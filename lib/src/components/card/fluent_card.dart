@@ -43,7 +43,7 @@ class FluentCard extends StatelessWidget {
     this.padding = const EdgeInsets.all(16.0),
     this.borderRadius = 12.0,
     this.enableSizeAnimation = true,
-    this.enableCursor = false,
+    this.enableCursor = true,
     this.animationDuration = FluentMotionDuration.gentle,
     this.animationCurve = FluentMotionCurve.standard,
   });
