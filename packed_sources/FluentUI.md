@@ -1,0 +1,293 @@
+This file is a merged representation of a subset of the codebase, containing specifically included files and files not matching ignore patterns, combined into a single document by Repomix.
+The content has been processed where security check has been disabled.
+
+# File Summary
+
+## Purpose
+This file contains a packed representation of a subset of the repository's contents that is considered the most important context.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.
+
+## File Format
+The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Multiple file entries, each consisting of:
+  a. A header with the file path (## File: path/to/file)
+  b. The full contents of the file in a code block
+
+## Usage Guidelines
+- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.
+
+## Notes
+- Some files may have been excluded based on .gitignore rules and Repomix's configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Only files matching these patterns are included: src/main/java/**/*.kt, src/main/java/**/*.java, src/main/kotlin/**/*.kt, src/main/res/values/attrs.xml, src/main/res/values/styles.xml, src/main/res/values/colors.xml, src/main/res/values/dimens.xml, src/main/res/values/themes.xml
+- Files matching these patterns are excluded: **/test/**, **/androidTest/**, **/build/**, **/.gradle/**
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Security check has been disabled - content may contain sensitive information
+- Files are sorted by Git change count (files with more changes are at the bottom)
+
+# Directory Structure
+```
+src/main/res/values/themes.xml
+```
+
+# Files
+
+## File: src/main/res/values/themes.xml
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) Microsoft Corporation. All rights reserved.
+  ~ Licensed under the MIT License.
+  -->
+
+<resources>
+    <!--
+    All semantic colors should be defined here in their light theme state as the default.
+    If they have a different semantic color for dark theme, define that color in "themes.xml (night)" as well.
+-->
+    <style name="Theme.FluentUI.Container" parent="Base.Theme.FluentUI">
+        <item name="colorPrimary">@color/fluentui_communication_blue</item>
+        <item name="colorPrimaryDark">@color/fluentui_communication_shade_20</item>
+        <item name="colorAccent">@color/fluentui_communication_blue</item>
+        <item name="android:textColorPrimary">@color/fluentui_gray_900</item>
+        <item name="buttonStyle">@style/Widget.FluentUI.Button</item>
+        <item name="toolbarStyle">@style/Widget.FluentUI.Toolbar</item>
+        <item name="actionOverflowButtonStyle">@style/Widget.FluentUI.Toolbar.OverflowButtonStyle</item>
+        <item name="homeAsUpIndicator">@drawable/ms_ic_arrow_left_24_filled_toolbar</item>
+        <item name="checkboxStyle">@style/Widget.FluentUI.CheckBox</item>
+        <item name="radioButtonStyle">@style/Widget.FluentUI.RadioButton</item>
+
+        <!-- *** Theme Semantic Colors *** -->
+
+        <item name="fluentuiColorPrimaryDarker">@color/fluentui_communication_shade_30</item>
+        <item name="fluentuiColorPrimaryLight">@color/fluentui_communication_tint_20</item>
+        <item name="fluentuiColorPrimaryLighter">@color/fluentui_communication_tint_40</item>
+
+        <!-- *** Base Semantic Colors *** -->
+
+        <!--Backgrounds-->
+        <item name="fluentuiBackgroundColor">@color/fluentui_white</item>
+        <item name="fluentuiBackgroundPressedColor">@color/fluentui_gray_100</item>
+        <item name="fluentuiBackgroundPrimaryColor">?attr/colorPrimary</item>
+        <item name="fluentuiBackgroundSecondaryColor">@color/fluentui_gray_900</item>
+        <item name="fluentuiBackgroundSecondaryPressedColor">@color/fluentui_gray_500</item>
+
+        <!--Backgrounds, Transparent-->
+        <item name="fluentuiBackgroundSecondary20Color">#33000000</item>
+
+        <!--Foregrounds-->
+        <item name="fluentuiForegroundColor">@color/fluentui_gray_900</item>
+        <item name="fluentuiForegroundSelectedColor">?attr/colorPrimary</item>
+        <item name="fluentuiForegroundSecondaryColor">@color/fluentui_gray_500</item>
+        <item name="fluentuiForegroundSecondaryIconColor">@color/fluentui_gray_400</item>
+        <item name="fluentuiForegroundOnPrimaryColor">@color/fluentui_white</item>
+        <item name="fluentuiForegroundOnSecondaryColor">@color/fluentui_white</item>
+        <item name="fluentuiDividerColor">@color/fluentui_gray_100</item>
+
+        <!--Foregrounds, Transparent-->
+        <item name="fluentuiForegroundOnPrimary80Color">#CCFFFFFF</item>
+        <item name="fluentuiForegroundOnPrimary70Color">#B3FFFFFF</item>
+
+        <!-- *** Semantic Colors *** -->
+
+        <!--AppBarLayout-->
+        <item name="fluentuiAppBarLayoutBackgroundColor">?attr/colorPrimary</item>
+
+        <!--BottomNavigation-->
+        <item name="fluentuiBottomNavigationBackgroundColor">?attr/fluentuiBackgroundColor</item>
+        <item name="fluentuiBottomNavigationForegroundActiveColor">?attr/colorPrimary</item>
+        <item name="fluentuiBottomNavigationForegroundInactiveColor">?attr/fluentuiForegroundSecondaryColor</item>
+
+        <!--BottomSheet-->
+        <item name="fluentuiBottomSheetBackgroundColor">?attr/fluentuiBackgroundColor</item>
+        <item name="fluentuiBottomSheetBackgroundPressedColor">?attr/fluentuiBackgroundPressedColor</item>
+        <item name="fluentuiBottomSheetIconColor">?attr/fluentuiForegroundSecondaryIconColor</item>
+        <item name="fluentuiBottomSheetDividerColor">?attr/fluentuiDividerColor</item>
+
+        <!--Button-->
+        <item name="fluentuiButtonBackgroundDefaultColor">?attr/fluentuiBackgroundPrimaryColor</item>
+        <item name="fluentuiButtonBackgroundDisabledColor">@color/fluentui_gray_50</item>
+        <item name="fluentuiButtonBackgroundPressedColor">?attr/colorControlHighlight</item>
+        <item name="fluentuiButtonTextDefaultColor">?attr/fluentuiForegroundOnPrimaryColor</item>
+        <item name="fluentuiButtonTextDisabledColor">@color/fluentui_gray_300</item>
+
+        <!--Button Borderless-->
+        <item name="fluentuiButtonBorderlessBackgroundDefaultColor">@android:color/transparent</item>
+        <item name="fluentuiButtonBorderlessBackgroundDisabledColor">@android:color/transparent</item>
+        <item name="fluentuiButtonBorderlessBackgroundPressedColor">?attr/colorControlHighlight</item>
+        <item name="fluentuiButtonBorderlessTextDefaultColor">?attr/colorPrimary</item>
+        <item name="fluentuiButtonBorderlessTextDisabledColor">@color/fluentui_gray_300</item>
+        <item name="fluentuiButtonBorderlessTextPressedColor">?attr/fluentuiButtonBorderlessTextDefaultColor</item>
+
+        <!--Button Outlined-->
+        <item name="fluentuiButtonOutlinedTextDefaultColor">@color/fluentui_communication_blue</item>
+        <item name="fluentuiButtonOutlinedTextPressedColor">@color/fluentui_communication_tint_20</item>
+        <item name="fluentuiButtonOutlinedTextDisabledColor">@color/fluentui_gray_300</item>
+        <item name="fluentuiButtonOutlinedStrokeDefaultColor">@color/fluentui_communication_tint_20</item>
+        <item name="FluentuiButtonOutlinedStrokePressedColor">@color/fluentui_communication_tint_30</item>
+        <item name="FluentuiButtonOutlinedStrokeDisabledColor">@color/fluentui_gray_50</item>
+
+        <!--Compound Buttons-->
+        <item name="fluentuiCompoundButtonTintDefaultColor">?attr/fluentuiForegroundSecondaryIconColor</item>
+        <item name="fluentuiCompoundButtonTintCheckedColor">?attr/fluentuiForegroundSelectedColor</item>
+
+        <!--ContextualCommandBar-->
+        <item name="fluentuiContextualCommandBarBackgroundColor">@color/fluentui_gray_50</item>
+        <item name="fluentuiContextualCommandBarBackgroundColorPressed">@color/fluentui_gray_100</item>
+        <item name="fluentuiContextualCommandBarBackgroundColorSelected">@color/fluentui_communication_tint_40</item>
+        <item name="fluentuiContextualCommandBarIconTint">@color/fluentui_gray_900</item>
+        <item name="fluentuiContextualCommandBarIconTintDisabled">@color/fluentui_gray_300</item>
+        <item name="fluentuiContextualCommandBarIconTintSelected">@color/fluentui_communication_blue</item>
+        <item name="fluentuiContextualCommandBarDismissBackgroundColor">#FFFFFF</item>
+        <item name="fluentuiContextualCommandBarDismissIconTintColor">@color/fluentui_gray_900</item>
+
+        <!--day selector-->
+        <item name="fluentuiCalendarDayTextActiveColor">?attr/fluentuiForegroundSelectedColor</item>
+        <item name="fluentuiCalendarDayTextActiveCheckedColor">?attr/fluentuiForegroundOnPrimaryColor</item>
+        <item name="fluentuiCalendarDayTextInactiveCheckedColor">?attr/fluentuiForegroundOnPrimaryColor</item>
+        <item name="fluentuiCalendarDayTextDefaultColor">?attr/fluentuiForegroundSecondaryColor</item>
+
+        <!--DateTimePicker-->
+        <item name="fluentuiDateTimePickerToolbarTitleTextColor">?attr/colorPrimary</item>
+        <item name="fluentuiDateTimePickerTabTextColor">?attr/fluentuiForegroundSecondaryColor</item>
+        <item name="fluentuiDateTimePickerDialogBackgroundColor">?attr/fluentuiDialogBackgroundColor</item>
+        <item name="fluentuiDateTimePickerToolbarIconColor">?attr/colorPrimary</item>
+
+        <!--Dialog-->
+        <item name="fluentuiDialogBackgroundColor">?attr/fluentuiBackgroundColor</item>
+        <item name="fluentuiDialogCloseIconColor">?attr/colorPrimary</item>
+        <item name="fluentuiDialogTabLayoutBackgroundColor">?attr/fluentuiDialogBackgroundColor</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+
+        <!--Drawer-->
+        <item name="fluentuiDrawerBackgroundColor">?attr/fluentuiBackgroundColor</item>
+        <item name="fluentuiDrawerHandleColor">@color/fluentui_gray_100</item>
+
+        <!--ListItemView-->
+        <item name="fluentuiListItemBackgroundColor">?attr/fluentuiBackgroundColor</item>
+        <item name="fluentuiListItemTitleColor">?attr/fluentuiForegroundColor</item>
+        <item name="fluentuiListItemSubtitleColor">?attr/fluentuiForegroundSecondaryColor</item>
+        <item name="fluentuiListItemSubtitleLargeHeaderColor">?attr/fluentuiForegroundColor</item>
+        <item name="fluentuiListItemFooterColor">?attr/fluentuiForegroundSecondaryColor</item>
+        <item name="fluentuiListItemRippleColor">?attr/fluentuiBackgroundPressedColor</item>
+
+        <!--ListSubHeader-->
+        <item name="fluentuiListSubHeaderTitlePrimaryColor">?attr/colorPrimary</item>
+        <item name="fluentuiListSubHeaderTitleSecondaryColor">?attr/fluentuiForegroundColor</item>
+        <item name="fluentuiListSubHeaderTitleTertiaryColor">?attr/fluentuiForegroundSecondaryColor</item>
+
+        <!--NumberPicker-->
+        <item name="fluentuiNumberPickerBackgroundColor">?attr/fluentuiBackgroundColor</item>
+        <item name="fluentuiNumberPickerDefaultTextColor">?attr/fluentuiForegroundSecondaryColor</item>
+        <item name="fluentuiNumberPickerSelectedTextColor">?attr/fluentuiForegroundSelectedColor</item>
+
+        <!--PeoplePicker-->
+        <item name="fluentuiPeoplePickerBackgroundColor">?attr/fluentuiBackgroundColor</item>
+        <item name="fluentuiPeoplePickerPopupBackgroundColor">?attr/fluentuiBackgroundColor</item>
+        <item name="fluentuiPeoplePickerTextViewBackgroundColor">?attr/fluentuiBackgroundColor</item>
+        <item name="fluentuiPeoplePickerTextViewDragBackgroundColor">?attr/fluentuiBackgroundPrimaryColor</item>
+        <item name="fluentuiPeoplePickerHintTextColor">?attr/fluentuiForegroundSecondaryColor</item>
+        <item name="fluentuiPeoplePickerLabelTextColor">?attr/fluentuiForegroundSecondaryColor</item>
+        <item name="fluentuiPeoplePickerCountSpanTextColor">?attr/fluentuiForegroundSecondaryColor</item>
+
+        <!--Persona Chip-->
+        <!--TODO add hex values to the colors file when they get added to the toolkit-->
+        <item name="fluentuiPersonaChipBackgroundNormalColor">@color/fluentui_gray_50</item>
+        <item name="fluentuiPersonaChipBackgroundActiveColor">?attr/fluentuiBackgroundPrimaryColor</item>
+        <item name="fluentuiPersonaChipBackgroundErrorColor">#FFF3F4</item>
+        <item name="fluentuiPersonaChipBackgroundErrorActiveColor">#E8484C</item>
+        <item name="fluentuiPersonaChipBackgroundPressedColor">#0D000000</item>
+        <item name="fluentuiPersonaChipTextNormalColor">@color/fluentui_gray_900</item>
+        <item name="fluentuiPersonaChipForegroundActiveColor">?attr/fluentuiForegroundOnPrimaryColor</item>
+        <item name="fluentuiPersonaChipTextErrorColor">#E63237</item>
+        <item name="fluentuiPersonaChipTextDisabledColor">@color/fluentui_gray_400</item>
+
+        <!--PopupMenu-->
+        <item name="fluentuiPopupMenuBackgroundColor">?attr/fluentuiBackgroundColor</item>
+        <item name="fluentuiPopupMenuBackgroundPressedColor">?attr/fluentuiBackgroundPressedColor</item>
+        <item name="fluentuiPopupMenuItemTitleColor">?attr/fluentuiForegroundColor</item>
+        <item name="fluentuiPopupMenuItemForegroundSelectedColor">?attr/fluentuiForegroundSelectedColor</item>
+        <item name="fluentuiPopupMenuItemCheckBackgroundRippleColor">@color/fluentui_gray_300</item>
+        <item name="fluentuiPopupMenuItemCheckboxTint">@color/fluentui_gray_300</item>
+        <item name="fluentuiPopupMenuItemRadiobuttonTint">@color/fluentui_gray_300</item>
+        <item name="fluentuiPopupMenuItemIconTint">@color/fluentui_gray_500</item>
+
+        <!--Progress-->
+        <item name="fluentuiProgressPrimaryColor">?attr/colorPrimary</item>
+        <item name="fluentuiProgressBackgroundColor">@color/fluentui_gray_100</item>
+
+        <!--Searchbar-->
+        <item name="fluentuiSearchbarBackgroundColor">?attr/fluentuiBackgroundPrimaryColor</item>
+        <item name="fluentuiSearchbarSearchViewContainerBackgroundColor">?attr/fluentuiBackgroundSecondary20Color</item>
+        <item name="fluentuiSearchbarBackButtonColor">?attr/fluentuiForegroundOnPrimaryColor</item>
+        <item name="fluentuiSearchbarSearchIconColor">?attr/fluentuiForegroundOnPrimary80Color</item>
+        <item name="fluentuiSearchbarSearchViewTextColor">?attr/fluentuiForegroundOnPrimaryColor</item>
+        <item name="fluentuiSearchbarSearchViewTextHintColor">?attr/fluentuiForegroundOnPrimary80Color</item>
+        <item name="fluentuiSearchbarSearchViewCursorColor">?attr/fluentuiForegroundOnPrimaryColor</item>
+        <item name="fluentuiSearchbarProgressColor">?attr/fluentuiForegroundOnPrimary70Color</item>
+        <item name="fluentuiSearchbarCloseIconColor">?attr/fluentuiForegroundOnPrimary70Color</item>
+
+        <!--Snackbar-->
+        <item name="fluentuiSnackbarBackgroundColor">?attr/fluentuiBackgroundSecondaryColor</item>
+        <item name="fluentuiSnackbarBackgroundAnnouncementColor">?attr/fluentuiBackgroundPrimaryColor</item>
+        <item name="fluentuiSnackbarBackgroundPrimaryColor">?attr/fluentuiBackgroundPrimaryColor</item>
+        <item name="fluentuiSnackbarBackgroundLightColor">@color/fluentui_black</item>
+        <item name="fluentuiSnackbarBackgroundWarningColor">@color/fluentui_yellow</item>
+        <item name="fluentuiSnackbarBackgroundDangerColor">@color/fluentui_red</item>
+        <item name="fluentuiSnackbarTextColor">?attr/fluentuiForegroundOnSecondaryColor</item>
+        <item name="fluentuiSnackbarTextAnnouncementColor">?attr/fluentuiForegroundOnSecondaryColor</item>
+        <item name="fluentuiSnackbarTextPrimaryColor">?attr/fluentuiForegroundOnPrimaryColor</item>
+        <item name="fluentuiSnackbarTextLightColor">@color/fluentui_white</item>
+        <item name="fluentuiSnackbarTextWarningColor">@color/fluentui_gray_900</item>
+        <item name="fluentuiSnackbarTextDangerColor">@color/fluentui_white</item>
+        <item name="fluentuiSnackbarActionTextColor">?attr/fluentuiColorPrimaryLight</item>
+        <item name="fluentuiSnackbarActionTextAnnouncementColor">?attr/fluentuiForegroundOnPrimaryColor</item>
+
+        <!--TabLayout Dialog-->
+        <item name="fluentuiDialogTabTextColor">?attr/fluentuiForegroundSecondaryColor</item>
+        <item name="fluentuiDialogTabSelectedTextColor">?attr/fluentuiForegroundSelectedColor</item>
+        <item name="fluentuiDialogTabIndicatorColor">?attr/fluentuiForegroundSelectedColor</item>
+
+        <!--TabLayout-->
+        <item name="fluentuiTabSelectedTextColor">?attr/fluentuiBackgroundPrimaryColor</item>
+        <item name="fluentuiTabUnselectedTextColor">?attr/fluentuiBackgroundColor</item>
+        <item name="fluentuiTabLayoutContainerBackgroundColor">?attr/fluentuiBackgroundPrimaryColor</item>
+        <item name="fluentuiTabLayoutBackgroundColor">@color/fluentui_communication_shade_10</item>
+        <item name="fluentuiTabSelectedBackgroundColor">?attr/fluentuiBackgroundColor</item>
+        <item name="fluentuiTabUnselectedBackgroundColor">?attr/fluentuiTabLayoutBackgroundColor</item>
+        <item name="fluentuiTabTextAppearance">@style/TextAppearance.FluentUI.Tab</item>
+        <!--Toolbar-->
+        <item name="fluentuiToolbarBackgroundColor">?attr/colorPrimary</item>
+        <item name="fluentuiToolbarTitleTextColor">?attr/fluentuiForegroundOnPrimaryColor</item>
+        <item name="fluentuiToolbarSubtitleTextColor">?attr/fluentuiForegroundOnPrimaryColor</item>
+        <item name="fluentuiToolbarIconColor">?attr/fluentuiForegroundOnPrimaryColor</item>
+
+        <!--Tooltip-->
+        <item name="fluentuiTooltipBackgroundColor">?attr/fluentuiBackgroundSecondaryColor</item>
+        <item name="fluentuiTooltipTextColor">?attr/fluentuiForegroundOnSecondaryColor</item>
+
+        <!--BottomSheet-->
+        <item name="fluentuiPersistentBottomSheetHeadingColor">?attr/fluentuiForegroundSecondaryColor</item>
+        <item name="fluentuiPersistentBottomSheetItemColor">?attr/fluentuiForegroundSecondaryColor</item>
+        <item name="fluentuiPersistentBottomSheetHorizontalItemColor">?attr/fluentuiForegroundColor</item>
+    </style>
+
+    <!--
+        All light theme semantic colors should be defined in the base theme as the default.
+        Dark theme specific semantic colors should be defined in "themes.xml (night)".
+    -->
+    <style name="Theme.FluentUI" parent="Theme.FluentUI.Container"/>
+</resources>
+```
