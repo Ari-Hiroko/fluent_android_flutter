@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../theme/fluent_global_tokens.dart';
+import '../../theme/fluent_motion_tokens.dart';
 import '../../theme/fluent_theme.dart';
 
 /// 按钮款式风格 [FluentButtonStyle]
@@ -31,8 +32,8 @@ enum FluentButtonSize {
 
 /// Fluent 2 官方按钮组件 [FluentButton]
 ///
-/// 移植自 Android Kotlin Button.kt 与 ButtonTokens.kt
-class FluentButton extends StatelessWidget {
+/// 移植自 Android Kotlin Button.kt，支持 Fluent 2 Motion 按压缩放与色彩平滑过渡动画
+class FluentButton extends StatefulWidget {
   /// 按钮文本
   final String text;
 
@@ -51,6 +52,21 @@ class FluentButton extends StatelessWidget {
   /// 是否填充父容器宽度 (Full Width)
   final bool isFullWidth;
 
+  /// 是否改变光标
+  final bool enableCursor;
+
+  /// 是否开启按压与过渡动画 (默认 true)
+  final bool enableAnimation;
+
+  /// 动画过渡时长 (默认 FluentMotionDuration.fast 150ms)
+  final Duration animationDuration;
+
+  /// 动画缓动曲线 (默认 FluentMotionCurve.standard)
+  final Curve animationCurve;
+
+  /// 按压时的微小缩放比例 (默认 0.97)
+  final double pressScale;
+
   const FluentButton({
     super.key,
     required this.text,
@@ -59,19 +75,55 @@ class FluentButton extends StatelessWidget {
     this.style = FluentButtonStyle.primary,
     this.size = FluentButtonSize.medium,
     this.isFullWidth = false,
+    this.enableCursor = true,
+    this.enableAnimation = false,
+    this.animationDuration = FluentMotionDuration.fast,
+    this.animationCurve = FluentMotionCurve.standard,
+    this.pressScale = 0.97,
   });
+
+  @override
+  State<FluentButton> createState() => _FluentButtonState();
+}
+
+class _FluentButtonState extends State<FluentButton> {
+  bool _isPressed = false;
+
+  void _handleTapDown(TapDownDetails details) {
+    if (widget.onPressed != null && widget.enableAnimation) {
+      setState(() {
+        _isPressed = true;
+      });
+    }
+  }
+
+  void _handleTapUp(TapUpDetails details) {
+    if (_isPressed) {
+      setState(() {
+        _isPressed = false;
+      });
+    }
+  }
+
+  void _handleTapCancel() {
+    if (_isPressed) {
+      setState(() {
+        _isPressed = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final theme = FluentTheme.of(context);
-    final isEnabled = onPressed != null;
+    final isEnabled = widget.onPressed != null;
 
     // 尺寸高度与 padding 计算
     double height = 40.0;
     double fontSize = 14.0;
     EdgeInsets padding = const EdgeInsets.symmetric(horizontal: 16.0);
 
-    switch (size) {
+    switch (widget.size) {
       case FluentButtonSize.small:
         height = 32.0;
         fontSize = 13.0;
@@ -94,14 +146,20 @@ class FluentButton extends StatelessWidget {
     Color foregroundColor;
     BorderSide borderSide = BorderSide.none;
 
-    switch (style) {
+    switch (widget.style) {
       case FluentButtonStyle.primary:
         backgroundColor = isEnabled ? theme.primaryColor : theme.dividerColor;
-        foregroundColor = isEnabled ? Colors.white : theme.foregroundSecondaryColor;
+        foregroundColor = isEnabled
+            ? Colors.white
+            : theme.foregroundSecondaryColor;
         break;
       case FluentButtonStyle.secondary:
-        backgroundColor = isEnabled ? theme.backgroundColor : theme.backgroundColor.withAlpha(128);
-        foregroundColor = isEnabled ? theme.primaryColor : theme.foregroundSecondaryColor;
+        backgroundColor = isEnabled
+            ? theme.backgroundColor
+            : theme.backgroundColor.withAlpha(128);
+        foregroundColor = isEnabled
+            ? theme.primaryColor
+            : theme.foregroundSecondaryColor;
         borderSide = BorderSide(
           color: isEnabled ? theme.primaryColor : theme.dividerColor,
           width: 1.0,
@@ -109,30 +167,33 @@ class FluentButton extends StatelessWidget {
         break;
       case FluentButtonStyle.borderless:
         backgroundColor = Colors.transparent;
-        foregroundColor = isEnabled ? theme.primaryColor : theme.foregroundSecondaryColor;
+        foregroundColor = isEnabled
+            ? theme.primaryColor
+            : theme.foregroundSecondaryColor;
         break;
       case FluentButtonStyle.danger:
-        backgroundColor = isEnabled ? FluentGlobalTokens.sharedRed : theme.dividerColor;
-        foregroundColor = isEnabled ? Colors.white : theme.foregroundSecondaryColor;
+        backgroundColor = isEnabled
+            ? FluentGlobalTokens.sharedRed
+            : theme.dividerColor;
+        foregroundColor = isEnabled
+            ? Colors.white
+            : theme.foregroundSecondaryColor;
         break;
     }
 
     Widget content = Row(
-      mainAxisSize: isFullWidth ? MainAxisSize.max : MainAxisSize.min,
+      mainAxisSize: widget.isFullWidth ? MainAxisSize.max : MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        if (icon != null) ...[
+        if (widget.icon != null) ...[
           IconTheme(
-            data: IconThemeData(
-              color: foregroundColor,
-              size: fontSize + 4.0,
-            ),
-            child: icon!,
+            data: IconThemeData(color: foregroundColor, size: fontSize + 4.0),
+            child: widget.icon!,
           ),
           const SizedBox(width: 8.0),
         ],
         Text(
-          text,
+          widget.text,
           style: TextStyle(
             fontSize: fontSize,
             fontWeight: FontWeight.w600,
@@ -142,25 +203,54 @@ class FluentButton extends StatelessWidget {
       ],
     );
 
-    return SizedBox(
-      height: height,
-      width: isFullWidth ? double.infinity : null,
-      child: Material(
-        color: backgroundColor,
-        borderRadius: BorderRadius.circular(FluentGlobalTokens.cornerRadius80),
-        child: InkWell(
-          onTap: onPressed,
-          borderRadius: BorderRadius.circular(FluentGlobalTokens.cornerRadius80),
-          highlightColor: Colors.black.withAlpha(20),
-          splashColor: Colors.black.withAlpha(30),
-          child: Container(
-            padding: padding,
+    final double currentScale = (widget.enableAnimation && _isPressed)
+        ? widget.pressScale
+        : 1.0;
+
+    return AnimatedScale(
+      scale: currentScale,
+      duration: widget.animationDuration,
+      curve: widget.animationCurve,
+      child: GestureDetector(
+        onTapDown: _handleTapDown,
+        onTapUp: _handleTapUp,
+        onTapCancel: _handleTapCancel,
+        child: SizedBox(
+          height: height,
+          width: widget.isFullWidth ? double.infinity : null,
+          child: AnimatedContainer(
+            duration: widget.enableAnimation
+                ? widget.animationDuration
+                : Duration.zero,
+            curve: widget.animationCurve,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(FluentGlobalTokens.cornerRadius80),
-              border: borderSide != BorderSide.none ? Border.fromBorderSide(borderSide) : null,
+              color: backgroundColor,
+              borderRadius: BorderRadius.circular(
+                FluentGlobalTokens.cornerRadius80,
+              ),
+              border: borderSide != BorderSide.none
+                  ? Border.fromBorderSide(borderSide)
+                  : null,
             ),
-            alignment: Alignment.center,
-            child: content,
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: widget.onPressed,
+                mouseCursor: widget.enableCursor
+                    ? SystemMouseCursors.click
+                    : SystemMouseCursors.basic,
+                borderRadius: BorderRadius.circular(
+                  FluentGlobalTokens.cornerRadius80,
+                ),
+                highlightColor: Colors.black.withAlpha(15),
+                splashColor: Colors.black.withAlpha(25),
+                child: Container(
+                  padding: padding,
+                  alignment: Alignment.center,
+                  child: content,
+                ),
+              ),
+            ),
           ),
         ),
       ),

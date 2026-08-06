@@ -1,0 +1,25 @@
+# fluent2_android
+
+> Microsoft Fluent 2 Design System for Flutter (iOS/Android)
+
+## Overview
+`fluent2_android` implements Microsoft's Fluent 2 design system for Flutter mobile applications, strictly matching Microsoft's Fluent 2 specs while honoring native Material API parameter naming habits.
+
+## Documentation
+- [COMPONENTS.md](COMPONENTS.md): Full component catalog with API parameter signatures and code examples.
+- [doc/LLM_CONTEXT.md](doc/LLM_CONTEXT.md): Compact LLM usage context file for consuming apps.
+- [packed_sources/PORTING_MAP_AND_TODO.md](packed_sources/PORTING_MAP_AND_TODO.md): Source file mapping table and porting status.
+
+## Core Exports
+- Theme: `FluentTheme`, `Fluent2ThemeData`, `FluentColors`, `FluentGlobalTokens`, `FluentAliasTokens`, `ControlTokens`
+- Buttons: `FluentButton`, `FluentCompoundButton`, `FluentFloatingActionButton`, `FluentChip`
+- Inputs: `FluentSearchBar`, `FluentTextField`, `FluentPeoplePicker`
+- Navigation: `FluentTopAppBar`, `FluentContextualCommandBar`, `FluentTabBar`, `FluentPillBar`
+- Menus: `FluentPopupMenu`, `FluentPopupMenuButton`, `FluentMenu`, `showFluentPopupMenu`
+- Dialogs & Sheets: `FluentDialog`, `FluentBottomSheet`, `FluentDrawer`, `showFluentDialog`, `showFluentBottomSheet`, `showFluentDrawer`
+- Cards & Lists: `FluentListItem`, `FluentListSubHeader`, `FluentDivider`
+- Notifications: `FluentSnackbar`, `FluentBanner`, `showFluentSnackbar`
+- Personas & Avatars: `FluentAvatar`, `FluentAvatarGroup`, `FluentPersona`
+- Progress & Transients: `FluentCircularProgressIndicator`, `FluentLinearProgressIndicator`, `FluentShimmer`, `FluentTooltip`
+- Calendar: `FluentCalendarView`
+- Icons: `FluentIcons`, `FluentIconData`

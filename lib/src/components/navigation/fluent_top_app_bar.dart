@@ -4,13 +4,13 @@ import '../../theme/fluent_theme.dart';
 
 /// TopAppBar 的尺寸形态 [FluentAppBarSize]
 enum FluentAppBarSize {
-  /// 标准单行或带副标题的高度 (56dp)
+  /// 标准单行或带副标题的高度 (56dp/64dp)
   small,
 
   /// 中等高度 (带次要文本信息)
   medium,
 
-  /// 大标题形态 (包含大号页面标题)
+  /// 大标题形态 (包含大号页面标题 96dp)
   large,
 }
 
@@ -60,6 +60,9 @@ class FluentTopAppBar extends StatelessWidget implements PreferredSizeWidget {
   /// 点击标题时的回调
   final VoidCallback? onTitleTap;
 
+  /// 是否改变光标
+  final bool enableCursor;
+
   const FluentTopAppBar({
     super.key,
     required this.title,
@@ -73,14 +76,17 @@ class FluentTopAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.bottomBar,
     this.showBottomBorder = true,
     this.onTitleTap,
+    this.enableCursor = true,
   });
+
+  bool get _hasSubTitle => subTitle != null && subTitle!.isNotEmpty;
 
   @override
   Size get preferredSize {
-    double baseHeight = 56.0;
+    double baseHeight = _hasSubTitle ? 64.0 : 56.0;
     if (appBarSize == FluentAppBarSize.large) baseHeight = 96.0;
     if (searchBar != null) baseHeight += 56.0;
-    if (bottomBar != null) baseHeight += 48.0;
+    if (bottomBar != null) baseHeight += 56.0;
     return Size.fromHeight(baseHeight);
   }
 
@@ -103,6 +109,8 @@ class FluentTopAppBar extends StatelessWidget implements PreferredSizeWidget {
         ? FluentColors.white.withAlpha(204)
         : theme.foregroundSecondaryColor;
 
+    final double mainRowHeight = _hasSubTitle ? 64.0 : 56.0;
+
     return Container(
       decoration: BoxDecoration(
         color: backgroundColor,
@@ -119,96 +127,117 @@ class FluentTopAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
       child: SafeArea(
         bottom: false,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            // 主栏 Row (Height 56dp)
-            SizedBox(
-              height: 56.0,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                child: Row(
-                  children: [
-                    // 左侧导航 Icon
-                    if (navigationIcon != null)
-                      IconTheme(
-                        data: IconThemeData(color: foregroundColor, size: 24.0),
-                        child: navigationIcon!,
-                      ),
-
-                    // Logo
-                    if (logo != null) ...[
-                      const SizedBox(width: 8.0),
-                      logo!,
-                    ],
-
-                    const SizedBox(width: 12.0),
-
-                    // 标题与副标题区
-                    Expanded(
-                      child: InkWell(
-                        onTap: onTitleTap,
-                        borderRadius: BorderRadius.circular(4.0),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              title,
-                              style: TextStyle(
-                                fontSize: appBarSize == FluentAppBarSize.large ? 22.0 : 18.0,
-                                fontWeight: FontWeight.w600,
-                                color: foregroundColor,
-                              ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
+        child: Container(
+          constraints: BoxConstraints(minHeight: preferredSize.height),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // 主栏 Row (Height 56dp / 64dp)
+              SizedBox(
+                height:
+                    mainRowHeight -
+                    (showBottomBorder && searchBar == null && bottomBar == null
+                        ? 1.0
+                        : 0.0),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                  child: Row(
+                    children: [
+                      // 左侧导航 Icon
+                      if (navigationIcon != null)
+                        MouseRegion(
+                          cursor: enableCursor
+                              ? SystemMouseCursors.click
+                              : SystemMouseCursors.basic,
+                          child: IconTheme(
+                            data: IconThemeData(
+                              color: foregroundColor,
+                              size: 24.0,
                             ),
-                            if (subTitle != null && subTitle!.isNotEmpty) ...[
-                              const SizedBox(height: 2.0),
+                            child: navigationIcon!,
+                          ),
+                        ),
+
+                      // Logo
+                      if (logo != null) ...[const SizedBox(width: 8.0), logo!],
+
+                      const SizedBox(width: 8.0),
+
+                      // 标题与副标题区
+                      Expanded(
+                        child: InkWell(
+                          onTap: onTitleTap,
+                          borderRadius: BorderRadius.circular(4.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
                               Text(
-                                subTitle!,
+                                title,
                                 style: TextStyle(
-                                  fontSize: 12.0,
-                                  color: secondaryForegroundColor,
+                                  fontSize: appBarSize == FluentAppBarSize.large
+                                      ? 20.0
+                                      : 16.0,
+                                  fontWeight: FontWeight.bold,
+                                  color: foregroundColor,
                                 ),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                               ),
+                              if (_hasSubTitle) ...[
+                                const SizedBox(height: 2.0),
+                                Text(
+                                  subTitle!,
+                                  style: TextStyle(
+                                    fontSize: 12.0,
+                                    color: secondaryForegroundColor,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ],
                             ],
-                          ],
+                          ),
                         ),
                       ),
-                    ),
 
-                    // 右侧 Actions 操作组
-                    if (actions != null && actions!.isNotEmpty)
-                      IconTheme(
-                        data: IconThemeData(color: foregroundColor, size: 24.0),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: actions!,
+                      // 右侧 Actions 动作图标组
+                      if (actions != null && actions!.isNotEmpty)
+                        MouseRegion(
+                          cursor: enableCursor
+                              ? SystemMouseCursors.click
+                              : SystemMouseCursors.basic,
+                          child: IconTheme(
+                            data: IconThemeData(
+                              color: foregroundColor,
+                              size: 24.0,
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: actions!,
+                            ),
+                          ),
                         ),
-                      ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
 
-            // 嵌套搜索栏区 (Searchbar)
-            if (searchBar != null)
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
-                child: searchBar!,
-              ),
+              // 嵌套搜索栏
+              if (searchBar != null)
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12.0,
+                    vertical: 6.0,
+                  ),
+                  child: searchBar!,
+                ),
 
-            // 底部扩展栏区 (BottomBar)
-            if (bottomBar != null)
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4.0),
-                child: bottomBar!,
-              ),
-          ],
+              // 底部扩展视图
+              if (bottomBar != null) ...[bottomBar!],
+            ],
+          ),
         ),
       ),
     );

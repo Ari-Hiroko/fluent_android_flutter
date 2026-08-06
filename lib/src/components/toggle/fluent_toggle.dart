@@ -28,21 +28,33 @@ class FluentCheckBox extends StatelessWidget {
 
     if (label == null) return widgetBox;
 
-    return InkWell(
-      onTap: onChanged != null ? () => onChanged!(!value) : null,
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          widgetBox,
-          const SizedBox(width: 6.0),
-          Text(
-            label!,
-            style: TextStyle(
-              fontSize: 14.0,
-              color: theme.foregroundColor,
-            ),
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onChanged != null ? () => onChanged!(!value) : null,
+        mouseCursor: onChanged != null
+            ? SystemMouseCursors.click
+            : SystemMouseCursors.basic,
+        borderRadius: BorderRadius.circular(4.0),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 2.0),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              widgetBox,
+              const SizedBox(width: 8.0),
+              Flexible(
+                child: Text(
+                  label!,
+                  style: TextStyle(
+                    fontSize: 14.0,
+                    color: theme.foregroundColor,
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
@@ -74,7 +86,9 @@ class FluentRadioButton<T> extends StatelessWidget {
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         border: Border.all(
-          color: isSelected ? theme.primaryColor : theme.foregroundSecondaryColor,
+          color: isSelected
+              ? theme.primaryColor
+              : theme.foregroundSecondaryColor,
           width: 2.0,
         ),
       ),
@@ -91,23 +105,30 @@ class FluentRadioButton<T> extends StatelessWidget {
 
     if (label == null) return indicator;
 
-    return InkWell(
-      onTap: onChanged != null ? () => onChanged!(value) : null,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 4.0),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            indicator,
-            const SizedBox(width: 8.0),
-            Text(
-              label!,
-              style: TextStyle(
-                fontSize: 14.0,
-                color: theme.foregroundColor,
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onChanged != null ? () => onChanged!(value) : null,
+        mouseCursor: onChanged != null
+            ? SystemMouseCursors.click
+            : SystemMouseCursors.basic,
+        borderRadius: BorderRadius.circular(4.0),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 4.0),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              indicator,
+              const SizedBox(width: 8.0),
+              Text(
+                label!,
+                style: TextStyle(
+                  fontSize: 14.0,
+                  color: theme.foregroundColor,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -145,21 +166,34 @@ class FluentToggleSwitch extends StatelessWidget {
 
     if (label == null) return switchWidget;
 
-    return InkWell(
-      onTap: onChanged != null ? () => onChanged!(!value) : null,
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            label!,
-            style: TextStyle(
-              fontSize: 14.0,
-              color: theme.foregroundColor,
-            ),
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onChanged != null ? () => onChanged!(!value) : null,
+        mouseCursor: onChanged != null
+            ? SystemMouseCursors.click
+            : SystemMouseCursors.basic,
+        borderRadius: BorderRadius.circular(4.0),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 2.0, horizontal: 2.0),
+          child: Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Text(
+                  label!,
+                  style: TextStyle(
+                    fontSize: 14.0,
+                    color: theme.foregroundColor,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8.0),
+              switchWidget,
+            ],
           ),
-          const SizedBox(width: 8.0),
-          switchWidget,
-        ],
+        ),
       ),
     );
   }
