@@ -58,13 +58,16 @@ class _FluentPillButtonState extends State<FluentPillButton>
     );
 
     // 对标 Kotlin Pill.kt: 0.95 -> 1.0 弹性 Spring 动画
-    _scaleAnimation = TweenSequence<double>([
-      TweenSequenceItem(tween: Tween(begin: 1.0, end: 0.95), weight: 30),
-      TweenSequenceItem(tween: Tween(begin: 0.95, end: 1.0), weight: 70),
-    ]).animate(CurvedAnimation(
-      parent: _controller,
-      curve: FluentMotionCurve.standard,
-    ));
+    _scaleAnimation =
+        TweenSequence<double>([
+          TweenSequenceItem(tween: Tween(begin: 1.0, end: 0.95), weight: 30),
+          TweenSequenceItem(tween: Tween(begin: 0.95, end: 1.0), weight: 70),
+        ]).animate(
+          CurvedAnimation(
+            parent: _controller,
+            curve: FluentMotionCurve.standard,
+          ),
+        );
   }
 
   @override
@@ -120,18 +123,25 @@ class _FluentPillButtonState extends State<FluentPillButton>
           scale: _scaleAnimation,
           child: Material(
             color: bg,
-            borderRadius: BorderRadius.circular(FluentGlobalTokens.cornerRadiusCircular),
+            borderRadius: BorderRadius.circular(
+              FluentGlobalTokens.cornerRadiusCircular,
+            ),
             child: InkWell(
               onTap: _handleTap,
               mouseCursor: isClickable
                   ? SystemMouseCursors.click
                   : SystemMouseCursors.basic,
-              borderRadius: BorderRadius.circular(FluentGlobalTokens.cornerRadiusCircular),
+              borderRadius: BorderRadius.circular(
+                FluentGlobalTokens.cornerRadiusCircular,
+              ),
               splashColor: fg.withAlpha(30),
               highlightColor: fg.withAlpha(15),
               child: Container(
                 height: 32.0,
-                padding: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 6.0),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 14.0,
+                  vertical: 6.0,
+                ),
                 alignment: Alignment.center,
                 child: Stack(
                   clipBehavior: Clip.none,
@@ -151,7 +161,9 @@ class _FluentPillButtonState extends State<FluentPillButton>
                           widget.label,
                           style: TextStyle(
                             fontSize: 13.0,
-                            fontWeight: widget.selected ? FontWeight.bold : FontWeight.w500,
+                            fontWeight: widget.selected
+                                ? FontWeight.bold
+                                : FontWeight.w500,
                             color: fg,
                           ),
                         ),
@@ -245,28 +257,36 @@ class FluentPillBar extends StatelessWidget {
     Widget barContainer = Container(
       height: 40.0,
       padding: const EdgeInsets.all(4.0),
+      clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
         color: containerBg,
-        borderRadius: BorderRadius.circular(FluentGlobalTokens.cornerRadiusCircular),
+        borderRadius: BorderRadius.circular(
+          FluentGlobalTokens.cornerRadiusCircular,
+        ),
       ),
-      child: isScrollable
-          ? SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              physics: const BouncingScrollPhysics(),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: pillWidgets,
+      child: Container(
+        clipBehavior: Clip.antiAlias,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(
+            FluentGlobalTokens.cornerRadiusCircular,
+          ),
+        ),
+        child: isScrollable
+            ? SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                physics: const BouncingScrollPhysics(),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: pillWidgets,
+                ),
+              )
+            : Row(
+                children: pillWidgets.map((w) => Expanded(child: w)).toList(),
               ),
-            )
-          : Row(
-              children: pillWidgets.map((w) => Expanded(child: w)).toList(),
-            ),
+      ),
     );
 
-    return Padding(
-      padding: padding,
-      child: barContainer,
-    );
+    return Padding(padding: padding, child: barContainer);
   }
 }
 

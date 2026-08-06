@@ -1272,12 +1272,18 @@ FluentPillButton(
               OutlinedButton.icon(
                 icon: const Icon(Icons.title),
                 label: const Text('TextButton Dialog'),
-                onPressed: () => _openConfirmDialog(context, buttonType: FluentDialogButtonType.textButton),
+                onPressed: () => _openConfirmDialog(
+                  context,
+                  buttonType: FluentDialogButtonType.textButton,
+                ),
               ),
               OutlinedButton.icon(
                 icon: const Icon(Icons.smart_button),
                 label: const Text('Standard Button Dialog'),
-                onPressed: () => _openConfirmDialog(context, buttonType: FluentDialogButtonType.button),
+                onPressed: () => _openConfirmDialog(
+                  context,
+                  buttonType: FluentDialogButtonType.button,
+                ),
               ),
               OutlinedButton.icon(
                 icon: const Icon(Icons.vertical_align_top),
@@ -1771,7 +1777,10 @@ Icon(FluentIcons.success);''',
   }
 
   // 弹窗与日志底栏
-  void _openConfirmDialog(BuildContext context, {FluentDialogButtonType buttonType = FluentDialogButtonType.textButton}) {
+  void _openConfirmDialog(
+    BuildContext context, {
+    FluentDialogButtonType buttonType = FluentDialogButtonType.textButton,
+  }) {
     showFluentDialog(
       context: context,
       title: '确认提交配置？',

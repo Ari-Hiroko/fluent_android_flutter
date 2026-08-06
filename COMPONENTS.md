@@ -403,6 +403,30 @@ FluentListItem(
 );
 ```
 
+### 9.2 `FluentBadge`
+符合 Fluent 2 规范的 8dp Dot 圆点、18dp Character 字符与 24dp List 列表项徽章组件。
+
+```dart
+// 1. Dot 圆点徽章 (8dp)
+FluentBadge(
+  child: Icon(Icons.notifications),
+);
+
+// 2. Character 字符徽章 (18dp)
+FluentBadge(
+  text: '99+',
+  badgeType: FluentBadgeType.character,
+  child: Icon(Icons.mail),
+);
+
+// 3. List 列表徽章 (24dp)
+FluentBadge(
+  text: 'NEW',
+  badgeType: FluentBadgeType.list,
+  style: FluentBadgeStyle.brand,
+);
+```
+
 ---
 
 ## 10. 消息通知与横幅 (Notification & Banner)

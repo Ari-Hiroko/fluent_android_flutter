@@ -151,135 +151,332 @@ class FluentTabBar extends StatelessWidget {
         children: List.generate(tabs.length, (index) {
           final tab = tabs[index];
           final isSelected = index == selectedIndex;
-          final bool isTabEnabled = tab.enabled;
-
-          final Color itemColor = !isTabEnabled
-              ? effectiveUnselectedColor.withAlpha(96)
-              : (isSelected
-                    ? effectiveSelectedColor
-                    : effectiveUnselectedColor);
-
-          final Widget iconWidget = (isSelected && tab.selectedIcon != null)
-              ? tab.selectedIcon!
-              : (tab.icon ?? const SizedBox.shrink());
-
-          final Widget? badgeWidget =
-              tab.badge ??
-              (tab.badgeText != null
-                  ? FluentBadge(
-                      text: tab.badgeText,
-                      style: FluentBadgeStyle.danger,
-                    )
-                  : null);
-
-          Widget content;
-
-          if (tabTextAlignment == FluentTabTextAlignment.vertical) {
-            // Icon 上，Text 下
-            content = Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                if (tab.icon != null)
-                  Stack(
-                    clipBehavior: Clip.none,
-                    children: [
-                      IconTheme(
-                        data: IconThemeData(color: itemColor, size: 22.0),
-                        child: iconWidget,
-                      ),
-                      if (badgeWidget != null)
-                        Positioned(top: -4.0, right: -8.0, child: badgeWidget),
-                    ],
-                  ),
-                const SizedBox(height: 2.0),
-                Text(
-                  tab.title,
-                  style: TextStyle(
-                    fontSize: 11.0,
-                    fontWeight: isSelected
-                        ? FontWeight.bold
-                        : FontWeight.normal,
-                    color: itemColor,
-                  ),
-                ),
-              ],
-            );
-          } else if (tabTextAlignment == FluentTabTextAlignment.noText) {
-            // 仅 Icon
-            content = Stack(
-              clipBehavior: Clip.none,
-              alignment: Alignment.center,
-              children: [
-                if (tab.icon != null)
-                  IconTheme(
-                    data: IconThemeData(color: itemColor, size: 22.0),
-                    child: iconWidget,
-                  ),
-                if (badgeWidget != null)
-                  Positioned(top: 6.0, right: 6.0, child: badgeWidget),
-              ],
-            );
-          } else {
-            // Icon 左，Text 右 (Horizontal)
-            content = Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                if (tab.icon != null) ...[
-                  IconTheme(
-                    data: IconThemeData(color: itemColor, size: 20.0),
-                    child: iconWidget,
-                  ),
-                  const SizedBox(width: 6.0),
-                ],
-                Text(
-                  tab.title,
-                  style: TextStyle(
-                    fontSize: 14.0,
-                    fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
-                    color: itemColor,
-                  ),
-                ),
-                if (badgeWidget != null) ...[
-                  const SizedBox(width: 4.0),
-                  badgeWidget,
-                ],
-              ],
-            );
-          }
-
-          final VoidCallback? tapAction = isTabEnabled
-              ? () {
-                  tab.onClick?.call();
-                  onTabSelected?.call(index);
-                }
-              : null;
-
+          final isTabEnabled = tab.enabled;
           return Expanded(
-            child: Material(
-              color: Colors.transparent,
-              child: InkWell(
-                mouseCursor: (isTabEnabled && enableCursor)
-                    ? SystemMouseCursors.click
-                    : SystemMouseCursors.basic,
-                onTap: tapAction,
-                child: Column(
-                  children: [
-                    Expanded(child: Center(child: content)),
-                    if (showIndicator)
-                      Container(
-                        height: 2.0,
-                        width: isSelected ? 32.0 : 0.0,
-                        color: isSelected && isTabEnabled
-                            ? effectiveIndicatorColor
-                            : Colors.transparent,
-                      ),
-                  ],
-                ),
-              ),
+            child: _FluentTabItemWidget(
+              tab: tab,
+              isSelected: isSelected,
+              isEnabled: isTabEnabled,
+              selectedColor: effectiveSelectedColor,
+              unselectedColor: effectiveUnselectedColor,
+              indicatorColor: effectiveIndicatorColor,
+              tabTextAlignment: tabTextAlignment,
+              showIndicator: showIndicator,
+              enableCursor: enableCursor,
+              onTap: isTabEnabled
+                  ? () {
+                      tab.onClick?.call();
+                      onTabSelected?.call(index);
+                    }
+                  : null,
             ),
           );
         }),
       ),
     );
   }
+}
+
+/// 每个 Tab 项的私有 StatefulWidget，持有动画控制器
+///
+/// 动画完全对标 Kotlin `TabItem.kt`：
+///   - 颜色渐变：`animateColorAsState(tween(300ms))` → TweenAnimationBuilder
+///   - 指示条：`AnimatedVisibility(fadeIn + expandHorizontally)` → AnimationController 驱动
+class _FluentTabItemWidget extends StatefulWidget {
+  final FluentTabItem tab;
+  final bool isSelected;
+  final bool isEnabled;
+  final Color selectedColor;
+  final Color unselectedColor;
+  final Color indicatorColor;
+  final FluentTabTextAlignment tabTextAlignment;
+  final bool showIndicator;
+  final bool enableCursor;
+  final VoidCallback? onTap;
+
+  const _FluentTabItemWidget({
+    required this.tab,
+    required this.isSelected,
+    required this.isEnabled,
+    required this.selectedColor,
+    required this.unselectedColor,
+    required this.indicatorColor,
+    required this.tabTextAlignment,
+    required this.showIndicator,
+    required this.enableCursor,
+    this.onTap,
+  });
+
+  @override
+  State<_FluentTabItemWidget> createState() => _FluentTabItemWidgetState();
+}
+
+class _FluentTabItemWidgetState extends State<_FluentTabItemWidget>
+    with SingleTickerProviderStateMixin {
+  /// 指示条动画控制器（0.0 = 收缩隐藏，1.0 = 完全展开可见）
+  late final AnimationController _indicatorCtrl;
+  late final Animation<double> _indicatorWidth;
+  late final Animation<double> _indicatorOpacity;
+
+  @override
+  void initState() {
+    super.initState();
+    _indicatorCtrl = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 250),
+      value: widget.isSelected ? 1.0 : 0.0,
+    );
+    // expandHorizontally → width 0→32dp
+    _indicatorWidth = Tween<double>(
+      begin: 0.0,
+      end: 32.0,
+    ).animate(CurvedAnimation(parent: _indicatorCtrl, curve: Curves.easeInOut));
+    // fadeIn → opacity 0→1
+    _indicatorOpacity = CurvedAnimation(
+      parent: _indicatorCtrl,
+      curve: Curves.easeIn,
+    );
+  }
+
+  @override
+  void didUpdateWidget(_FluentTabItemWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.isSelected != widget.isSelected) {
+      if (widget.isSelected) {
+        _indicatorCtrl.forward();
+      } else {
+        _indicatorCtrl.reverse();
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    _indicatorCtrl.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final tab = widget.tab;
+    final isSelected = widget.isSelected;
+    final isEnabled = widget.isEnabled;
+
+    // 目标颜色（不带动画，用 TweenAnimationBuilder 包裹）
+    final Color targetColor = !isEnabled
+        ? widget.unselectedColor.withAlpha(96)
+        : (isSelected ? widget.selectedColor : widget.unselectedColor);
+
+    final Widget iconWidget = (isSelected && tab.selectedIcon != null)
+        ? tab.selectedIcon!
+        : (tab.icon ?? const SizedBox.shrink());
+
+    final Widget? badgeWidget =
+        tab.badge ??
+        (tab.badgeText != null
+            ? FluentBadge(
+                text: tab.badgeText,
+                badgeType: FluentBadgeType.character,
+                style: FluentBadgeStyle.danger,
+              )
+            : null);
+
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        mouseCursor: (isEnabled && widget.enableCursor)
+            ? SystemMouseCursors.click
+            : SystemMouseCursors.basic,
+        onTap: widget.onTap,
+        // TweenAnimationBuilder 驱动颜色过渡（对标 animateColorAsState 300ms）
+        child: TweenAnimationBuilder<Color?>(
+          tween: ColorTween(end: targetColor),
+          duration: const Duration(milliseconds: 300),
+          builder: (context, animatedColor, _) {
+            final color = animatedColor ?? targetColor;
+            Widget content;
+            if (widget.tabTextAlignment == FluentTabTextAlignment.vertical) {
+              content = Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  if (tab.icon != null)
+                    _BadgeWithIcon(
+                      iconSize: 22.0,
+                      iconColor: color,
+                      icon: iconWidget,
+                      badge: badgeWidget,
+                    ),
+                  const SizedBox(height: 2.0),
+                  Text(
+                    tab.title,
+                    style: TextStyle(
+                      fontSize: 11.0,
+                      fontWeight: isSelected
+                          ? FontWeight.bold
+                          : FontWeight.normal,
+                      color: color,
+                    ),
+                  ),
+                ],
+              );
+            } else if (widget.tabTextAlignment ==
+                FluentTabTextAlignment.noText) {
+              content = _BadgeWithIcon(
+                iconSize: 26.0,
+                iconColor: color,
+                icon: iconWidget,
+                badge: badgeWidget,
+              );
+            } else {
+              content = Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  if (tab.icon != null) ...[
+                    IconTheme(
+                      data: IconThemeData(color: color, size: 20.0),
+                      child: iconWidget,
+                    ),
+                    const SizedBox(width: 6.0),
+                  ],
+                  Text(
+                    tab.title,
+                    style: TextStyle(
+                      fontSize: 14.0,
+                      fontWeight: isSelected
+                          ? FontWeight.bold
+                          : FontWeight.w500,
+                      color: color,
+                    ),
+                  ),
+                  if (badgeWidget != null) ...[
+                    const SizedBox(width: 4.0),
+                    badgeWidget,
+                  ],
+                ],
+              );
+            }
+
+            return Column(
+              children: [
+                Expanded(child: Center(child: content)),
+                // 指示条：AnimationBuilder 驱动 expandHorizontally + fadeIn
+                if (widget.showIndicator)
+                  AnimatedBuilder(
+                    animation: _indicatorCtrl,
+                    builder: (context, _) {
+                      return SizedBox(
+                        height: 3.0,
+                        child: FadeTransition(
+                          opacity: _indicatorOpacity,
+                          child: Container(
+                            height: 3.0,
+                            width: _indicatorWidth.value,
+                            decoration: BoxDecoration(
+                              color: widget.indicatorColor,
+                              borderRadius: BorderRadius.circular(100.0),
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+              ],
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
+
+/// 精确复刻 Kotlin `TabItem.kt` CustomLayout badge 定位逻辑的 Flutter 组件
+///
+/// Kotlin 核心定位规则：
+///   hasContent = badge 宽度 > 16dp（即文字 badge，非小圆点）
+///   contentOffset = hasContent ? -2dp : 0
+///   badgeX (左边) = iconLeft + iconWidth/2 + contentOffset
+///   badgeY (顶边) = iconTop - 4dp  ← badge 顶部超出 icon 顶部 4dp
+class _BadgeWithIcon extends StatelessWidget {
+  final Widget icon;
+  final Widget? badge;
+  final double iconSize;
+  final Color iconColor;
+
+  const _BadgeWithIcon({
+    required this.icon,
+    required this.iconSize,
+    required this.iconColor,
+    this.badge,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    if (badge == null) {
+      return IconTheme(
+        data: IconThemeData(color: iconColor, size: iconSize),
+        child: icon,
+      );
+    }
+    return CustomMultiChildLayout(
+      delegate: _BadgeOverIconDelegate(iconSize: iconSize),
+      children: [
+        LayoutId(
+          id: _BadgeSlot.icon,
+          child: IconTheme(
+            data: IconThemeData(color: iconColor, size: iconSize),
+            child: icon,
+          ),
+        ),
+        LayoutId(id: _BadgeSlot.badge, child: badge!),
+      ],
+    );
+  }
+}
+
+enum _BadgeSlot { icon, badge }
+
+class _BadgeOverIconDelegate extends MultiChildLayoutDelegate {
+  final double iconSize;
+
+  _BadgeOverIconDelegate({required this.iconSize});
+
+  @override
+  void performLayout(Size size) {
+    // 1. 先测量 badge
+    final badgeSize = layoutChild(
+      _BadgeSlot.badge,
+      const BoxConstraints.tightForFinite(),
+    );
+    // 2. 布局 icon（固定尺寸）
+    layoutChild(
+      _BadgeSlot.icon,
+      BoxConstraints.tight(Size(iconSize, iconSize)),
+    );
+
+    // 3. 定位 icon（在分配空间内水平居中，垂直向下偏移 4dp 以留出 badge 空间）
+    final iconX = (size.width - iconSize) / 2;
+    const iconY = 4.0; // badge 超出顶部 4dp，icon 向下偏 4dp
+    positionChild(_BadgeSlot.icon, Offset(iconX, iconY));
+
+    // 4. 复刻 Kotlin 定位：
+    //    hasContent = badge 宽度 > 16dp（文字 badge vs. 圆点）
+    //    contentOffset = hasContent ? -2dp : 0dp
+    //    badge 左边 = icon 左边 + iconSize/2 + contentOffset
+    //    badge 顶边 = iconY - 4dp = 0
+    final bool hasContent = badgeSize.width > 16.0;
+    final double contentOffset = hasContent ? -2.0 : 0.0;
+    final double badgeX = iconX + iconSize / 2 + contentOffset;
+    const double badgeY = 0.0;
+    positionChild(_BadgeSlot.badge, Offset(badgeX, badgeY));
+  }
+
+  @override
+  Size getSize(BoxConstraints constraints) {
+    // 宽度 = icon + 右侧 badge 溢出空间；高度 = icon + 4dp badge 顶部超出
+    return constraints.constrain(Size(iconSize + 20.0, iconSize + 4.0));
+  }
+
+  @override
+  bool shouldRelayout(_BadgeOverIconDelegate oldDelegate) =>
+      oldDelegate.iconSize != iconSize;
 }
