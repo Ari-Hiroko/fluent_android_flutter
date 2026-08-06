@@ -249,7 +249,7 @@ class _ShowcaseHomePageState extends State<ShowcaseHomePage> {
           theme: theme,
           name: 'FluentButton',
           description:
-              'Fluent 2 官方标准按钮，包含 Primary, Secondary, Borderless, Danger 4 种视觉款式。',
+              'Fluent 2 标准按钮，包含 Primary, Secondary, Borderless, Danger 4 种视觉款式。',
           demo: Wrap(
             spacing: 10.0,
             runSpacing: 10.0,
@@ -451,7 +451,7 @@ FluentToggleSwitch(
         ComponentDocCard(
           theme: theme,
           name: 'FluentBadge / FluentCitation',
-          description: '微软官方提醒徽章 Badge 与索引引用标签 Citation。',
+          description: '微软提醒徽章 Badge 与索引引用标签 Citation。',
           demo: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
@@ -508,7 +508,7 @@ FluentCitation(
           theme: theme,
           name: 'FluentBasicChip / FluentChip',
           description:
-              '微软官方 Chip 标签药丸组件，支持 Rest, Selected, Disabled, Static 与前后 Accessory。',
+              '微软 Chip 标签药丸组件，支持 Rest, Selected, Disabled, Static 与前后 Accessory。',
           demo: Wrap(
             spacing: 8.0,
             runSpacing: 8.0,
@@ -702,7 +702,7 @@ FluentCitation(
                         const SizedBox(width: 12.0),
                         const Expanded(
                           child: Text(
-                            'Fluent 2 官方基础容器卡片 (BasicCard)',
+                            'Fluent 2 基础容器卡片 (BasicCard)',
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
                         ),
@@ -869,7 +869,7 @@ FluentFileCard(
           theme: theme,
           name: 'FluentTabBar & FluentPillBar',
           description:
-              '微软 V2 官方选项卡，支持 Vertical, Horizontal, NoText 排布、自定义 Badge (Dot / Character) 与 PillBar 分段控制。',
+              '微软 V2 选项卡，支持 Vertical, Horizontal, NoText 排布、自定义 Badge (Dot / Character) 与 PillBar 分段控制。',
           demo: Column(
             children: [
               FluentTabBar(
@@ -1022,7 +1022,7 @@ FluentPillButton(
         ComponentDocCard(
           theme: theme,
           name: 'FluentSideRail',
-          description: '微软官方平板、桌面或大屏模式下的左侧垂直 Navigation Rail 导航条。',
+          description: '微软平板、桌面或大屏模式下的左侧垂直 Navigation Rail 导航条。',
           demo: SizedBox(
             height: 440.0,
             child: FluentSideRail(
@@ -1166,7 +1166,7 @@ FluentPillButton(
         ComponentDocCard(
           theme: theme,
           name: 'FluentLabel',
-          description: '微软官方 12 种 Typography 规范文本标签，满足各类标题与正文层级需求。',
+          description: '微软 12 种 Typography 规范文本标签，满足各类标题与正文层级需求。',
           demo: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: const [
@@ -1246,7 +1246,7 @@ FluentPillButton(
               name: 'style',
               type: 'FluentLabelStyle',
               defaultVal: 'body1',
-              desc: '12 种 Fluent 2 官方 Typography 字体层级样式',
+              desc: '12 种 Fluent 2  Typography 字体层级样式',
             ),
             ApiParam(
               name: 'color',
@@ -1458,7 +1458,7 @@ dismissFluentSnackbar(context);''',
         ComponentDocCard(
           theme: theme,
           name: 'FluentCardNudge',
-          description: '微软官方带有操作与撤销功能的 CardNudge 通知卡片。',
+          description: '微软带有操作与撤销功能的 CardNudge 通知卡片。',
           demo: FluentCardNudge(
             title: '更新通知',
             message: '发现 Fluent 2 视觉库最新组件可供使用。',
@@ -1664,7 +1664,7 @@ dismissFluentSnackbar(context);''',
                   children: const [
                     Icon(Icons.blur_on, color: Colors.blue),
                     SizedBox(width: 8.0),
-                    Expanded(child: Text('Fluent 2 官方亚克力磨砂玻璃 (AcrylicPane)')),
+                    Expanded(child: Text('Fluent 2 亚克力磨砂玻璃 (AcrylicPane)')),
                   ],
                 ),
               ),
@@ -1740,7 +1740,7 @@ FluentAcrylic(
         ComponentDocCard(
           theme: theme,
           name: 'FluentIcons',
-          description: 'Fluent 2 官方系统图标映射字典。',
+          description: 'Fluent 2 系统图标映射字典。',
           demo: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: const [

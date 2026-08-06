@@ -25,7 +25,7 @@ enum FluentSnackbarStyle {
   danger,
 }
 
-/// Fluent 2 官方消息提示条组件 [FluentSnackbar]
+/// Fluent 2 消息提示条组件 [FluentSnackbar]
 ///
 /// 移植自 Android Kotlin Snackbar.kt, V2SnackbarActivity.kt 与 V2SnackbarActivityUITest.kt
 class FluentSnackbar extends StatelessWidget {

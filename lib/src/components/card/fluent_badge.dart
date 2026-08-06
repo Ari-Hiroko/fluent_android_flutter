@@ -14,7 +14,7 @@ enum FluentBadgeStyle {
   danger,
 }
 
-/// Fluent 2 官方徽章组件 [FluentBadge]
+/// Fluent 2 徽章组件 [FluentBadge]
 ///
 /// 移植自 Android Kotlin Badge.kt 与 V2BadgeActivity.kt
 class FluentBadge extends StatelessWidget {
@@ -98,10 +98,24 @@ class FluentBadge extends StatelessWidget {
       children: [
         child!,
         Positioned(
-          top: alignment == Alignment.topRight || alignment == Alignment.topLeft ? -4.0 : null,
-          bottom: alignment == Alignment.bottomRight || alignment == Alignment.bottomLeft ? -4.0 : null,
-          right: alignment == Alignment.topRight || alignment == Alignment.bottomRight ? -4.0 : null,
-          left: alignment == Alignment.topLeft || alignment == Alignment.bottomLeft ? -4.0 : null,
+          top: alignment == Alignment.topRight || alignment == Alignment.topLeft
+              ? -4.0
+              : null,
+          bottom:
+              alignment == Alignment.bottomRight ||
+                  alignment == Alignment.bottomLeft
+              ? -4.0
+              : null,
+          right:
+              alignment == Alignment.topRight ||
+                  alignment == Alignment.bottomRight
+              ? -4.0
+              : null,
+          left:
+              alignment == Alignment.topLeft ||
+                  alignment == Alignment.bottomLeft
+              ? -4.0
+              : null,
           child: badgeContent,
         ),
       ],

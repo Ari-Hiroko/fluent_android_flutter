@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../../theme/fluent_theme.dart';
 import '../buttons/fluent_text_button.dart';
 
-/// Fluent 2 官方 CardNudge 提醒通知卡片 [FluentCardNudge]
+/// Fluent 2  CardNudge 提醒通知卡片 [FluentCardNudge]
 ///
 /// 移植自 Android Kotlin V2CardNudgeActivity.kt 与 CardNudge.kt
 class FluentCardNudge extends StatelessWidget {

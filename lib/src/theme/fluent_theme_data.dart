@@ -7,7 +7,7 @@ import 'fluent_typography.dart';
 /// 严格映射 FluentUI Android XML themes.xml / attrs.xml 属性名
 class Fluent2ThemeData {
   final Brightness brightness;
-  
+
   // Theme Semantic Colors
   final Color primaryColor; // colorPrimary
   final Color backgroundColor; // fluentuiBackgroundColor
@@ -19,12 +19,15 @@ class Fluent2ThemeData {
 
   // Popup Menu Semantic Colors (themes.xml lines 217-226)
   final Color popupMenuBackgroundColor; // fluentuiPopupMenuBackgroundColor
-  final Color popupMenuBackgroundPressedColor; // fluentuiPopupMenuBackgroundPressedColor
+  final Color
+  popupMenuBackgroundPressedColor; // fluentuiPopupMenuBackgroundPressedColor
   final Color popupMenuItemTitleColor; // fluentuiPopupMenuItemTitleColor
-  final Color popupMenuItemForegroundSelectedColor; // fluentuiPopupMenuItemForegroundSelectedColor
+  final Color
+  popupMenuItemForegroundSelectedColor; // fluentuiPopupMenuItemForegroundSelectedColor
   final Color popupMenuItemIconTint; // fluentuiPopupMenuItemIconTint
   final Color popupMenuItemCheckboxTint; // fluentuiPopupMenuItemCheckboxTint
-  final Color popupMenuItemRadiobuttonTint; // fluentuiPopupMenuItemRadiobuttonTint
+  final Color
+  popupMenuItemRadiobuttonTint; // fluentuiPopupMenuItemRadiobuttonTint
 
   final double cornerRadius; // fluentui_popup_menu_corner_radius (8.0 / 4.0)
   final double elevation;
@@ -49,7 +52,7 @@ class Fluent2ThemeData {
     this.elevation = 8.0,
   });
 
-  /// Fluent 2 官方浅色主题 (Theme.FluentUI Light)
+  /// Fluent 2 浅色主题 (Theme.FluentUI Light)
   factory Fluent2ThemeData.light() {
     return const Fluent2ThemeData(
       brightness: Brightness.light,
@@ -63,7 +66,8 @@ class Fluent2ThemeData {
       popupMenuBackgroundColor: FluentColors.popupMenuBackgroundLight,
       popupMenuBackgroundPressedColor: FluentColors.popupMenuItemPressedLight,
       popupMenuItemTitleColor: FluentColors.popupMenuItemTitleColorLight,
-      popupMenuItemForegroundSelectedColor: FluentColors.popupMenuItemForegroundSelectedLight,
+      popupMenuItemForegroundSelectedColor:
+          FluentColors.popupMenuItemForegroundSelectedLight,
       popupMenuItemIconTint: FluentColors.popupMenuItemIconTintLight,
       popupMenuItemCheckboxTint: FluentColors.popupMenuItemCheckboxTintLight,
       popupMenuItemRadiobuttonTint: FluentColors.popupMenuItemCheckboxTintLight,
@@ -72,7 +76,7 @@ class Fluent2ThemeData {
     );
   }
 
-  /// Fluent 2 官方深色主题 (Theme.FluentUI Dark)
+  /// Fluent 2 深色主题 (Theme.FluentUI Dark)
   factory Fluent2ThemeData.dark() {
     return const Fluent2ThemeData(
       brightness: Brightness.dark,
@@ -86,7 +90,8 @@ class Fluent2ThemeData {
       popupMenuBackgroundColor: FluentColors.popupMenuBackgroundDark,
       popupMenuBackgroundPressedColor: FluentColors.popupMenuItemPressedDark,
       popupMenuItemTitleColor: FluentColors.popupMenuItemTitleColorDark,
-      popupMenuItemForegroundSelectedColor: FluentColors.popupMenuItemForegroundSelectedDark,
+      popupMenuItemForegroundSelectedColor:
+          FluentColors.popupMenuItemForegroundSelectedDark,
       popupMenuItemIconTint: FluentColors.popupMenuItemIconTintDark,
       popupMenuItemCheckboxTint: FluentColors.popupMenuItemCheckboxTintDark,
       popupMenuItemRadiobuttonTint: FluentColors.popupMenuItemCheckboxTintDark,
@@ -112,7 +117,9 @@ class Fluent2ThemeData {
         surface: backgroundColor,
         onSurface: foregroundColor,
       ),
-      scaffoldBackgroundColor: isDark ? FluentColors.darkBackground1 : FluentColors.gray50,
+      scaffoldBackgroundColor: isDark
+          ? FluentColors.darkBackground1
+          : FluentColors.gray50,
       dividerColor: dividerColor,
       fontFamily: FluentTypography.fontFamily,
     );

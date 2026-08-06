@@ -20,7 +20,7 @@ class FluentSideRailItem {
   });
 }
 
-/// Fluent 2 官方 SideRail 侧边栏垂直导航组件 [FluentSideRail]
+/// Fluent 2  SideRail 侧边栏垂直导航组件 [FluentSideRail]
 ///
 /// 移植自 Android Kotlin SideRail.kt 与 V2SideRailActivity.kt
 /// 专门用于平板、桌面或横屏模式下的左侧垂直侧边导航栏。

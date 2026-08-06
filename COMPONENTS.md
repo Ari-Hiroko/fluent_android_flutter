@@ -61,7 +61,7 @@ FluentTheme(
 
 ### 2.1 `FluentButton`
 
-Fluent 2 官方标准按钮组件，涵盖实心、描边、无边框及警示四种款式。
+Fluent 2 标准按钮组件，涵盖实心、描边、无边框及警示四种款式。
 
 #### 代码示例
 ```dart
@@ -240,7 +240,7 @@ showFluentDialog(
 
 ### 6.1 `FluentTopAppBar` & `FluentAppBarLayout`
 
-微软官方 Tokenized 导航栏与 `AppBarLayout` 容器（完全对齐 Kotlin `AppBarLayout.kt` & `AppBarLayoutActivity.kt`），支持 Neutral/Brand 两种风格，整合 Avatar/BackIcon 导航图标、AccessoryView（如 SearchBar）以及 `ScrollBehavior` 手势折叠。
+微软 Tokenized 导航栏与 `AppBarLayout` 容器（完全对齐 Kotlin `AppBarLayout.kt` & `AppBarLayoutActivity.kt`），支持 Neutral/Brand 两种风格，整合 Avatar/BackIcon 导航图标、AccessoryView（如 SearchBar）以及 `ScrollBehavior` 手势折叠。
 
 #### 代码示例
 ```dart
@@ -466,7 +466,7 @@ FluentCalendarView(
 
 ---
 
-## 14. 微软 V2 官方独占组件 (Fluent 2 V2 Controls)
+## 14. 微软 V2 独占组件 (Fluent 2 V2 Controls)
 
 ### 14.1 `FluentBadge` (通知提醒徽章)
 ```dart

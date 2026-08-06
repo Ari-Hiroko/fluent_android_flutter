@@ -19,7 +19,7 @@ class FluentAvatarCarouselItem {
   });
 }
 
-/// Fluent 2 官方人员轮播选择器组件 [FluentAvatarCarousel]
+/// Fluent 2 人员轮播选择器组件 [FluentAvatarCarousel]
 ///
 /// 移植自 Android Kotlin V2AvatarCarouselActivity.kt 与 AvatarCarousel.kt
 class FluentAvatarCarousel extends StatefulWidget {
