@@ -30,7 +30,7 @@ enum FluentButtonSize {
   large,
 }
 
-/// Fluent 2 官方按钮组件 [FluentButton]
+/// Fluent 2 按钮组件 [FluentButton]
 ///
 /// 移植自 Android Kotlin Button.kt，支持 Fluent 2 Motion 按压缩放与色彩平滑过渡动画
 class FluentButton extends StatefulWidget {

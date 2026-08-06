@@ -4,7 +4,7 @@ import '../../theme/fluent_motion_tokens.dart';
 import '../../theme/fluent_theme.dart';
 import '../buttons/fluent_text_button.dart';
 
-/// Fluent 2 官方横幅通知组件 [FluentBanner]
+/// Fluent 2 横幅通知组件 [FluentBanner]
 ///
 /// 完全移植自 Android Kotlin Banner.kt, V2BannerActivity.kt 与 V2BannerUITest.kt
 class FluentBanner extends StatefulWidget {

@@ -3,7 +3,7 @@ import '../../theme/fluent_motion_tokens.dart';
 import '../../theme/fluent_theme.dart';
 import '../buttons/fluent_text_button.dart';
 
-/// Fluent 2 官方 BasicCard 基础卡片容器 [FluentCard]
+/// Fluent 2  BasicCard 基础卡片容器 [FluentCard]
 ///
 /// 完全移植自 Android Kotlin BasicCard.kt, V2CardActivity.kt 与 V2CardUITest.kt
 /// 支持可选的内容动态改变伸缩动画 (AnimatedSize Expansion & Contraction Transition)
@@ -109,7 +109,7 @@ class FluentCard extends StatelessWidget {
   }
 }
 
-/// Fluent 2 官方 FileCard 文件预览卡片 [FluentFileCard]
+/// Fluent 2  FileCard 文件预览卡片 [FluentFileCard]
 ///
 /// 完全移植自 Android Kotlin FileCard.kt 与 V2CardUITest.kt
 class FluentFileCard extends StatelessWidget {
@@ -257,7 +257,7 @@ class FluentFileCard extends StatelessWidget {
   }
 }
 
-/// Fluent 2 官方 AnnouncementCard 公告/通告卡片 [FluentAnnouncementCard]
+/// Fluent 2  AnnouncementCard 公告/通告卡片 [FluentAnnouncementCard]
 ///
 /// 完全移植自 Android Kotlin AnnouncementCard.kt 与 V2CardUITest.kt
 class FluentAnnouncementCard extends StatelessWidget {

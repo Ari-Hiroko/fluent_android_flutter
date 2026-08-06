@@ -61,7 +61,7 @@ FluentTheme(
 
 ### 2.1 `FluentButton`
 
-Fluent 2 官方标准按钮组件，涵盖实心、描边、无边框及警示四种款式。
+Fluent 2 标准按钮组件，涵盖实心、描边、无边框及警示四种款式。
 
 #### 代码示例
 ```dart
@@ -214,25 +214,38 @@ showFluentPopupMenu<String>(
 
 #### 代码示例
 ```dart
+// 方式 1: 纯文字按钮形态 (FluentDialogButtonType.textButton)
 showFluentDialog(
   context: context,
   title: '确认提交更改？',
   message: '提交后配置将即时生效。',
-  actions: [
-    TextButton(
-      child: const Text('取消'),
-      onPressed: () => Navigator.pop(context),
-    ),
-    ElevatedButton(
-      child: const Text('确定'),
-      onPressed: () {
-        Navigator.pop(context);
-        print('Confirmed');
-      },
-    ),
-  ],
+  buttonType: FluentDialogButtonType.textButton,
+  secondaryButtonText: '取消',
+  onSecondaryPressed: () => Navigator.pop(context),
+  primaryButtonText: '确定',
+  onPrimaryPressed: () => print('Confirmed'),
+);
+
+// 方式 2: 标准按钮形态 (FluentDialogButtonType.button)
+showFluentDialog(
+  context: context,
+  title: '确认删除账号？',
+  message: '删除后所有数据将不可恢复。',
+  buttonType: FluentDialogButtonType.button,
+  secondaryButtonText: '取消',
+  primaryButtonText: '删除',
+  onPrimaryPressed: () => print('Deleted'),
 );
 ```
+
+#### 核心属性
+| 参数名 | 类型 | 默认值 | 描述 |
+| :--- | :--- | :--- | :--- |
+| `title` / `message` | `String?` | `null` | 对话框主标题与正文文本 |
+| `primaryButtonText` | `String?` | `null` | 封装主按钮文本 (如 "确定") |
+| `secondaryButtonText` | `String?` | `null` | 封装次要按钮文本 (如 "取消") |
+| `buttonType` | `FluentDialogButtonType` | `textButton` | `textButton` (纯文字) 或 `button` (标准按钮) |
+| `actions` | `List<Widget>?` | `null` | 自定义底部动作按钮组（为 null 时自动使用封装按钮） |
 
 ---
 
@@ -240,7 +253,7 @@ showFluentDialog(
 
 ### 6.1 `FluentTopAppBar` & `FluentAppBarLayout`
 
-微软官方 Tokenized 导航栏与 `AppBarLayout` 容器（完全对齐 Kotlin `AppBarLayout.kt` & `AppBarLayoutActivity.kt`），支持 Neutral/Brand 两种风格，整合 Avatar/BackIcon 导航图标、AccessoryView（如 SearchBar）以及 `ScrollBehavior` 手势折叠。
+微软 Tokenized 导航栏与 `AppBarLayout` 容器（完全对齐 Kotlin `AppBarLayout.kt` & `AppBarLayoutActivity.kt`），支持 Neutral/Brand 两种风格，整合 Avatar/BackIcon 导航图标、AccessoryView（如 SearchBar）以及 `ScrollBehavior` 手势折叠。
 
 #### 代码示例
 ```dart
@@ -398,14 +411,20 @@ FluentListItem(
 兼容原生的全局模态 Toast 通知消息框。
 
 ```dart
-showFluentSnackbar(
+// 1. 弹出带有平滑弹跳与渐隐动画的 Toast
+showFluentSnackbarToast(
   context: context,
   title: '上传完成',
   message: '文件已存入个人网盘',
-  style: FluentSnackbarStyle.brand,
+  style: FluentSnackbarStyle.accent, // neutral, contrast, accent, warning, danger
+  duration: FluentSnackbarDuration.long, // short, long, indefinite
   actionText: '查看',
   onActionTap: () => openFile(),
+  enableDismiss: true,
 );
+
+// 2. 主动关闭当前 Snackbar / Toast
+dismissFluentSnackbar(context);
 ```
 
 ---
@@ -466,7 +485,7 @@ FluentCalendarView(
 
 ---
 
-## 14. 微软 V2 官方独占组件 (Fluent 2 V2 Controls)
+## 14. 微软 V2 独占组件 (Fluent 2 V2 Controls)
 
 ### 14.1 `FluentBadge` (通知提醒徽章)
 ```dart

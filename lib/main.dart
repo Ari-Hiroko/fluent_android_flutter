@@ -92,7 +92,7 @@ class _ShowcaseHomePageState extends State<ShowcaseHomePage> {
 
       appBar: FluentTopAppBar(
         title: 'Microsoft Fluent UI 2',
-        subTitle: '标准组件手册与交互式 API 属性表',
+        subTitle: '示例交互式 API 属性表',
         style: FluentStyle.brand,
         navigationIcon: IconButton(
           mouseCursor: SystemMouseCursors.click,
@@ -249,7 +249,7 @@ class _ShowcaseHomePageState extends State<ShowcaseHomePage> {
           theme: theme,
           name: 'FluentButton',
           description:
-              'Fluent 2 官方标准按钮，包含 Primary, Secondary, Borderless, Danger 4 种视觉款式。',
+              'Fluent 2 标准按钮，包含 Primary, Secondary, Borderless, Danger 4 种视觉款式。',
           demo: Wrap(
             spacing: 10.0,
             runSpacing: 10.0,
@@ -375,25 +375,22 @@ class _ShowcaseHomePageState extends State<ShowcaseHomePage> {
                 },
               ),
               const SizedBox(height: 12.0),
-              Padding(
-                padding: const EdgeInsets.only(left: 4.0),
-                child: Row(
-                  children: [
-                    FluentRadioButton<int>(
-                      value: 1,
-                      groupValue: _radioValue,
-                      label: '选项 1',
-                      onChanged: (val) => setState(() => _radioValue = val!),
-                    ),
-                    const SizedBox(width: 24.0),
-                    FluentRadioButton<int>(
-                      value: 2,
-                      groupValue: _radioValue,
-                      label: '选项 2',
-                      onChanged: (val) => setState(() => _radioValue = val!),
-                    ),
-                  ],
-                ),
+              Row(
+                children: [
+                  FluentRadioButton<int>(
+                    value: 1,
+                    groupValue: _radioValue,
+                    label: '选项 1',
+                    onChanged: (val) => setState(() => _radioValue = val!),
+                  ),
+                  const SizedBox(width: 16.0),
+                  FluentRadioButton<int>(
+                    value: 2,
+                    groupValue: _radioValue,
+                    label: '选项 2',
+                    onChanged: (val) => setState(() => _radioValue = val!),
+                  ),
+                ],
               ),
               const SizedBox(height: 12.0),
               const Divider(height: 1.0),
@@ -451,7 +448,7 @@ FluentToggleSwitch(
         ComponentDocCard(
           theme: theme,
           name: 'FluentBadge / FluentCitation',
-          description: '微软官方提醒徽章 Badge 与索引引用标签 Citation。',
+          description: '微软提醒徽章 Badge 与索引引用标签 Citation。',
           demo: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
@@ -508,7 +505,7 @@ FluentCitation(
           theme: theme,
           name: 'FluentBasicChip / FluentChip',
           description:
-              '微软官方 Chip 标签药丸组件，支持 Rest, Selected, Disabled, Static 与前后 Accessory。',
+              '微软 Chip 标签药丸组件，支持 Rest, Selected, Disabled, Static 与前后 Accessory。',
           demo: Wrap(
             spacing: 8.0,
             runSpacing: 8.0,
@@ -702,7 +699,7 @@ FluentCitation(
                         const SizedBox(width: 12.0),
                         const Expanded(
                           child: Text(
-                            'Fluent 2 官方基础容器卡片 (BasicCard)',
+                            'Fluent 2 基础容器卡片 (BasicCard)',
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
                         ),
@@ -869,7 +866,7 @@ FluentFileCard(
           theme: theme,
           name: 'FluentTabBar & FluentPillBar',
           description:
-              '微软 V2 官方选项卡，支持 Vertical, Horizontal, NoText 排布、自定义 Badge (Dot / Character) 与 PillBar 分段控制。',
+              '微软 V2 选项卡，支持 Vertical, Horizontal, NoText 排布、自定义 Badge (Dot / Character) 与 PillBar 分段控制。',
           demo: Column(
             children: [
               FluentTabBar(
@@ -1022,7 +1019,7 @@ FluentPillButton(
         ComponentDocCard(
           theme: theme,
           name: 'FluentSideRail',
-          description: '微软官方平板、桌面或大屏模式下的左侧垂直 Navigation Rail 导航条。',
+          description: '微软平板、桌面或大屏模式下的左侧垂直 Navigation Rail 导航条。',
           demo: SizedBox(
             height: 440.0,
             child: FluentSideRail(
@@ -1166,7 +1163,7 @@ FluentPillButton(
         ComponentDocCard(
           theme: theme,
           name: 'FluentLabel',
-          description: '微软官方 12 种 Typography 规范文本标签，满足各类标题与正文层级需求。',
+          description: '微软 12 种 Typography 规范文本标签，满足各类标题与正文层级需求。',
           demo: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: const [
@@ -1246,7 +1243,7 @@ FluentPillButton(
               name: 'style',
               type: 'FluentLabelStyle',
               defaultVal: 'body1',
-              desc: '12 种 Fluent 2 官方 Typography 字体层级样式',
+              desc: '12 种 Fluent 2  Typography 字体层级样式',
             ),
             ApiParam(
               name: 'color',
@@ -1273,9 +1270,14 @@ FluentPillButton(
             runSpacing: 10.0,
             children: [
               OutlinedButton.icon(
-                icon: const Icon(Icons.crop_square),
-                label: const Text('showFluentDialog'),
-                onPressed: () => _openConfirmDialog(context),
+                icon: const Icon(Icons.title),
+                label: const Text('TextButton Dialog'),
+                onPressed: () => _openConfirmDialog(context, buttonType: FluentDialogButtonType.textButton),
+              ),
+              OutlinedButton.icon(
+                icon: const Icon(Icons.smart_button),
+                label: const Text('Standard Button Dialog'),
+                onPressed: () => _openConfirmDialog(context, buttonType: FluentDialogButtonType.button),
               ),
               OutlinedButton.icon(
                 icon: const Icon(Icons.vertical_align_top),
@@ -1356,49 +1358,49 @@ showFluentBottomSheet(
                 children: [
                   ElevatedButton.icon(
                     icon: const Icon(Icons.notifications_active),
-                    label: const Text('Show Snackbar'),
+                    label: const Text('Show Animated Toast'),
                     onPressed: () {
-                      showFluentSnackbar(
+                      showFluentSnackbarToast(
                         context: context,
                         title: '发送成功',
                         message: '邮件投递成功',
                         subTitle: '已包含附件资源文件',
                         leadingIcon: const Icon(Icons.email_outlined),
                         actionText: '查看详情',
-                        onActionTap: () => _log('点击了 Action 按钮'),
                         enableDismiss: true,
+                        enableSwipeToDismiss: true,
                         style: FluentSnackbarStyle.accent,
+                        duration: FluentSnackbarDuration.long,
+                        onResult: (res) => _log('Snackbar 交互结果: $res'),
                       );
                     },
                   ),
                   OutlinedButton.icon(
-                    icon: const Icon(Icons.close),
-                    label: const Text('Dismiss Snackbar'),
+                    icon: const Icon(Icons.warning_amber),
+                    label: const Text('Warning Toast'),
                     onPressed: () {
-                      dismissFluentSnackbar(context);
-                      _log('主动关闭 Dismiss 了当前 Snackbar');
-                    },
-                  ),
-                  OutlinedButton(
-                    child: const Text('Warning Style'),
-                    onPressed: () {
-                      showFluentSnackbar(
+                      showFluentSnackbarToast(
                         context: context,
-                        message: '网络连通性受限',
+                        message: '网络连通性受限，部分功能可能不可用',
                         style: FluentSnackbarStyle.warning,
                         enableDismiss: true,
+                        duration: FluentSnackbarDuration.short,
+                        onResult: (res) => _log('Warning Toast 结果: $res'),
                       );
                     },
                   ),
-                  OutlinedButton(
-                    child: const Text('Danger Style'),
+                  OutlinedButton.icon(
+                    icon: const Icon(Icons.error_outline),
+                    label: const Text('Danger Toast'),
                     onPressed: () {
-                      showFluentSnackbar(
+                      showFluentSnackbarToast(
                         context: context,
                         message: '文件已被彻底删除',
                         style: FluentSnackbarStyle.danger,
                         actionText: '撤销',
-                        onActionTap: () => _log('撤销删除'),
+                        duration: FluentSnackbarDuration.indefinite,
+                        enableDismiss: true,
+                        onResult: (res) => _log('Danger Toast 结果: $res'),
                       );
                     },
                   ),
@@ -1406,7 +1408,8 @@ showFluentBottomSheet(
               ),
             ],
           ),
-          codeSnippet: '''showFluentSnackbar(
+          codeSnippet: '''// 弹出包含 PopUp 上弹动画与 Swipe-To-Dismiss 横向划出隐藏的 Toast
+showFluentSnackbarToast(
   context: context,
   title: '发送成功',
   message: '邮件投递成功',
@@ -1414,11 +1417,11 @@ showFluentBottomSheet(
   leadingIcon: const Icon(Icons.email),
   actionText: '查看',
   enableDismiss: true,
+  enableSwipeToDismiss: true, // 开启横向手势划出
   style: FluentSnackbarStyle.accent, // neutral, contrast, accent, warning, danger
-);
-
-// 主动关闭当前 Snackbar
-dismissFluentSnackbar(context);''',
+  duration: FluentSnackbarDuration.long, // short (4s), long (10s), indefinite
+  onResult: (result) => print('Result: \$result'),
+);''',
           params: const [
             ApiParam(
               name: 'message',
@@ -1458,7 +1461,7 @@ dismissFluentSnackbar(context);''',
         ComponentDocCard(
           theme: theme,
           name: 'FluentCardNudge',
-          description: '微软官方带有操作与撤销功能的 CardNudge 通知卡片。',
+          description: '微软带有操作与撤销功能的 CardNudge 通知卡片。',
           demo: FluentCardNudge(
             title: '更新通知',
             message: '发现 Fluent 2 视觉库最新组件可供使用。',
@@ -1664,7 +1667,7 @@ dismissFluentSnackbar(context);''',
                   children: const [
                     Icon(Icons.blur_on, color: Colors.blue),
                     SizedBox(width: 8.0),
-                    Expanded(child: Text('Fluent 2 官方亚克力磨砂玻璃 (AcrylicPane)')),
+                    Expanded(child: Text('Fluent 2 亚克力磨砂玻璃 (AcrylicPane)')),
                   ],
                 ),
               ),
@@ -1740,7 +1743,7 @@ FluentAcrylic(
         ComponentDocCard(
           theme: theme,
           name: 'FluentIcons',
-          description: 'Fluent 2 官方系统图标映射字典。',
+          description: 'Fluent 2 系统图标映射字典。',
           demo: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: const [
@@ -1768,24 +1771,19 @@ Icon(FluentIcons.success);''',
   }
 
   // 弹窗与日志底栏
-  void _openConfirmDialog(BuildContext context) {
+  void _openConfirmDialog(BuildContext context, {FluentDialogButtonType buttonType = FluentDialogButtonType.textButton}) {
     showFluentDialog(
       context: context,
       title: '确认提交配置？',
       message: '提交后当前选项将即时生效应用。',
-      actions: [
-        TextButton(
-          child: const Text('取消'),
-          onPressed: () => Navigator.pop(context),
-        ),
-        ElevatedButton(
-          child: const Text('确定'),
-          onPressed: () {
-            Navigator.pop(context);
-            _log('Dialog 确认');
-          },
-        ),
-      ],
+      buttonType: buttonType,
+      secondaryButtonText: '取消',
+      onSecondaryPressed: () => Navigator.pop(context),
+      primaryButtonText: '确定提交',
+      onPrimaryPressed: () {
+        Navigator.pop(context);
+        _log('Dialog 确认提交');
+      },
     );
   }
 
@@ -2207,19 +2205,22 @@ class _ComponentDocCardState extends State<ComponentDocCard> {
     return Expanded(
       child: GestureDetector(
         onTap: () => setState(() => _activeTabIndex = index),
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 150),
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            color: isSelected ? theme.primaryColor : Colors.transparent,
-            borderRadius: BorderRadius.circular(18.0),
-          ),
-          child: Text(
-            label,
-            style: TextStyle(
-              fontSize: 12.0,
-              fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
-              color: isSelected ? Colors.white : theme.foregroundColor,
+        child: MouseRegion(
+          cursor: SystemMouseCursors.click,
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 150),
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: isSelected ? theme.primaryColor : Colors.transparent,
+              borderRadius: BorderRadius.circular(18.0),
+            ),
+            child: Text(
+              label,
+              style: TextStyle(
+                fontSize: 12.0,
+                fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+                color: isSelected ? Colors.white : theme.foregroundColor,
+              ),
             ),
           ),
         ),

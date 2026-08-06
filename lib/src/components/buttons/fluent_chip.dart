@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../../theme/fluent_global_tokens.dart';
 import '../../theme/fluent_theme.dart';
 
-/// Fluent 2 官方 BasicChip / Chip 标签组件 [FluentChip] / [FluentBasicChip]
+/// Fluent 2  BasicChip / Chip 标签组件 [FluentChip] / [FluentBasicChip]
 ///
 /// 完全移植自 Android Kotlin BasicChip.kt, BasicChipTokens.kt 与 V2BasicChipActivityUITest.kt
 class FluentChip extends StatelessWidget {
@@ -87,15 +87,19 @@ class FluentChip extends StatelessWidget {
       fg = isDark ? const Color(0xFF5C5C5C) : const Color(0xFFB3B3B3);
     } else if (selected) {
       // Selected 选中状态 (Background5Selected & Foreground1 或自定义 Brand 背景)
-      bg = selectedBackgroundColor ??
+      bg =
+          selectedBackgroundColor ??
           (isDark ? const Color(0xFF3B3B3B) : const Color(0xFFE5E5E5));
-      fg = selectedTextColor ??
+      fg =
+          selectedTextColor ??
           (isDark ? Colors.white : const Color(0xFF242424));
     } else {
       // Rest 正常/未选中状态 (Background5 & Foreground2)
-      bg = backgroundColor ??
+      bg =
+          backgroundColor ??
           (isDark ? const Color(0xFF2D2D2D) : const Color(0xFFF0F0F0));
-      fg = textColor ??
+      fg =
+          textColor ??
           (isDark ? const Color(0xFFD6D6D6) : const Color(0xFF424242));
     }
 
@@ -107,10 +111,7 @@ class FluentChip extends StatelessWidget {
         children: [
           if (effectiveLeading != null) ...[
             IconTheme(
-              data: IconThemeData(
-                color: fg,
-                size: 16.0,
-              ),
+              data: IconThemeData(color: fg, size: 16.0),
               child: effectiveLeading,
             ),
             const SizedBox(width: 8.0), // HorizontalSpacing: Size80 (8.0dp)
@@ -126,10 +127,7 @@ class FluentChip extends StatelessWidget {
           if (effectiveTrailing != null) ...[
             const SizedBox(width: 8.0), // HorizontalSpacing: Size80 (8.0dp)
             IconTheme(
-              data: IconThemeData(
-                color: fg,
-                size: 16.0,
-              ),
+              data: IconThemeData(color: fg, size: 16.0),
               child: effectiveTrailing,
             ),
           ],
@@ -165,5 +163,5 @@ class FluentChip extends StatelessWidget {
   }
 }
 
-/// Fluent 2 官方 BasicChip 别名支持 [FluentBasicChip]
+/// Fluent 2  BasicChip 别名支持 [FluentBasicChip]
 typedef FluentBasicChip = FluentChip;

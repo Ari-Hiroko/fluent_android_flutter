@@ -1,7 +1,20 @@
 import 'package:flutter/material.dart';
 import '../../theme/fluent_theme.dart';
+import '../buttons/fluent_button.dart';
+import '../buttons/fluent_text_button.dart';
 
-/// Fluent 2 Tokenized 模态对话框容器 [FluentDialog]
+/// 对话框按钮封装类型 [FluentDialogButtonType]
+enum FluentDialogButtonType {
+  /// 纯文字按键形态 (FluentTextButton)
+  textButton,
+
+  /// 标准按钮形态 (FluentButton)
+  button,
+}
+
+/// Fluent 2 模态对话框容器 [FluentDialog]
+///
+/// 支持内置封装主/次按钮 (TextButton 或 标准 Button) 及自定义 Actions
 class FluentDialog extends StatelessWidget {
   /// 对话框标题
   final String? title;
@@ -12,7 +25,22 @@ class FluentDialog extends StatelessWidget {
   /// 对话框内部自定义 Widget 内容
   final Widget? content;
 
-  /// 底部按钮操作栏组
+  /// 主按钮文本 (如 "确认", "确定")
+  final String? primaryButtonText;
+
+  /// 主按钮点击回调
+  final VoidCallback? onPrimaryPressed;
+
+  /// 次要按钮文本 (如 "取消", "返回")
+  final String? secondaryButtonText;
+
+  /// 次要按钮点击回调
+  final VoidCallback? onSecondaryPressed;
+
+  /// 内置封装按钮类型 (textButton 纯文字按钮 或 button 标准按钮，默认 textButton)
+  final FluentDialogButtonType buttonType;
+
+  /// 自定义底部按钮操作栏组 (为 null 时自动使用内置封装按钮)
   final List<Widget>? actions;
 
   /// 对话框外边距与内边距
@@ -29,6 +57,11 @@ class FluentDialog extends StatelessWidget {
     this.title,
     this.message,
     this.content,
+    this.primaryButtonText,
+    this.onPrimaryPressed,
+    this.secondaryButtonText,
+    this.onSecondaryPressed,
+    this.buttonType = FluentDialogButtonType.textButton,
     this.actions,
     this.padding = const EdgeInsets.all(20.0),
     this.cornerRadius,
@@ -40,6 +73,47 @@ class FluentDialog extends StatelessWidget {
     final theme = FluentTheme.of(context);
     final radius = cornerRadius ?? theme.cornerRadius * 2; // 对话框采用大圆角
     final shadowElevation = elevation ?? (theme.elevation + 4.0);
+
+    // 构建内置封装的按钮列表
+    List<Widget> effectiveActions = actions ?? [];
+
+    if (actions == null &&
+        (primaryButtonText != null || secondaryButtonText != null)) {
+      if (buttonType == FluentDialogButtonType.button) {
+        effectiveActions = [
+          if (secondaryButtonText != null)
+            FluentButton(
+              text: secondaryButtonText!,
+              style: FluentButtonStyle.secondary,
+              size: FluentButtonSize.small,
+              onPressed: onSecondaryPressed,
+            ),
+          if (primaryButtonText != null)
+            FluentButton(
+              text: primaryButtonText!,
+              style: FluentButtonStyle.primary,
+              size: FluentButtonSize.small,
+              onPressed: onPrimaryPressed,
+            ),
+        ];
+      } else {
+        effectiveActions = [
+          if (secondaryButtonText != null)
+            FluentTextButton(
+              text: secondaryButtonText!,
+              onPressed: onSecondaryPressed,
+              fontSize: 14.0,
+            ),
+          if (primaryButtonText != null)
+            FluentTextButton(
+              text: primaryButtonText!,
+              onPressed: onPrimaryPressed,
+              fontWeight: FontWeight.bold,
+              fontSize: 14.0,
+            ),
+        ];
+      }
+    }
 
     return Dialog(
       backgroundColor: Colors.transparent,
@@ -98,11 +172,11 @@ class FluentDialog extends StatelessWidget {
               if (content != null) ...[content!, const SizedBox(height: 16.0)],
 
               // 按钮操作区 Actions
-              if (actions != null && actions!.isNotEmpty) ...[
+              if (effectiveActions.isNotEmpty) ...[
                 const SizedBox(height: 8.0),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
-                  children: actions!.map((act) {
+                  children: effectiveActions.map((act) {
                     return Padding(
                       padding: const EdgeInsets.only(left: 8.0),
                       child: act,
@@ -124,6 +198,11 @@ Future<T?> showFluentDialog<T>({
   String? title,
   String? message,
   Widget? content,
+  String? primaryButtonText,
+  VoidCallback? onPrimaryPressed,
+  String? secondaryButtonText,
+  VoidCallback? onSecondaryPressed,
+  FluentDialogButtonType buttonType = FluentDialogButtonType.textButton,
   List<Widget>? actions,
   bool barrierDismissible = true,
 }) {
@@ -135,6 +214,11 @@ Future<T?> showFluentDialog<T>({
         title: title,
         message: message,
         content: content,
+        primaryButtonText: primaryButtonText,
+        onPrimaryPressed: onPrimaryPressed,
+        secondaryButtonText: secondaryButtonText,
+        onSecondaryPressed: onSecondaryPressed,
+        buttonType: buttonType,
         actions: actions,
       );
     },

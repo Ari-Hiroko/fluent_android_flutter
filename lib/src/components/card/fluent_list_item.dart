@@ -10,7 +10,7 @@ enum SectionHeaderStyle { bold, subtle }
 /// SectionDescription 排布类型
 enum TextPlacement { top, bottom }
 
-/// Fluent 2 官方标准列表项组件 [FluentListItem]
+/// Fluent 2 标准列表项组件 [FluentListItem]
 ///
 /// 完全移植自 Android Kotlin ListItem.kt, V2ListItemActivity.kt 与 V2ListItemUITest.kt
 class FluentListItem extends StatefulWidget {

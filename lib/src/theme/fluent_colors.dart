@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// Fluent 2 Android 官方调色板与 Theme Semantic Colors
+/// Fluent 2 Android 调色板与 Theme Semantic Colors
 /// (基于 fluentui-android 源码与 FluentUI.md 规范)
 class FluentColors {
   FluentColors._();
@@ -24,13 +24,17 @@ class FluentColors {
   static const Color gray400 = Color(0xFF707070); // Secondary Icons
   static const Color gray300 = Color(0xFFA6A6A6); // Checkbox / Radio tint
   static const Color gray200 = Color(0xFFD1D1D1); // Borders & Strokes
-  static const Color gray100 = Color(0xFFE0E0E0); // Dividers & Pressed background
-  static const Color gray50 = Color(0xFFF5F5F5);  // Card / Light background
+  static const Color gray100 = Color(
+    0xFFE0E0E0,
+  ); // Dividers & Pressed background
+  static const Color gray50 = Color(0xFFF5F5F5); // Card / Light background
   static const Color white = Color(0xFFFFFFFF);
 
   // --- 暗黑模式中性色 (Dark Theme Neutrals) ---
   static const Color darkBackground1 = Color(0xFF1F1F1F);
-  static const Color darkBackground2 = Color(0xFF292929); // Popup background dark
+  static const Color darkBackground2 = Color(
+    0xFF292929,
+  ); // Popup background dark
   static const Color darkBackgroundPressed = Color(0xFF383838);
   static const Color darkForeground1 = Color(0xFFFFFFFF);
   static const Color darkForeground2 = Color(0xFFD6D6D6);

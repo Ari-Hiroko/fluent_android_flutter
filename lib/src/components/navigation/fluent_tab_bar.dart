@@ -53,7 +53,7 @@ class FluentTabItem {
   });
 }
 
-/// Fluent 2 官方 TabBar 底部/顶部选项卡组件 [FluentTabBar]
+/// Fluent 2  TabBar 底部/顶部选项卡组件 [FluentTabBar]
 ///
 /// 完全移植自 Android Kotlin TabBar.kt, TabBarTokens.kt, TabItemTokens.kt 与 V2TabBarActivity.kt
 class FluentTabBar extends StatelessWidget {
@@ -119,19 +119,21 @@ class FluentTabBar extends StatelessWidget {
         : 48.0;
 
     // 默认背景色与前景色计算 (对标 TabBarTokens & TabItemTokens)
-    final Color effectiveBg = backgroundColor ??
+    final Color effectiveBg =
+        backgroundColor ??
         (isBrand ? theme.primaryColor : theme.backgroundColor);
 
-    final Color effectiveSelectedColor = selectedColor ??
-        (isBrand ? Colors.white : theme.primaryColor);
+    final Color effectiveSelectedColor =
+        selectedColor ?? (isBrand ? Colors.white : theme.primaryColor);
 
-    final Color effectiveUnselectedColor = unselectedColor ??
+    final Color effectiveUnselectedColor =
+        unselectedColor ??
         (isBrand
             ? Colors.white.withAlpha(180)
             : theme.foregroundSecondaryColor);
 
-    final Color effectiveIndicatorColor = indicatorColor ??
-        (isBrand ? Colors.white : theme.primaryColor);
+    final Color effectiveIndicatorColor =
+        indicatorColor ?? (isBrand ? Colors.white : theme.primaryColor);
 
     final Color topBorderColor = isBrand
         ? Colors.white.withAlpha(40)
@@ -153,13 +155,16 @@ class FluentTabBar extends StatelessWidget {
 
           final Color itemColor = !isTabEnabled
               ? effectiveUnselectedColor.withAlpha(96)
-              : (isSelected ? effectiveSelectedColor : effectiveUnselectedColor);
+              : (isSelected
+                    ? effectiveSelectedColor
+                    : effectiveUnselectedColor);
 
           final Widget iconWidget = (isSelected && tab.selectedIcon != null)
               ? tab.selectedIcon!
               : (tab.icon ?? const SizedBox.shrink());
 
-          final Widget? badgeWidget = tab.badge ??
+          final Widget? badgeWidget =
+              tab.badge ??
               (tab.badgeText != null
                   ? FluentBadge(
                       text: tab.badgeText,
@@ -183,11 +188,7 @@ class FluentTabBar extends StatelessWidget {
                         child: iconWidget,
                       ),
                       if (badgeWidget != null)
-                        Positioned(
-                          top: -4.0,
-                          right: -8.0,
-                          child: badgeWidget,
-                        ),
+                        Positioned(top: -4.0, right: -8.0, child: badgeWidget),
                     ],
                   ),
                 const SizedBox(height: 2.0),
@@ -215,11 +216,7 @@ class FluentTabBar extends StatelessWidget {
                     child: iconWidget,
                   ),
                 if (badgeWidget != null)
-                  Positioned(
-                    top: 6.0,
-                    right: 6.0,
-                    child: badgeWidget,
-                  ),
+                  Positioned(top: 6.0, right: 6.0, child: badgeWidget),
               ],
             );
           } else {

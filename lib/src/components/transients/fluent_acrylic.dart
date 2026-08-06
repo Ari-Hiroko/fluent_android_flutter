@@ -2,7 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import '../../theme/fluent_theme.dart';
 
-/// Fluent 2 官方亚克力磨砂玻璃面板 [FluentAcrylic]
+/// Fluent 2 亚克力磨砂玻璃面板 [FluentAcrylic]
 ///
 /// 移植自 Android Kotlin V2AcrylicPaneActivity.kt 与 AcrylicPane.kt
 class FluentAcrylic extends StatelessWidget {
