@@ -11,7 +11,7 @@ import 'package:fluent2_android/fluent2_android.dart';
 ```dart
 Widget build(BuildContext context) {
   return FluentTheme(
-    data: Fluent2ThemeData.light(), // or dark()
+    data: FluentThemeData.light(), // or dark()
     child: Builder(
       builder: (context) {
         return MaterialApp(

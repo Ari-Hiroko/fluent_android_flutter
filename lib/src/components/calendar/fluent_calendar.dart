@@ -273,7 +273,7 @@ class _FluentCalendarViewState extends State<FluentCalendarView>
 class _NavButton extends StatefulWidget {
   final IconData icon;
   final VoidCallback onPressed;
-  final Fluent2ThemeData theme;
+  final FluentThemeData theme;
 
   const _NavButton({
     required this.icon,
@@ -327,7 +327,7 @@ class _DayCell extends StatefulWidget {
   final bool isSelected;
   final bool isToday;
   final bool isWeekend;
-  final Fluent2ThemeData theme;
+  final FluentThemeData theme;
   final Color weekendColor;
   final Color hoverBg;
   final Color primaryColor;
@@ -356,7 +356,7 @@ class _DayCellState extends State<_DayCell>
     with SingleTickerProviderStateMixin {
   late final AnimationController _scaleCtrl;
   late final Animation<double> _scaleAnim;
-  bool _hovered = false;
+  // bool _hovered = false;
 
   @override
   void initState() {
@@ -407,8 +407,8 @@ class _DayCellState extends State<_DayCell>
 
     return MouseRegion(
       cursor: SystemMouseCursors.click,
-      onEnter: (_) => setState(() => _hovered = true),
-      onExit: (_) => setState(() => _hovered = false),
+      // onEnter: (_) => setState(() => _hovered = true),
+      // onExit: (_) => setState(() => _hovered = false),
       child: GestureDetector(
         onTap: widget.onTap,
         child: ScaleTransition(

@@ -193,7 +193,7 @@ Future<T?> showFluentPopupMenu<T>({
 class _FluentPopupMenuRoute<R> extends PopupRoute<R> {
   final Rect anchorRect;
   final Size overlaySize;
-  final Fluent2ThemeData themeData;
+  final FluentThemeData themeData;
   final Widget Function(VoidCallback dismiss) builder;
 
   _FluentPopupMenuRoute({
@@ -222,7 +222,7 @@ class _FluentPopupMenuRoute<R> extends PopupRoute<R> {
     Animation<double> secondaryAnimation,
   ) {
     return FluentTheme(
-      data: themeData,
+      themeData: themeData,
       child: CustomSingleChildLayout(
         delegate: _FluentPopupMenuLayoutDelegate(
           anchorRect: anchorRect,

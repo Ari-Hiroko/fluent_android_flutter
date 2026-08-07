@@ -142,7 +142,7 @@ class FluentSideRail extends StatelessWidget {
 
   Widget _buildRailItem({
     required BuildContext context,
-    required Fluent2ThemeData theme,
+    required FluentThemeData theme,
     required FluentSideRailItem item,
     required bool isSelected,
     required VoidCallback onTap,

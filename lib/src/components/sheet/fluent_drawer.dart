@@ -41,10 +41,18 @@ class FluentDrawer extends StatelessWidget {
       elevation: FluentGlobalTokens.shadow28,
       shadowColor: Colors.black.withAlpha(80),
       borderRadius: BorderRadius.only(
-        topRight: isLeft ? Radius.circular(theme.cornerRadius * 2) : Radius.zero,
-        bottomRight: isLeft ? Radius.circular(theme.cornerRadius * 2) : Radius.zero,
-        topLeft: !isLeft ? Radius.circular(theme.cornerRadius * 2) : Radius.zero,
-        bottomLeft: !isLeft ? Radius.circular(theme.cornerRadius * 2) : Radius.zero,
+        topRight: isLeft
+            ? Radius.circular(theme.cornerRadius * 2)
+            : Radius.zero,
+        bottomRight: isLeft
+            ? Radius.circular(theme.cornerRadius * 2)
+            : Radius.zero,
+        topLeft: !isLeft
+            ? Radius.circular(theme.cornerRadius * 2)
+            : Radius.zero,
+        bottomLeft: !isLeft
+            ? Radius.circular(theme.cornerRadius * 2)
+            : Radius.zero,
       ),
       child: Container(
         width: width,
@@ -52,15 +60,21 @@ class FluentDrawer extends StatelessWidget {
         decoration: BoxDecoration(
           color: theme.backgroundColor,
           borderRadius: BorderRadius.only(
-            topRight: isLeft ? Radius.circular(theme.cornerRadius * 2) : Radius.zero,
-            bottomRight: isLeft ? Radius.circular(theme.cornerRadius * 2) : Radius.zero,
-            topLeft: !isLeft ? Radius.circular(theme.cornerRadius * 2) : Radius.zero,
-            bottomLeft: !isLeft ? Radius.circular(theme.cornerRadius * 2) : Radius.zero,
+            topRight: isLeft
+                ? Radius.circular(theme.cornerRadius * 2)
+                : Radius.zero,
+            bottomRight: isLeft
+                ? Radius.circular(theme.cornerRadius * 2)
+                : Radius.zero,
+            topLeft: !isLeft
+                ? Radius.circular(theme.cornerRadius * 2)
+                : Radius.zero,
+            bottomLeft: !isLeft
+                ? Radius.circular(theme.cornerRadius * 2)
+                : Radius.zero,
           ),
         ),
-        child: SafeArea(
-          child: child,
-        ),
+        child: SafeArea(child: child),
       ),
     );
   }
@@ -86,12 +100,15 @@ Future<T?> showFluentDrawer<T>({
       reverseTransitionDuration: const Duration(milliseconds: 200),
       pageBuilder: (context, anim, secondaryAnim) {
         return FluentTheme(
-          data: fluentTheme,
+          themeData: fluentTheme,
           child: SlideTransition(
-            position: Tween<Offset>(
-              begin: Offset(isLeft ? -1.0 : 1.0, 0.0),
-              end: Offset.zero,
-            ).animate(CurvedAnimation(parent: anim, curve: Curves.easeOutCubic)),
+            position:
+                Tween<Offset>(
+                  begin: Offset(isLeft ? -1.0 : 1.0, 0.0),
+                  end: Offset.zero,
+                ).animate(
+                  CurvedAnimation(parent: anim, curve: Curves.easeOutCubic),
+                ),
             child: Align(
               alignment: isLeft ? Alignment.centerLeft : Alignment.centerRight,
               child: FluentDrawer(

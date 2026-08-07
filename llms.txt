@@ -11,7 +11,7 @@
 - [packed_sources/PORTING_MAP_AND_TODO.md](packed_sources/PORTING_MAP_AND_TODO.md): Source file mapping table and porting status.
 
 ## Core Exports
-- Theme: `FluentTheme`, `Fluent2ThemeData`, `FluentColors`, `FluentGlobalTokens`, `FluentAliasTokens`, `ControlTokens`
+- Theme: `FluentTheme`, `FluentThemeData`, `FluentColors`, `FluentGlobalTokens`, `FluentAliasTokens`, `ControlTokens`
 - Buttons: `FluentButton`, `FluentCompoundButton`, `FluentFloatingActionButton`, `FluentChip`
 - Inputs: `FluentSearchBar`, `FluentTextField`, `FluentPeoplePicker`
 - Navigation: `FluentTopAppBar`, `FluentContextualCommandBar`, `FluentTabBar`, `FluentPillBar`

@@ -27,7 +27,12 @@ class FluentBottomSheet extends StatelessWidget {
     required this.child,
     this.showHandle = true,
     this.cornerRadius,
-    this.padding = const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 24.0, top: 8.0),
+    this.padding = const EdgeInsets.only(
+      left: 16.0,
+      right: 16.0,
+      bottom: 24.0,
+      top: 8.0,
+    ),
   });
 
   @override
@@ -63,7 +68,9 @@ class FluentBottomSheet extends StatelessWidget {
                 margin: const EdgeInsets.only(bottom: 12.0),
                 decoration: BoxDecoration(
                   color: theme.foregroundSecondaryColor.withAlpha(96),
-                  borderRadius: BorderRadius.circular(FluentGlobalTokens.cornerRadiusCircular),
+                  borderRadius: BorderRadius.circular(
+                    FluentGlobalTokens.cornerRadiusCircular,
+                  ),
                 ),
               ),
             ],
@@ -112,7 +119,7 @@ Future<T?> showFluentBottomSheet<T>({
     barrierColor: Colors.black54,
     builder: (context) {
       return FluentTheme(
-        data: fluentTheme,
+        themeData: fluentTheme,
         child: FluentBottomSheet(
           title: title,
           showHandle: showHandle,

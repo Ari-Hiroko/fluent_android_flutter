@@ -12,24 +12,29 @@ class ControlTokens {
 
 /// Button Control Tokens
 class ButtonTokens implements IControlToken {
-  final Fluent2ThemeData theme;
+  final FluentThemeData theme;
   const ButtonTokens(this.theme);
 
-  Color backgroundRest(bool isPrimary) => isPrimary ? theme.primaryColor : theme.backgroundColor;
-  Color backgroundPressed(bool isPrimary) => isPrimary ? theme.primaryColor.withAlpha(200) : theme.backgroundPressedColor;
+  Color backgroundRest(bool isPrimary) =>
+      isPrimary ? theme.primaryColor : theme.backgroundColor;
+  Color backgroundPressed(bool isPrimary) => isPrimary
+      ? theme.primaryColor.withAlpha(200)
+      : theme.backgroundPressedColor;
   Color backgroundDisabled(bool isPrimary) => theme.dividerColor;
 
-  Color foregroundRest(bool isPrimary) => isPrimary ? Colors.white : theme.foregroundColor;
+  Color foregroundRest(bool isPrimary) =>
+      isPrimary ? Colors.white : theme.foregroundColor;
   Color foregroundDisabled() => theme.foregroundSecondaryColor.withAlpha(128);
 
   double get cornerRadius => FluentGlobalTokens.cornerRadius80;
   double get minHeight => 40.0;
-  EdgeInsets get padding => const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0);
+  EdgeInsets get padding =>
+      const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0);
 }
 
 /// CheckBox & Radio Control Tokens
 class ToggleControlTokens implements IControlToken {
-  final Fluent2ThemeData theme;
+  final FluentThemeData theme;
   const ToggleControlTokens(this.theme);
 
   Color get activeColor => theme.foregroundSelectedColor;
@@ -40,7 +45,7 @@ class ToggleControlTokens implements IControlToken {
 
 /// Divider Control Tokens
 class DividerTokens implements IControlToken {
-  final Fluent2ThemeData theme;
+  final FluentThemeData theme;
   const DividerTokens(this.theme);
 
   Color get color => theme.dividerColor;
@@ -49,7 +54,7 @@ class DividerTokens implements IControlToken {
 
 /// Badge Control Tokens
 class BadgeTokens implements IControlToken {
-  final Fluent2ThemeData theme;
+  final FluentThemeData theme;
   const BadgeTokens(this.theme);
 
   Color get backgroundColor => theme.foregroundSelectedColor;
@@ -60,7 +65,7 @@ class BadgeTokens implements IControlToken {
 
 /// Card Control Tokens
 class CardTokens implements IControlToken {
-  final Fluent2ThemeData theme;
+  final FluentThemeData theme;
   const CardTokens(this.theme);
 
   Color get backgroundColor => theme.backgroundColor;
@@ -71,7 +76,7 @@ class CardTokens implements IControlToken {
 
 /// TextField Control Tokens
 class TextFieldTokens implements IControlToken {
-  final Fluent2ThemeData theme;
+  final FluentThemeData theme;
   const TextFieldTokens(this.theme);
 
   Color get backgroundColor => theme.backgroundColor;

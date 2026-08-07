@@ -88,7 +88,7 @@ class FluentAvatarGroup extends StatelessWidget {
     );
   }
 
-  Widget _buildOverflowBadge(Fluent2ThemeData theme, int count) {
+  Widget _buildOverflowBadge(FluentThemeData theme, int count) {
     return Container(
       width: size.displaySize,
       height: size.displaySize,

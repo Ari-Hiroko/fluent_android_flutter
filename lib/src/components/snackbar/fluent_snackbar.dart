@@ -242,7 +242,11 @@ class FluentSnackbar extends StatelessWidget {
                     : SystemMouseCursors.basic,
                 child: GestureDetector(
                   onTap: onDismiss,
-                  child: Icon(Icons.close, size: 18.0, color: secondaryTextColor),
+                  child: Icon(
+                    Icons.close,
+                    size: 18.0,
+                    color: secondaryTextColor,
+                  ),
                 ),
               ),
             ],
@@ -299,22 +303,16 @@ class _AnimatedFluentSnackbarState extends State<AnimatedFluentSnackbar>
     );
 
     // 对标 AnimationBehavior.onShowAnimation (OffsetY 40.0 -> 0.0)
-    _offsetAnimation = Tween<Offset>(
-      begin: const Offset(0.0, 0.4),
-      end: Offset.zero,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.fastOutSlowIn,
-    ));
+    _offsetAnimation =
+        Tween<Offset>(begin: const Offset(0.0, 0.4), end: Offset.zero).animate(
+          CurvedAnimation(parent: _controller, curve: Curves.fastOutSlowIn),
+        );
 
     // 对标 AnimationVariables.scale (0.85 -> 1.0)
     _scaleAnimation = Tween<double>(
       begin: 0.85,
       end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeOutBack,
-    ));
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutBack));
 
     _controller.forward();
 
@@ -331,7 +329,8 @@ class _AnimatedFluentSnackbarState extends State<AnimatedFluentSnackbar>
 
   Future<void> _dismiss(FluentNotificationResult result) async {
     _timer?.cancel();
-    if (_controller.isAnimating && _controller.status == AnimationStatus.reverse) {
+    if (_controller.isAnimating &&
+        _controller.status == AnimationStatus.reverse) {
       return;
     }
     await _controller.reverse();
@@ -375,13 +374,18 @@ class _AnimatedFluentSnackbarState extends State<AnimatedFluentSnackbar>
   @override
   Widget build(BuildContext context) {
     // 拖拽时的透明度衰减 (对标 Kotlin graphicsLayer alpha)
-    final double dragAlpha = (1.0 - (_dragOffsetX.abs() / 300.0)).clamp(0.0, 1.0);
+    final double dragAlpha = (1.0 - (_dragOffsetX.abs() / 300.0)).clamp(
+      0.0,
+      1.0,
+    );
 
     return GestureDetector(
       onHorizontalDragUpdate: _onHorizontalDragUpdate,
       onHorizontalDragEnd: _onHorizontalDragEnd,
       child: AnimatedContainer(
-        duration: _isDragging ? Duration.zero : const Duration(milliseconds: 250),
+        duration: _isDragging
+            ? Duration.zero
+            : const Duration(milliseconds: 250),
         curve: Curves.easeOut,
         transform: Matrix4.translationValues(_dragOffsetX, 0, 0),
         child: Opacity(
@@ -431,9 +435,12 @@ void showFluentSnackbarToast({
         child: Align(
           alignment: alignment,
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 20.0,
+              vertical: 16.0,
+            ),
             child: FluentTheme(
-              data: fluentTheme,
+              themeData: fluentTheme,
               child: AnimatedFluentSnackbar(
                 duration: duration,
                 enableSwipeToDismiss: enableSwipeToDismiss,
@@ -490,7 +497,7 @@ ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showFluentSnackbar({
 
   final snackBar = SnackBar(
     content: FluentTheme(
-      data: fluentTheme,
+      themeData: fluentTheme,
       child: FluentSnackbar(
         message: message,
         title: title,

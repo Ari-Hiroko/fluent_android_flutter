@@ -8,7 +8,7 @@
 
 - **Tokens 体系**：实现微软全局 Design Tokens，包含 `FluentColors`、`FluentTypography`、`FluentMotionTokens` 及 `ControlTokens`。
 - **组件覆盖**：提供 35+ 个通用控件，涵盖 TopAppBar / AppBarLayout 导航栏、TabBar / PillBar 选项卡、SideRail 侧边栏、ListItem / Card 列表卡片、Dialog / BottomSheet 模态窗口及 Avatar 人员状态等。
-- **主题适配**：内建 `Fluent2ThemeData.light()` 与 `Fluent2ThemeData.dark()` 明暗主题，支持与 Material `ThemeData` 的转换集成。
+- **主题适配**：内建 `FluentThemeData.light()` 与 `FluentThemeData.dark()` 明暗主题，支持与 Material `ThemeData` 的转换集成。
 - **交互规范**：支持鼠标悬停指针手势控制（`enableCursor`）与贝塞尔缓动动画曲线。
 
 ---
@@ -49,7 +49,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FluentTheme(
-      data: Fluent2ThemeData.light(),
+      data: FluentThemeData.light(),
       child: Builder(
         builder: (context) {
           final theme = FluentTheme.of(context);

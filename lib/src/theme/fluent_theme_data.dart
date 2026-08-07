@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'fluent_colors.dart';
 import 'fluent_typography.dart';
 
-/// Fluent 2 Android 主题配置数据 [Fluent2ThemeData]
+/// Fluent 2 Android 主题配置数据 [FluentThemeData]
 ///
 /// 严格映射 FluentUI Android XML themes.xml / attrs.xml 属性名
-class Fluent2ThemeData {
+class FluentThemeData {
   final Brightness brightness;
 
   // Theme Semantic Colors
@@ -32,7 +32,7 @@ class Fluent2ThemeData {
   final double cornerRadius; // fluentui_popup_menu_corner_radius (8.0 / 4.0)
   final double elevation;
 
-  const Fluent2ThemeData({
+  const FluentThemeData({
     required this.brightness,
     required this.primaryColor,
     required this.backgroundColor,
@@ -53,8 +53,8 @@ class Fluent2ThemeData {
   });
 
   /// Fluent 2 浅色主题 (Theme.FluentUI Light)
-  factory Fluent2ThemeData.light() {
-    return const Fluent2ThemeData(
+  factory FluentThemeData.light() {
+    return const FluentThemeData(
       brightness: Brightness.light,
       primaryColor: FluentColors.communicationBlue,
       backgroundColor: FluentColors.white,
@@ -77,8 +77,8 @@ class Fluent2ThemeData {
   }
 
   /// Fluent 2 深色主题 (Theme.FluentUI Dark)
-  factory Fluent2ThemeData.dark() {
-    return const Fluent2ThemeData(
+  factory FluentThemeData.dark() {
+    return const FluentThemeData(
       brightness: Brightness.dark,
       primaryColor: FluentColors.communicationBlue,
       backgroundColor: FluentColors.darkBackground1,

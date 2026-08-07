@@ -46,12 +46,14 @@ class _FluentMenuState extends State<FluentMenu>
       reverseDuration: const Duration(milliseconds: 75),
     );
 
-    _scaleAnimation = Tween<double>(begin: 0.8, end: 1.0).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic),
-    );
-    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeOut),
-    );
+    _scaleAnimation = Tween<double>(
+      begin: 0.8,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic));
+    _fadeAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
 
     _controller.forward();
   }
@@ -132,11 +134,14 @@ Future<T?> showFluentMenu<T>({
       transitionDuration: const Duration(milliseconds: 120),
       reverseTransitionDuration: const Duration(milliseconds: 75),
       pageBuilder: (context, anim, secondaryAnim) {
-        final topPos = (rect.bottom + 6.0).clamp(12.0, overlayBox.size.height - 100.0);
+        final topPos = (rect.bottom + 6.0).clamp(
+          12.0,
+          overlayBox.size.height - 100.0,
+        );
         final leftPos = rect.left.clamp(12.0, overlayBox.size.width - 220.0);
 
         return FluentTheme(
-          data: fluentTheme,
+          themeData: fluentTheme,
           child: Stack(
             children: [
               Positioned(

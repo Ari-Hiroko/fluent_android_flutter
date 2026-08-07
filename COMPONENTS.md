@@ -25,14 +25,14 @@
 
 ## 1. 主题与 Tokens (Theme & Tokens)
 
-### 1.1 `FluentTheme` & `Fluent2ThemeData`
+### 1.1 `FluentTheme` & `FluentThemeData`
 
 提供 Fluent UI 2 全局主题上下文接入。支持深/浅色模式与原生 Material 主题转换。
 
 #### 代码示例
 ```dart
 FluentTheme(
-  data: Fluent2ThemeData.light(), // 或 Fluent2ThemeData.dark()
+  data: FluentThemeData.light(), // 或 FluentThemeData.dark()
   child: MaterialApp(
     theme: FluentTheme.of(context).toMaterialTheme(),
     home: const Page(),

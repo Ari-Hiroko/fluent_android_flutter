@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../theme/fluent_colors.dart';
-import '../../theme/fluent_theme.dart';
 import '../avatar/fluent_avatar.dart';
 import 'fluent_top_app_bar.dart';
 
@@ -35,7 +33,8 @@ enum FluentNavigationIconType {
 /// Fluent 2 AppBarLayout 容器组件 [FluentAppBarLayout]
 ///
 /// 完全移植自 Android Kotlin AppBarLayout.kt, AppBarLayoutActivity.kt 与 V2AppBarLayoutUITest.kt
-class FluentAppBarLayout extends StatelessWidget implements PreferredSizeWidget {
+class FluentAppBarLayout extends StatelessWidget
+    implements PreferredSizeWidget {
   /// 主标题
   final String title;
 
@@ -57,14 +56,47 @@ class FluentAppBarLayout extends StatelessWidget implements PreferredSizeWidget 
   /// 滚动行为控制 (none, collapseToolbar, pin)
   final FluentScrollBehavior scrollBehavior;
 
-  /// 风格样式 (neutral, brand)
+  /// 风格样式 (neutral, brand, custom)
   final FluentStyle style;
+
+  /// 自定义背景颜色 (可选)
+  final Color? backgroundColor;
+
+  /// 自定义前景色 / 主文本与图标颜色 (可选)
+  final Color? foregroundColor;
+
+  /// 自定义副文本与次要图标颜色 (可选)
+  final Color? secondaryForegroundColor;
+
+  /// 自定义底部边框颜色 (可选)
+  final Color? borderColor;
 
   /// 顶部右侧动作控件组 (Actions)
   final List<Widget>? actions;
 
+  /// 操作按钮组之间的间距 (默认 4.0dp)
+  final double actionsSpacing;
+
+  /// 标题对齐方式 (left, center, right)
+  final FluentTitleAlignment titleAlignment;
+
+  /// 是否居中显示标题
+  final bool centerTitle;
+
+  /// 标题与两侧控件之间的间距 (默认 8.0dp)
+  final double titleSpacing;
+
   /// 底部 Accessory View 槽位 (如搜索栏 SearchBar、PillBar 或 TabBar)
   final Widget? accessoryView;
+
+  /// 是否在底部显示 1dp 分割线
+  final bool showBottomBorder;
+
+  /// 阴影高度 (Elevation)
+  final double elevation;
+
+  /// 阴影颜色
+  final Color? shadowColor;
 
   /// 是否改变鼠标光标
   final bool enableCursor;
@@ -79,8 +111,19 @@ class FluentAppBarLayout extends StatelessWidget implements PreferredSizeWidget 
     this.onNavigationIconClick,
     this.scrollBehavior = FluentScrollBehavior.collapseToolbar,
     this.style = FluentStyle.neutral,
+    this.backgroundColor,
+    this.foregroundColor,
+    this.secondaryForegroundColor,
+    this.borderColor,
     this.actions,
+    this.actionsSpacing = 4.0,
+    this.titleAlignment = FluentTitleAlignment.left,
+    this.centerTitle = false,
+    this.titleSpacing = 8.0,
     this.accessoryView,
+    this.showBottomBorder = true,
+    this.elevation = 0.0,
+    this.shadowColor,
     this.enableCursor = true,
   });
 
@@ -93,9 +136,6 @@ class FluentAppBarLayout extends StatelessWidget implements PreferredSizeWidget 
 
   @override
   Widget build(BuildContext context) {
-    final theme = FluentTheme.of(context);
-    final isBrand = style == FluentStyle.brand;
-
     Widget? leadingWidget;
 
     switch (navigationIconType) {
@@ -104,7 +144,7 @@ class FluentAppBarLayout extends StatelessWidget implements PreferredSizeWidget 
         break;
       case FluentNavigationIconType.avatar:
         leadingWidget = Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 8.0),
           child: GestureDetector(
             onTap: onNavigationIconClick,
             child: FluentAvatar(
@@ -122,10 +162,7 @@ class FluentAppBarLayout extends StatelessWidget implements PreferredSizeWidget 
           mouseCursor: enableCursor
               ? SystemMouseCursors.click
               : SystemMouseCursors.basic,
-          icon: Icon(
-            Icons.arrow_back,
-            color: isBrand ? FluentColors.white : theme.foregroundColor,
-          ),
+          icon: const Icon(Icons.arrow_back),
           onPressed: onNavigationIconClick ?? () => Navigator.maybePop(context),
         );
         break;
@@ -135,9 +172,20 @@ class FluentAppBarLayout extends StatelessWidget implements PreferredSizeWidget 
       title: title,
       subTitle: subTitle,
       style: style,
-      navigationIcon: leadingWidget,
-      actions: actions,
+      backgroundColor: backgroundColor,
+      foregroundColor: foregroundColor,
+      secondaryForegroundColor: secondaryForegroundColor,
+      borderColor: borderColor,
+      leftActions: leadingWidget != null ? [leadingWidget] : null,
+      rightActions: actions,
+      actionsSpacing: actionsSpacing,
+      titleAlignment: titleAlignment,
+      centerTitle: centerTitle,
+      titleSpacing: titleSpacing,
       bottomBar: accessoryView,
+      showBottomBorder: showBottomBorder,
+      elevation: elevation,
+      shadowColor: shadowColor,
       enableCursor: enableCursor,
     );
   }
