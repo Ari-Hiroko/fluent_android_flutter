@@ -25,6 +25,8 @@ class FluentPopupMenuButton<T> extends StatelessWidget {
   /// 按钮 Tooltip 提示
   final String? tooltip;
 
+  final bool enableCursor;
+
   const FluentPopupMenuButton({
     super.key,
     required this.itemBuilder,
@@ -34,6 +36,7 @@ class FluentPopupMenuButton<T> extends StatelessWidget {
     this.child,
     this.offset = Offset.zero,
     this.tooltip,
+    this.enableCursor = true,
   });
 
   void _showMenu(BuildContext context) {
@@ -53,15 +56,15 @@ class FluentPopupMenuButton<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (child != null) {
-      return InkWell(
-        onTap: () => _showMenu(context),
-        child: child,
-      );
+      return InkWell(onTap: () => _showMenu(context), child: child);
     }
 
     return IconButton(
       icon: icon ?? const Icon(Icons.more_vert),
       tooltip: tooltip ?? 'Show Menu',
+      mouseCursor: enableCursor
+          ? SystemMouseCursors.click
+          : SystemMouseCursors.basic,
       onPressed: () => _showMenu(context),
     );
   }

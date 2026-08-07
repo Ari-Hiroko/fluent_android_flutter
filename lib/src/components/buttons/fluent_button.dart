@@ -76,11 +76,71 @@ class FluentButton extends StatefulWidget {
     this.size = FluentButtonSize.medium,
     this.isFullWidth = false,
     this.enableCursor = true,
-    this.enableAnimation = false,
+    this.enableAnimation = true,
     this.animationDuration = FluentMotionDuration.fast,
     this.animationCurve = FluentMotionCurve.standard,
     this.pressScale = 0.97,
   });
+
+  /// 品牌主色实心按钮便利构造器
+  const FluentButton.primary({
+    super.key,
+    required this.text,
+    this.icon,
+    this.onPressed,
+    this.size = FluentButtonSize.medium,
+    this.isFullWidth = false,
+    this.enableCursor = true,
+    this.enableAnimation = true,
+    this.animationDuration = FluentMotionDuration.fast,
+    this.animationCurve = FluentMotionCurve.standard,
+    this.pressScale = 0.97,
+  }) : style = FluentButtonStyle.primary;
+
+  /// 危险/红色警示按钮便利构造器
+  const FluentButton.danger({
+    super.key,
+    required this.text,
+    this.icon,
+    this.onPressed,
+    this.size = FluentButtonSize.medium,
+    this.isFullWidth = false,
+    this.enableCursor = true,
+    this.enableAnimation = true,
+    this.animationDuration = FluentMotionDuration.fast,
+    this.animationCurve = FluentMotionCurve.standard,
+    this.pressScale = 0.97,
+  }) : style = FluentButtonStyle.danger;
+
+  /// 描边/次要按钮便利构造器
+  const FluentButton.secondary({
+    super.key,
+    required this.text,
+    this.icon,
+    this.onPressed,
+    this.size = FluentButtonSize.medium,
+    this.isFullWidth = false,
+    this.enableCursor = true,
+    this.enableAnimation = true,
+    this.animationDuration = FluentMotionDuration.fast,
+    this.animationCurve = FluentMotionCurve.standard,
+    this.pressScale = 0.97,
+  }) : style = FluentButtonStyle.secondary;
+
+  /// 无边框/文本按钮便利构造器
+  const FluentButton.borderless({
+    super.key,
+    required this.text,
+    this.icon,
+    this.onPressed,
+    this.size = FluentButtonSize.medium,
+    this.isFullWidth = false,
+    this.enableCursor = true,
+    this.enableAnimation = true,
+    this.animationDuration = FluentMotionDuration.fast,
+    this.animationCurve = FluentMotionCurve.standard,
+    this.pressScale = 0.97,
+  }) : style = FluentButtonStyle.borderless;
 
   @override
   State<FluentButton> createState() => _FluentButtonState();
@@ -88,30 +148,6 @@ class FluentButton extends StatefulWidget {
 
 class _FluentButtonState extends State<FluentButton> {
   bool _isPressed = false;
-
-  void _handleTapDown(TapDownDetails details) {
-    if (widget.onPressed != null && widget.enableAnimation) {
-      setState(() {
-        _isPressed = true;
-      });
-    }
-  }
-
-  void _handleTapUp(TapUpDetails details) {
-    if (_isPressed) {
-      setState(() {
-        _isPressed = false;
-      });
-    }
-  }
-
-  void _handleTapCancel() {
-    if (_isPressed) {
-      setState(() {
-        _isPressed = false;
-      });
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -211,44 +247,46 @@ class _FluentButtonState extends State<FluentButton> {
       scale: currentScale,
       duration: widget.animationDuration,
       curve: widget.animationCurve,
-      child: GestureDetector(
-        onTapDown: _handleTapDown,
-        onTapUp: _handleTapUp,
-        onTapCancel: _handleTapCancel,
-        child: SizedBox(
-          height: height,
-          width: widget.isFullWidth ? double.infinity : null,
-          child: AnimatedContainer(
-            duration: widget.enableAnimation
-                ? widget.animationDuration
-                : Duration.zero,
-            curve: widget.animationCurve,
-            decoration: BoxDecoration(
-              color: backgroundColor,
+      child: SizedBox(
+        height: height,
+        width: widget.isFullWidth ? double.infinity : null,
+        child: AnimatedContainer(
+          duration: widget.enableAnimation
+              ? widget.animationDuration
+              : Duration.zero,
+          curve: widget.animationCurve,
+          decoration: BoxDecoration(
+            color: backgroundColor,
+            borderRadius: BorderRadius.circular(
+              FluentGlobalTokens.cornerRadius80,
+            ),
+            border: borderSide != BorderSide.none
+                ? Border.fromBorderSide(borderSide)
+                : null,
+          ),
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: widget.onPressed,
+              onHighlightChanged: (highlighted) {
+                if (widget.enableAnimation && isEnabled) {
+                  setState(() {
+                    _isPressed = highlighted;
+                  });
+                }
+              },
+              mouseCursor: (widget.enableCursor && isEnabled)
+                  ? SystemMouseCursors.click
+                  : SystemMouseCursors.basic,
               borderRadius: BorderRadius.circular(
                 FluentGlobalTokens.cornerRadius80,
               ),
-              border: borderSide != BorderSide.none
-                  ? Border.fromBorderSide(borderSide)
-                  : null,
-            ),
-            child: Material(
-              color: Colors.transparent,
-              child: InkWell(
-                onTap: widget.onPressed,
-                mouseCursor: widget.enableCursor
-                    ? SystemMouseCursors.click
-                    : SystemMouseCursors.basic,
-                borderRadius: BorderRadius.circular(
-                  FluentGlobalTokens.cornerRadius80,
-                ),
-                highlightColor: Colors.black.withAlpha(15),
-                splashColor: Colors.black.withAlpha(25),
-                child: Container(
-                  padding: padding,
-                  alignment: Alignment.center,
-                  child: content,
-                ),
+              highlightColor: Colors.black.withAlpha(15),
+              splashColor: Colors.black.withAlpha(25),
+              child: Container(
+                padding: padding,
+                alignment: Alignment.center,
+                child: content,
               ),
             ),
           ),

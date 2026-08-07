@@ -36,7 +36,7 @@ class _MainAppState extends State<MainApp> with SingleTickerProviderStateMixin {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             FluentCard.Announcement(
-              style: FluentCardStyle(shadow: FluentShadow.shadow28(context)),
+              // style: FluentCardStyle(shadow: FluentShadow.shadow16(context)),
               selectable: true,
               opacity: 0.8,
               title: '飞八分钱',
@@ -60,6 +60,52 @@ class _MainAppState extends State<MainApp> with SingleTickerProviderStateMixin {
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
+              ),
+            ),
+            const SizedBox(height: 10),
+            FluentCard.Text(
+              expandable: false,
+              opacity: 0.8,
+              title: '按钮测试',
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text('我测你们按钮'),
+                  Row(
+                    children: [
+                      FluentButton.danger(
+                        text: '飞八',
+                        onPressed: () {
+                          showFluentSnackbarToast(
+                            context: context,
+                            title: '危险动作',
+                            message: '成功触发了 FluentButton.danger 红色按钮',
+                            style: FluentSnackbarStyle.danger,
+                          );
+                        },
+                      ),
+                      const SizedBox(width: 10),
+                      FluentButton.primary(
+                        text: '哦对了',
+                        onPressed: () {
+                          showFluentSnackbarToast(
+                            context: context,
+                            title: '哦对了',
+                            message: '成功触发了 FluentButton.secondary 灰色按钮',
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                  // FluentPopupMenuButton(
+                  //   itemBuilder: (BuildContext context) {
+                  //     return [
+                  //       FluentPopupMenuItem(title: 'a'),
+                  //       FluentPopupMenuItem(title: 'a'),
+                  //     ];
+                  //   },
+                  // ),
+                ],
               ),
             ),
             const SizedBox(height: 10),
@@ -256,7 +302,8 @@ class _SettingsViewState extends State<_SettingsView> {
             child: Row(
               children: [
                 const FluentAvatar(
-                  name: '公告喵',
+                  presence: FluentPresence.available,
+                  name: '孙',
                   size: FluentAvatarSize.size56,
                   image: AssetImage('assets/sun.jpg'),
                 ),
@@ -266,7 +313,7 @@ class _SettingsViewState extends State<_SettingsView> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: const [
                       Text(
-                        '公告喵喵',
+                        '孙笑川',
                         style: TextStyle(
                           fontSize: 16.0,
                           fontWeight: FontWeight.bold,
@@ -274,7 +321,7 @@ class _SettingsViewState extends State<_SettingsView> {
                       ),
                       SizedBox(height: 2.0),
                       Text(
-                        'gonggaomiao@fluent2.org',
+                        'SunXiaoChuan258@nm.sl',
                         style: TextStyle(fontSize: 13.0, color: Colors.black54),
                       ),
                     ],
@@ -348,13 +395,13 @@ class _SettingsViewState extends State<_SettingsView> {
                 const SizedBox(height: 8.0),
                 FluentListItem(
                   title: '检查软件更新',
-                  subTitle: '当前版本 v2.1.0-build.8',
+                  subTitle: '当前版本 v1.1.4-build.514',
                   leading: const Icon(Icons.system_update_alt),
                   onTap: () {
                     showFluentSnackbarToast(
                       context: context,
                       title: '检查更新',
-                      message: '当前已是最新版本 v2.1.0',
+                      message: '当前已是最新版本 v1.1.4',
                       leadingIcon: const Icon(Icons.check_circle_outline),
                       style: FluentSnackbarStyle.accent,
                     );
@@ -363,13 +410,13 @@ class _SettingsViewState extends State<_SettingsView> {
                 const Divider(height: 1.0),
                 FluentListItem(
                   title: '清除系统缓存',
-                  subTitle: '已占用 12.4 MB 临时资源',
+                  subTitle: '已占用 51.4 MB 临时资源',
                   leading: const Icon(Icons.cleaning_services_outlined),
                   onTap: () {
                     showFluentSnackbarToast(
                       context: context,
                       title: '清理完成',
-                      message: '成功清理 12.4 MB 缓存空间',
+                      message: '成功清理 0.4 MB 缓存空间',
                       style: FluentSnackbarStyle.neutral,
                     );
                   },

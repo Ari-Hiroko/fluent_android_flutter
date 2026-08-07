@@ -192,7 +192,7 @@ class FluentTabSwitcher extends StatefulWidget {
     this.enableGesture = true,
     this.keepAlive = true,
     this.duration = FluentMotionDuration.gentle,
-    this.curve = FluentMotionCurve.standard,
+    this.curve = Curves.easeOutQuint,
   });
 
   @override
@@ -279,7 +279,9 @@ class _FluentTabSwitcherState extends State<FluentTabSwitcher> {
     if (widget.children.isEmpty) return const SizedBox.shrink();
 
     final List<Widget> pages = widget.keepAlive
-        ? widget.children.map((child) => _KeepAliveWrapper(child: child)).toList()
+        ? widget.children
+              .map((child) => _KeepAliveWrapper(child: child))
+              .toList()
         : widget.children;
 
     return PageView(
@@ -330,15 +332,14 @@ class FluentPageRoute<T> extends PageRouteBuilder<T> {
     super.transitionDuration = FluentMotionDuration.gentle,
     super.reverseTransitionDuration = FluentMotionDuration.gentle,
   }) : super(
-          pageBuilder: (context, animation, secondaryAnimation) =>
-              builder(context),
-          transitionsBuilder:
-              (context, animation, secondaryAnimation, child) {
-            return FluentPageSwitcher.buildTransition(
-              child: child,
-              animation: animation,
-              type: transitionType,
-            );
-          },
-        );
+         pageBuilder: (context, animation, secondaryAnimation) =>
+             builder(context),
+         transitionsBuilder: (context, animation, secondaryAnimation, child) {
+           return FluentPageSwitcher.buildTransition(
+             child: child,
+             animation: animation,
+             type: transitionType,
+           );
+         },
+       );
 }

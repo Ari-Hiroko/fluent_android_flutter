@@ -38,6 +38,8 @@ class FluentPopupMenuItem<T> {
   /// 自定义点击事件回调
   final VoidCallback? onTap;
 
+  final bool enableCursor;
+
   FluentPopupMenuItem({
     this.value,
     required this.title,
@@ -47,6 +49,7 @@ class FluentPopupMenuItem<T> {
     this.roleDescription,
     this.enabled = true,
     this.onTap,
+    this.enableCursor = true,
   });
 
   /// 链式复制更新状态
@@ -59,6 +62,7 @@ class FluentPopupMenuItem<T> {
     String? roleDescription,
     bool? enabled,
     VoidCallback? onTap,
+    bool? enableCursor,
   }) {
     return FluentPopupMenuItem<T>(
       value: value ?? this.value,
@@ -69,6 +73,7 @@ class FluentPopupMenuItem<T> {
       roleDescription: roleDescription ?? this.roleDescription,
       enabled: enabled ?? this.enabled,
       onTap: onTap ?? this.onTap,
+      enableCursor: enableCursor ?? this.enableCursor,
     );
   }
 }

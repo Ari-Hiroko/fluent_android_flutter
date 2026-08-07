@@ -9,12 +9,14 @@ class FluentPopupMenuItemView<T> extends StatelessWidget {
   final FluentPopupMenuItem<T> item;
   final FluentItemCheckableBehavior checkableBehavior;
   final VoidCallback? onItemClicked;
+  final bool enableCursor;
 
   const FluentPopupMenuItemView({
     super.key,
     required this.item,
     this.checkableBehavior = FluentItemCheckableBehavior.none,
     this.onItemClicked,
+    this.enableCursor = true,
   });
 
   @override
@@ -96,6 +98,9 @@ class FluentPopupMenuItemView<T> extends StatelessWidget {
           Material(
             color: Colors.transparent,
             child: InkWell(
+              mouseCursor: enableCursor
+                  ? SystemMouseCursors.click
+                  : SystemMouseCursors.basic,
               onTap: isEnabled ? onItemClicked : null,
               hoverColor: theme.popupMenuBackgroundPressedColor,
               splashColor: theme.popupMenuBackgroundPressedColor,
