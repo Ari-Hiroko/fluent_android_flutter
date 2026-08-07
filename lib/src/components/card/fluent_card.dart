@@ -2,11 +2,19 @@ import 'package:flutter/material.dart';
 import '../../theme/fluent_motion_tokens.dart';
 import '../../theme/fluent_theme.dart';
 import '../buttons/fluent_text_button.dart';
+import 'fluent_text_card.dart';
 
-/// Fluent 2  BasicCard 基础卡片容器 [FluentCard]
+export 'fluent_text_card.dart';
+
+/// Fluent 2 BasicCard 基础卡片容器 [FluentCard]
 ///
 /// 完全移植自 Android Kotlin BasicCard.kt, V2CardActivity.kt 与 V2CardUITest.kt
-/// 支持可选的内容动态改变伸缩动画 (AnimatedSize Expansion & Contraction Transition)
+/// 支持可选的内容动态改变伸缩动画与 [opacity] 不透明度调整。
+///
+/// 同时也提供便利的衍生命名构建函数：
+/// - `FluentCard.text(...)` / `FluentCard.Text(...)` -> [FluentTextCard] (可展开文本卡片)
+/// - `FluentCard.file(...)` / `FluentCard.File(...)` -> [FluentFileCard] (文件预览卡片)
+/// - `FluentCard.announcement(...)` / `FluentCard.Announcement(...)` -> [FluentAnnouncementCard] (通告卡片)
 class FluentCard extends StatelessWidget {
   /// 卡片内容 Child
   final Widget child;
@@ -32,6 +40,15 @@ class FluentCard extends StatelessWidget {
   /// 内容伸缩动画持续时间
   final Duration animationDuration;
 
+  /// 自定义卡片背景色 (可选)
+  final Color? backgroundColor;
+
+  /// 卡片不透明度 (默认 1.0，范围 0.0 ~ 1.0)
+  final double opacity;
+
+  /// 是否强制垂直拉伸填满父容器的高度 (默认为 false，即自适应包裹内容高度)
+  final bool expand;
+
   /// 内容伸缩动画曲线
   final Curve animationCurve;
 
@@ -42,11 +59,237 @@ class FluentCard extends StatelessWidget {
     this.onClick,
     this.padding = const EdgeInsets.all(16.0),
     this.borderRadius = 12.0,
+    this.backgroundColor,
+    this.opacity = 1.0,
+    this.expand = false,
     this.enableSizeAnimation = true,
     this.enableCursor = true,
     this.animationDuration = FluentMotionDuration.gentle,
     this.animationCurve = FluentMotionCurve.standard,
   });
+
+  /// [FluentTextCard] 构建方法: `FluentCard.text(...)`
+  static Widget text({
+    Key? key,
+    String? title,
+    Widget? titleWidget,
+    String? subTitle,
+    String? subtitle,
+    Widget? leadingIcon,
+    String? text,
+    InlineSpan? richText,
+    Widget? child,
+    bool initiallyExpanded = false,
+    ValueChanged<bool>? onExpandedChanged,
+    Widget? trailingAction,
+    Widget? actionIcon,
+    VoidCallback? actionOnClick,
+    bool expandable = true,
+    bool showDivider = false,
+    EdgeInsetsGeometry padding = const EdgeInsets.all(16.0),
+    EdgeInsetsGeometry? contentPadding,
+    double borderRadius = 12.0,
+    Color? backgroundColor,
+    double opacity = 1.0,
+    bool expand = false,
+    bool enableCursor = true,
+    Duration animationDuration = FluentMotionDuration.gentle,
+    Curve animationCurve = FluentMotionCurve.standard,
+  }) {
+    return FluentTextCard(
+      key: key,
+      title: title,
+      titleWidget: titleWidget,
+      subTitle: subTitle,
+      subtitle: subtitle,
+      leadingIcon: leadingIcon,
+      text: text,
+      richText: richText,
+      initiallyExpanded: initiallyExpanded,
+      onExpandedChanged: onExpandedChanged,
+      trailingAction: trailingAction,
+      actionIcon: actionIcon,
+      actionOnClick: actionOnClick,
+      expandable: expandable,
+      showDivider: showDivider,
+      padding: padding,
+      contentPadding: contentPadding,
+      borderRadius: borderRadius,
+      backgroundColor: backgroundColor,
+      opacity: opacity,
+      expand: expand,
+      enableCursor: enableCursor,
+      animationDuration: animationDuration,
+      animationCurve: animationCurve,
+      child: child,
+    );
+  }
+
+  /// [FluentTextCard] 静态构建别名方法: `FluentCard.Text(...)`
+  // ignore: non_constant_identifier_names
+  static Widget Text({
+    Key? key,
+    String? title,
+    Widget? titleWidget,
+    String? subTitle,
+    String? subtitle,
+    Widget? leadingIcon,
+    String? text,
+    InlineSpan? richText,
+    Widget? child,
+    bool initiallyExpanded = false,
+    ValueChanged<bool>? onExpandedChanged,
+    Widget? trailingAction,
+    Widget? actionIcon,
+    VoidCallback? actionOnClick,
+    bool expandable = true,
+    bool showDivider = false,
+    EdgeInsetsGeometry padding = const EdgeInsets.all(16.0),
+    EdgeInsetsGeometry? contentPadding,
+    double borderRadius = 12.0,
+    Color? backgroundColor,
+    double opacity = 1.0,
+    bool expand = false,
+    bool enableCursor = true,
+    Duration animationDuration = FluentMotionDuration.gentle,
+    Curve animationCurve = FluentMotionCurve.standard,
+  }) => FluentCard.text(
+    key: key,
+    title: title,
+    titleWidget: titleWidget,
+    subTitle: subTitle,
+    subtitle: subtitle,
+    leadingIcon: leadingIcon,
+    text: text,
+    richText: richText,
+    initiallyExpanded: initiallyExpanded,
+    onExpandedChanged: onExpandedChanged,
+    trailingAction: trailingAction,
+    actionIcon: actionIcon,
+    actionOnClick: actionOnClick,
+    expandable: expandable,
+    showDivider: showDivider,
+    padding: padding,
+    contentPadding: contentPadding,
+    borderRadius: borderRadius,
+    backgroundColor: backgroundColor,
+    opacity: opacity,
+    expand: expand,
+    enableCursor: enableCursor,
+    animationDuration: animationDuration,
+    animationCurve: animationCurve,
+    child: child,
+  );
+
+  /// [FluentFileCard] 构建方法: `FluentCard.file(...)`
+  static Widget file({
+    Key? key,
+    required String fileName,
+    required String subTitle,
+    Widget? leadingIcon,
+    Widget? thumbnail,
+    Widget? actionOverflowIcon,
+    VoidCallback? actionOverflowOnClick,
+    VoidCallback? onTap,
+    VoidCallback? onClick,
+    double opacity = 1.0,
+    bool enableSizeAnimation = true,
+  }) {
+    return FluentFileCard(
+      key: key,
+      fileName: fileName,
+      subTitle: subTitle,
+      leadingIcon: leadingIcon,
+      thumbnail: thumbnail,
+      actionOverflowIcon: actionOverflowIcon,
+      actionOverflowOnClick: actionOverflowOnClick,
+      onTap: onTap,
+      onClick: onClick,
+      opacity: opacity,
+      enableSizeAnimation: enableSizeAnimation,
+    );
+  }
+
+  /// [FluentFileCard] 静态构建别名方法: `FluentCard.File(...)`
+  // ignore: non_constant_identifier_names
+  static Widget File({
+    Key? key,
+    required String fileName,
+    required String subTitle,
+    Widget? leadingIcon,
+    Widget? thumbnail,
+    Widget? actionOverflowIcon,
+    VoidCallback? actionOverflowOnClick,
+    VoidCallback? onTap,
+    VoidCallback? onClick,
+    double opacity = 1.0,
+    bool enableSizeAnimation = true,
+  }) => FluentCard.file(
+    key: key,
+    fileName: fileName,
+    subTitle: subTitle,
+    leadingIcon: leadingIcon,
+    thumbnail: thumbnail,
+    actionOverflowIcon: actionOverflowIcon,
+    actionOverflowOnClick: actionOverflowOnClick,
+    onTap: onTap,
+    onClick: onClick,
+    opacity: opacity,
+    enableSizeAnimation: enableSizeAnimation,
+  );
+
+  /// [FluentAnnouncementCard] 构建方法: `FluentCard.announcement(...)`
+  static Widget announcement({
+    Key? key,
+    required String title,
+    required String description,
+    String? buttonText,
+    VoidCallback? buttonOnClick,
+    VoidCallback? onActionTap,
+    Widget? illustration,
+    VoidCallback? onTap,
+    double opacity = 1.0,
+    bool enableSizeAnimation = true,
+  }) {
+    return FluentAnnouncementCard(
+      key: key,
+      title: title,
+      description: description,
+      buttonText: buttonText,
+      buttonOnClick: buttonOnClick,
+      onActionTap: onActionTap,
+      illustration: illustration,
+      onTap: onTap,
+      opacity: opacity,
+      enableSizeAnimation: enableSizeAnimation,
+    );
+  }
+
+  /// [FluentAnnouncementCard] 静态构建别名方法: `FluentCard.Announcement(...)`
+  // ignore: non_constant_identifier_names
+  static Widget Announcement({
+    Key? key,
+    required String title,
+    required String description,
+    String? buttonText,
+    VoidCallback? buttonOnClick,
+    VoidCallback? onActionTap,
+    Widget? illustration,
+    VoidCallback? onTap,
+    double opacity = 1.0,
+    bool enableSizeAnimation = true,
+  }) => FluentCard.announcement(
+    key: key,
+    title: title,
+    description: description,
+    buttonText: buttonText,
+    buttonOnClick: buttonOnClick,
+    onActionTap: onActionTap,
+    illustration: illustration,
+    onTap: onTap,
+    opacity: opacity,
+    enableSizeAnimation: enableSizeAnimation,
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -56,9 +299,16 @@ class FluentCard extends StatelessWidget {
     final VoidCallback? tapCallback = onTap ?? onClick;
     final bool isClickable = tapCallback != null;
 
+    final Color baseBg = backgroundColor ?? theme.backgroundColor;
+    // 根据 opacity 计算最终的不透明背景色
+    final Color effectiveBg = opacity < 1.0
+        ? baseBg.withValues(alpha: baseBg.a * opacity)
+        : baseBg;
+
+    final bool isTranslucent = opacity < 1.0 || effectiveBg.a < 1.0;
+
     Widget cardBody = Padding(padding: padding, child: child);
 
-    // 内容改变时自动平滑伸缩动画 (AnimatedSize Transition)
     if (enableSizeAnimation) {
       cardBody = AnimatedSize(
         duration: animationDuration,
@@ -69,75 +319,91 @@ class FluentCard extends StatelessWidget {
     }
 
     final BoxDecoration decoration = BoxDecoration(
-      color: theme.backgroundColor,
+      color: effectiveBg,
       borderRadius: BorderRadius.circular(borderRadius),
       border: Border.all(
-        color: theme.dividerColor.withAlpha(isDark ? 100 : 200),
+        color: isTranslucent
+            ? (isDark
+                  ? Colors.white.withValues(alpha: 0.15)
+                  : Colors.white.withValues(alpha: 0.6))
+            : theme.dividerColor.withValues(alpha: isDark ? 0.3 : 0.4),
         width: 1.0,
       ),
       boxShadow: [
         BoxShadow(
-          color: Colors.black.withAlpha(isDark ? 30 : 10),
-          blurRadius: 8.0,
+          color: Colors.black.withValues(
+            alpha: isDark ? 0.2 : (isTranslucent ? 0.03 : 0.05),
+          ),
+          blurRadius: isTranslucent ? 10.0 : 8.0,
           offset: const Offset(0, 3),
         ),
       ],
     );
 
+    // 优化的悬浮/按压触控色彩：避免脏色，在磨砂玻璃与纯色背景上均保持通透高亮
+    final Color hoverOverlay = isDark
+        ? Colors.white.withValues(alpha: 0.06)
+        : (isTranslucent
+              ? Colors.white.withValues(alpha: 0.35)
+              : Colors.black.withValues(alpha: 0.03));
+
+    final Color highlightOverlay = isDark
+        ? Colors.white.withValues(alpha: 0.04)
+        : (isTranslucent
+              ? Colors.white.withValues(alpha: 0.2)
+              : Colors.black.withValues(alpha: 0.02));
+
+    final Color splashOverlay = Colors.black12.withValues(alpha: 0.02);
+
+    Widget cardWidget;
     if (!isClickable) {
-      // 静态非点击 Card (对应 V2CardUITest assertHasNoClickAction)
-      return Container(decoration: decoration, child: cardBody);
+      cardWidget = Container(decoration: decoration, child: cardBody);
+    } else {
+      cardWidget = Container(
+        decoration: decoration,
+        child: Material(
+          color: Colors.transparent,
+          borderRadius: BorderRadius.circular(borderRadius),
+          child: InkWell(
+            onTap: tapCallback,
+            mouseCursor: enableCursor
+                ? SystemMouseCursors.click
+                : SystemMouseCursors.basic,
+            borderRadius: BorderRadius.circular(borderRadius),
+            hoverColor: hoverOverlay,
+            highlightColor: highlightOverlay,
+            splashColor: splashOverlay,
+            child: cardBody,
+          ),
+        ),
+      );
     }
 
-    return Container(
-      decoration: decoration,
-      child: Material(
-        color: Colors.transparent,
-        borderRadius: BorderRadius.circular(borderRadius),
-        child: InkWell(
-          onTap: tapCallback,
-          mouseCursor: enableCursor
-              ? SystemMouseCursors.click
-              : SystemMouseCursors.basic,
-          borderRadius: BorderRadius.circular(borderRadius),
-          splashColor: theme.primaryColor.withAlpha(20),
-          highlightColor: theme.primaryColor.withAlpha(10),
-          child: cardBody,
-        ),
-      ),
-    );
+    if (!expand) {
+      cardWidget = Align(
+        alignment: Alignment.topCenter,
+        heightFactor: 1.0,
+        child: cardWidget,
+      );
+    }
+
+    return cardWidget;
   }
 }
 
-/// Fluent 2  FileCard 文件预览卡片 [FluentFileCard]
+/// Fluent 2 FileCard 文件预览卡片 [FluentFileCard]
 ///
 /// 完全移植自 Android Kotlin FileCard.kt 与 V2CardUITest.kt
 class FluentFileCard extends StatelessWidget {
-  /// 主文件名 (对应 text / fileName)
   final String fileName;
-
-  /// 副标题信息 (如 '2.4 MB · PDF Document'，对应 subText / subTitle)
   final String subTitle;
-
-  /// 前置文本图标 (对应 textIcon / leadingIcon)
   final Widget? leadingIcon;
-
-  /// 缩略图 Icon 或 Preview Widget (对应 previewImageDrawable / thumbnail)
   final Widget? thumbnail;
-
-  /// 更多选项图标 Icon
   final Widget? actionOverflowIcon;
-
-  /// 更多选项图标点击回调 (注意：必须不为 null 才渲染更多选项 Icon，完全与 V2CardUITest 对齐)
   final VoidCallback? actionOverflowOnClick;
-
-  /// 点击卡片回调
   final VoidCallback? onTap;
-
-  /// 点击卡片回调 onClick 别名
   final VoidCallback? onClick;
-
-  /// 是否启用当内容改变时自动平滑伸缩动画
+  final double opacity;
   final bool enableSizeAnimation;
 
   const FluentFileCard({
@@ -150,6 +416,7 @@ class FluentFileCard extends StatelessWidget {
     this.actionOverflowOnClick,
     this.onTap,
     this.onClick,
+    this.opacity = 1.0,
     this.enableSizeAnimation = true,
   });
 
@@ -157,18 +424,17 @@ class FluentFileCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = FluentTheme.of(context);
     final VoidCallback? cardTap = onTap ?? onClick;
-
     final bool showMoreOption = actionOverflowOnClick != null;
 
     return FluentCard(
       onTap: cardTap,
       padding: const EdgeInsets.all(12.0),
+      opacity: opacity,
       enableSizeAnimation: enableSizeAnimation,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // 预览图 Preview Image Section
           if (thumbnail != null) ...[
             ClipRRect(
               borderRadius: BorderRadius.circular(8.0),
@@ -180,7 +446,6 @@ class FluentFileCard extends StatelessWidget {
             ),
             const SizedBox(height: 10.0),
           ],
-
           Row(
             children: [
               if (thumbnail == null) ...[
@@ -257,32 +522,18 @@ class FluentFileCard extends StatelessWidget {
   }
 }
 
-/// Fluent 2  AnnouncementCard 公告/通告卡片 [FluentAnnouncementCard]
+/// Fluent 2 AnnouncementCard 公告/通告卡片 [FluentAnnouncementCard]
 ///
 /// 完全移植自 Android Kotlin AnnouncementCard.kt 与 V2CardUITest.kt
 class FluentAnnouncementCard extends StatelessWidget {
-  /// 主标题 Title
   final String title;
-
-  /// 描述信息 Description
   final String description;
-
-  /// 按钮文本 ButtonText
   final String? buttonText;
-
-  /// 按钮点击回调 (必须不为 null 才渲染，完全与 V2CardUITest 对齐)
   final VoidCallback? buttonOnClick;
-
-  /// 按钮点击回调 别名
   final VoidCallback? onActionTap;
-
-  /// 图像/插图 Preview Illustration
   final Widget? illustration;
-
-  /// 卡片点击回调
   final VoidCallback? onTap;
-
-  /// 是否启用当内容改变时自动平滑伸缩动画
+  final double opacity;
   final bool enableSizeAnimation;
 
   const FluentAnnouncementCard({
@@ -294,6 +545,7 @@ class FluentAnnouncementCard extends StatelessWidget {
     this.onActionTap,
     this.illustration,
     this.onTap,
+    this.opacity = 1.0,
     this.enableSizeAnimation = true,
   });
 
@@ -306,6 +558,7 @@ class FluentAnnouncementCard extends StatelessWidget {
     return FluentCard(
       onTap: onTap,
       padding: const EdgeInsets.all(16.0),
+      opacity: opacity,
       enableSizeAnimation: enableSizeAnimation,
       child: Column(
         mainAxisSize: MainAxisSize.min,

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'fluent2_android.dart';
+import 'package:fluent2_android/fluent2_android.dart';
 
 void main() {
   runApp(const MainApp());
@@ -30,7 +30,7 @@ class _MainAppState extends State<MainApp> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     return FluentTheme(
       themeData: FluentThemeData.fromSeed(
-        seedColor: Color.fromARGB(255, 215, 82, 131),
+        seedColor: const Color.fromARGB(255, 215, 82, 131),
       ),
       child: MaterialApp(
         title: "Fluent 2 Android",
@@ -38,7 +38,6 @@ class _MainAppState extends State<MainApp> with SingleTickerProviderStateMixin {
         home: Scaffold(
           backgroundColor: Colors.white,
           appBar: FluentTopAppBar(
-            // appBarSize: FluentAppBarSize.small,
             leftActions: [
               FluentTooltip(
                 message: '菜单',
@@ -61,15 +60,9 @@ class _MainAppState extends State<MainApp> with SingleTickerProviderStateMixin {
                 ),
               ),
             ],
-            elevation: 5,
-            style: FluentStyle.brand,
-            // backgroundColor: const Color.fromARGB(255, 215, 82, 131),
-            title: '测试软件',
-            subTitle: '这是一个副标题',
-            titleAlignment: TitleAlignment.left,
             rightActions: [
               FluentTooltip(
-                message: '搜索',
+                message: '导航',
                 child: IconButton(
                   onPressed: () {},
                   icon: const Icon(Icons.navigation),
@@ -85,27 +78,77 @@ class _MainAppState extends State<MainApp> with SingleTickerProviderStateMixin {
                 ),
               ),
             ],
+            elevation: 5,
+            style: FluentStyle.brand,
+            title: '测试软件',
+            subTitle: '这是一个副标题',
+            titleAlignment: TitleAlignment.left,
           ),
-          body: const Center(child: Text("Fluent 2 Android")),
+          body: Container(
+            width: double.infinity,
+            height: double.infinity,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: Image.asset('assets/sun.jpg').image,
+                fit: BoxFit.cover,
+              ),
+            ),
+            child: FluentAcrylic(
+              borderRadius: 0,
+              blur: 10.0,
+              opacity: 0.8,
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      width: double.infinity,
+                      child: FluentCard.Text(
+                        opacity: 0.8,
+                        title: '咦？',
+                        subTitle: '点击卡片可展开或折叠详细内容',
+                        leadingIcon: const Icon(Icons.auto_fix_normal),
+                        initiallyExpanded: true,
+                        showDivider: true,
+                        richText: const TextSpan(
+                          text: '飞八分钱干飞马，干得飞马笑哈哈\n',
+                          style: TextStyle(fontSize: 14),
+                          children: [
+                            TextSpan(text: '哦对了\n'),
+                            TextSpan(text: '哦对了'),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
           bottomNavigationBar: FluentTabBar(
             tabTextAlignment: FluentTabTextAlignment.vertical,
+            selectedIndex: _tabIndex,
+            onTabSelected: (index) => setState(() {
+              _tabIndex = index;
+            }),
             tabs: [
               FluentTabItem(
-                icon: Icon(Icons.home),
+                icon: const Icon(Icons.home),
                 title: '飞八分钱',
                 onClick: () => setState(() {
                   _tabIndex = 0;
                 }),
               ),
               FluentTabItem(
-                icon: Icon(Icons.settings),
+                icon: const Icon(Icons.settings),
                 title: '设置',
                 onClick: () => setState(() {
                   _tabIndex = 1;
                 }),
               ),
             ],
-            selectedIndex: _tabIndex,
           ),
         ),
       ),
