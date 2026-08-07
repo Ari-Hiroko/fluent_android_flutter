@@ -7,7 +7,7 @@ import 'fluent_card.dart';
 /// Fluent 2 可展开文本卡片 [FluentTextCard]
 ///
 /// 封装了可展开/收起的主标题、副标题、图标与文本/富文本/自定义内容。
-/// 支持嵌入 [Text]、[Text.rich] 或自定义 [Widget]，自带平滑的展开折叠与 Chevron 旋转动画。
+/// 标准化命名：[title]、[subtitle]、[leadingIcon]、[onTap]、[onActionTap]、[actionIcon]。
 class FluentTextCard extends StatefulWidget {
   /// 标题文本
   final String? title;
@@ -15,16 +15,13 @@ class FluentTextCard extends StatefulWidget {
   /// 自定义标题 Widget (若提供则优先于 [title])
   final Widget? titleWidget;
 
-  /// 副标题文本 [subTitle] (与 [subtitle] 互为别名)
-  final String? subTitle;
-
-  /// 副标题文本 [subtitle] (与 [subTitle] 互为别名)
+  /// 副标题文本
   final String? subtitle;
 
-  /// 前置图标 Leading Icon (可选)
+  /// 前置图标 Leading Icon
   final Widget? leadingIcon;
 
-  /// 展开后的主要可变内容文本 (可选)
+  /// 展开后的主要文本内容 (可选)
   final String? text;
 
   /// 展开后的富文本 [InlineSpan] 或 [TextSpan] (可选)
@@ -39,14 +36,14 @@ class FluentTextCard extends StatefulWidget {
   /// 展开状态改变时的回调函数
   final ValueChanged<bool>? onExpandedChanged;
 
-  /// 右侧动作图标/按钮 [trailingAction] (与 [actionIcon] 互为别名)
-  final Widget? trailingAction;
-
-  /// 右侧动作图标/按钮 [actionIcon] (与 [trailingAction] 互为别名)
+  /// 右侧动作图标/按钮
   final Widget? actionIcon;
 
-  /// 右侧动作图标点击回调 [actionOnClick] (可选)
-  final VoidCallback? actionOnClick;
+  /// 右侧动作图标/按钮点击回调
+  final VoidCallback? onActionTap;
+
+  /// 卡片整体点击回调
+  final VoidCallback? onTap;
 
   /// 是否可以展开/折叠 (默认 true)
   final bool expandable;
@@ -66,8 +63,14 @@ class FluentTextCard extends StatefulWidget {
   /// 自定义卡片背景色 (可选)
   final Color? backgroundColor;
 
-  /// 卡片不透明度 (默认 1.0，当设为 < 1.0 时自适应毛玻璃与半透明表面)
+  /// 卡片不透明度 (默认 1.0)
   final double opacity;
+
+  /// 自定义卡片宽度 (可选，默认 double.infinity 填满父容器宽度)
+  final double? width;
+
+  /// 是否开启内部文本划词/复制选中功能 (默认 false)
+  final bool selectable;
 
   /// 是否拉伸填满父容器垂直高度 (默认 false，即自适应包裹内容)
   final bool expand;
@@ -85,7 +88,6 @@ class FluentTextCard extends StatefulWidget {
     super.key,
     this.title,
     this.titleWidget,
-    this.subTitle,
     this.subtitle,
     this.leadingIcon,
     this.text,
@@ -93,9 +95,9 @@ class FluentTextCard extends StatefulWidget {
     this.child,
     this.initiallyExpanded = false,
     this.onExpandedChanged,
-    this.trailingAction,
     this.actionIcon,
-    this.actionOnClick,
+    this.onActionTap,
+    this.onTap,
     this.expandable = true,
     this.showDivider = false,
     this.padding = const EdgeInsets.all(16.0),
@@ -103,6 +105,8 @@ class FluentTextCard extends StatefulWidget {
     this.borderRadius = 12.0,
     this.backgroundColor,
     this.opacity = 1.0,
+    this.width,
+    this.selectable = false,
     this.expand = false,
     this.enableCursor = true,
     this.animationDuration = FluentMotionDuration.gentle,
@@ -127,8 +131,8 @@ class _FluentTextCardState extends State<FluentTextCard>
   }
 
   void _toggleExpand() {
-    if (widget.actionOnClick != null) {
-      widget.actionOnClick!.call();
+    if (widget.onActionTap != null) {
+      widget.onActionTap!.call();
     }
     if (!widget.expandable) return;
     setState(() {
@@ -140,14 +144,12 @@ class _FluentTextCardState extends State<FluentTextCard>
   @override
   Widget build(BuildContext context) {
     final theme = FluentTheme.of(context);
-    final String? effectiveSubTitle = widget.subTitle ?? widget.subtitle;
-    final Widget? effectiveTrailing = widget.trailingAction ?? widget.actionIcon;
 
     Widget headerContent = Row(
       children: [
         if (widget.leadingIcon != null) ...[
           IconTheme(
-            data: IconThemeData(color: theme.primaryColor, size: 22.0),
+            data: IconThemeData(color: theme.foregroundColor, size: 22.0),
             child: widget.leadingIcon!,
           ),
           const SizedBox(width: 12.0),
@@ -168,10 +170,10 @@ class _FluentTextCardState extends State<FluentTextCard>
                     color: theme.foregroundColor,
                   ),
                 ),
-              if (effectiveSubTitle != null) ...[
+              if (widget.subtitle != null) ...[
                 const SizedBox(height: 2.0),
                 Text(
-                  effectiveSubTitle,
+                  widget.subtitle!,
                   style: TextStyle(
                     fontSize: 12.0,
                     color: theme.foregroundSecondaryColor,
@@ -181,8 +183,8 @@ class _FluentTextCardState extends State<FluentTextCard>
             ],
           ),
         ),
-        if (effectiveTrailing != null)
-          effectiveTrailing
+        if (widget.actionIcon != null)
+          widget.actionIcon!
         else if (widget.expandable)
           AnimatedRotation(
             turns: _isExpanded ? 0.5 : 0.0,
@@ -197,46 +199,69 @@ class _FluentTextCardState extends State<FluentTextCard>
       ],
     );
 
+    Widget headerWidget = headerContent;
+    if (widget.enableCursor &&
+        (widget.expandable || widget.onActionTap != null)) {
+      headerWidget = MouseRegion(
+        cursor: SystemMouseCursors.click,
+        child: headerContent,
+      );
+    }
+
+    Widget cardChild = Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        headerWidget,
+        AnimatedSize(
+          duration: widget.animationDuration,
+          curve: widget.animationCurve,
+          alignment: Alignment.topCenter,
+          child: _isExpanded
+              ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (widget.showDivider) ...[
+                      const SizedBox(height: 12.0),
+                      Divider(
+                        height: 1.0,
+                        color: theme.dividerColor.withValues(alpha: 0.5),
+                      ),
+                    ],
+                    Padding(
+                      padding:
+                          widget.contentPadding ??
+                          const EdgeInsets.only(top: 12.0),
+                      child: _buildBodyContent(context, theme),
+                    ),
+                  ],
+                )
+              : const SizedBox(width: double.infinity, height: 0.0),
+        ),
+      ],
+    );
+
+    if (widget.selectable) {
+      cardChild = SelectionArea(child: cardChild);
+    }
+
     return FluentCard(
       padding: widget.padding,
       borderRadius: widget.borderRadius,
       backgroundColor: widget.backgroundColor,
       opacity: widget.opacity,
+      width: widget.width,
+      selectable: widget.selectable,
       expand: widget.expand,
-      enableCursor: widget.enableCursor && widget.expandable,
-      onTap: widget.expandable || widget.actionOnClick != null ? _toggleExpand : null,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          headerContent,
-          AnimatedSize(
-            duration: widget.animationDuration,
-            curve: widget.animationCurve,
-            alignment: Alignment.topCenter,
-            child: _isExpanded
-                ? Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      if (widget.showDivider) ...[
-                        const SizedBox(height: 12.0),
-                        Divider(
-                          height: 1.0,
-                          color: theme.dividerColor.withValues(alpha: 0.5),
-                        ),
-                      ],
-                      Padding(
-                        padding: widget.contentPadding ??
-                            const EdgeInsets.only(top: 12.0),
-                        child: _buildBodyContent(context, theme),
-                      ),
-                    ],
-                  )
-                : const SizedBox(width: double.infinity, height: 0.0),
-          ),
-        ],
-      ),
+      enableCursor:
+          widget.enableCursor && widget.expandable && !widget.selectable,
+      onTap:
+          widget.onTap ??
+          (widget.expandable || widget.onActionTap != null
+              ? _toggleExpand
+              : null),
+      child: cardChild,
     );
   }
 
@@ -245,24 +270,45 @@ class _FluentTextCardState extends State<FluentTextCard>
       return widget.child!;
     }
     if (widget.richText != null) {
-      return Text.rich(
-        TextSpan(children: [widget.richText!]),
-        style: TextStyle(
-          fontSize: 14.0,
-          color: theme.foregroundColor,
-          height: 1.4,
-        ),
-      );
+      final TextSpan span = widget.richText is TextSpan
+          ? (widget.richText as TextSpan)
+          : TextSpan(children: [widget.richText!]);
+      return widget.selectable
+          ? SelectableText.rich(
+              span,
+              style: TextStyle(
+                fontSize: 14.0,
+                color: theme.foregroundColor,
+                height: 1.4,
+              ),
+            )
+          : Text.rich(
+              span,
+              style: TextStyle(
+                fontSize: 14.0,
+                color: theme.foregroundColor,
+                height: 1.4,
+              ),
+            );
     }
     if (widget.text != null) {
-      return Text(
-        widget.text!,
-        style: TextStyle(
-          fontSize: 14.0,
-          color: theme.foregroundColor,
-          height: 1.4,
-        ),
-      );
+      return widget.selectable
+          ? SelectableText(
+              widget.text!,
+              style: TextStyle(
+                fontSize: 14.0,
+                color: theme.foregroundColor,
+                height: 1.4,
+              ),
+            )
+          : Text(
+              widget.text!,
+              style: TextStyle(
+                fontSize: 14.0,
+                color: theme.foregroundColor,
+                height: 1.4,
+              ),
+            );
     }
     return const SizedBox.shrink();
   }

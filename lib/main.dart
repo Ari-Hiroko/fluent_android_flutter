@@ -99,16 +99,23 @@ class _MainAppState extends State<MainApp> with SingleTickerProviderStateMixin {
               opacity: 0.8,
               child: SingleChildScrollView(
                 padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      width: double.infinity,
-                      child: FluentCard.Text(
+                child: SizedBox(
+                  width: double.infinity,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      FluentCard.Announcement(
+                        selectable: true,
+                        opacity: 0.8,
+                        title: '飞八分钱',
+                        description: '大家好啊，我是公告喵，今天来点大家想看的东西',
+                      ),
+                      SizedBox(height: 10),
+                      FluentCard.Text(
                         opacity: 0.8,
                         title: '咦？',
-                        subTitle: '点击卡片可展开或折叠详细内容',
+                        subtitle: '这都有火箭收的',
                         leadingIcon: const Icon(Icons.auto_fix_normal),
                         initiallyExpanded: true,
                         showDivider: true,
@@ -121,8 +128,8 @@ class _MainAppState extends State<MainApp> with SingleTickerProviderStateMixin {
                           ],
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),

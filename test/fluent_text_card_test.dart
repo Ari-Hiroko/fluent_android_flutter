@@ -3,6 +3,28 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:fluent2_android/fluent2_android.dart';
 
 void main() {
+  group('FluentCard Selectable Tests', () {
+    testWidgets('Renders SelectionArea and SelectableText when selectable is true', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: FluentCard.Text(
+              selectable: true,
+              title: 'Selectable Title',
+              text: 'Selectable Body Text',
+              initiallyExpanded: true,
+            ),
+          ),
+        ),
+      );
+
+      await tester.pumpAndSettle();
+
+      expect(find.byType(SelectionArea), findsAtLeastNWidgets(1));
+      expect(find.byType(SelectableText), findsOneWidget);
+    });
+  });
+
   group('FluentCard Factory Constructor Tests', () {
     testWidgets('Renders via FluentCard.text constructor', (tester) async {
       await tester.pumpWidget(
@@ -10,7 +32,7 @@ void main() {
           home: Scaffold(
             body: FluentCard.text(
               title: 'Card Title via FluentCard.text',
-              subTitle: 'Card Subtitle',
+              subtitle: 'Card Subtitle',
               text: 'Expanded detail text',
               initiallyExpanded: true,
             ),
@@ -48,8 +70,8 @@ void main() {
         MaterialApp(
           home: Scaffold(
             body: FluentCard.file(
-              fileName: 'Document.pdf',
-              subTitle: '2.5 MB',
+              title: 'Document.pdf',
+              subtitle: '2.5 MB',
             ),
           ),
         ),
@@ -87,7 +109,7 @@ void main() {
           home: Scaffold(
             body: FluentTextCard(
               title: 'Card Title',
-              subTitle: 'Card Subtitle',
+              subtitle: 'Card Subtitle',
               text: 'Expandable body text content',
               initiallyExpanded: false,
             ),

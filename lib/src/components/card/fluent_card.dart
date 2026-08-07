@@ -9,7 +9,7 @@ export 'fluent_text_card.dart';
 /// Fluent 2 BasicCard 基础卡片容器 [FluentCard]
 ///
 /// 完全移植自 Android Kotlin BasicCard.kt, V2CardActivity.kt 与 V2CardUITest.kt
-/// 支持可选的内容动态改变伸缩动画与 [opacity] 不透明度调整。
+/// 支持可选的内容动态改变伸缩动画、[opacity] 不透明度调整、[width] 自定义宽度（默认 [double.infinity] 自动填满横向宽度）与 [selectable] 划词选中复制。
 ///
 /// 同时也提供便利的衍生命名构建函数：
 /// - `FluentCard.text(...)` / `FluentCard.Text(...)` -> [FluentTextCard] (可展开文本卡片)
@@ -19,11 +19,8 @@ class FluentCard extends StatelessWidget {
   /// 卡片内容 Child
   final Widget child;
 
-  /// 点击回调 (可选，当为 null 时卡片非响应式静态 Container)
+  /// 点击回调
   final VoidCallback? onTap;
-
-  /// 点击回调 onClick 别名
-  final VoidCallback? onClick;
 
   /// 内边距
   final EdgeInsetsGeometry padding;
@@ -46,6 +43,12 @@ class FluentCard extends StatelessWidget {
   /// 卡片不透明度 (默认 1.0，范围 0.0 ~ 1.0)
   final double opacity;
 
+  /// 卡片宽度 (可选，默认为 [double.infinity]，即占据父容器 100% 宽度)
+  final double? width;
+
+  /// 是否开启内部文本划词/选中复制功能 (默认 false)
+  final bool selectable;
+
   /// 是否强制垂直拉伸填满父容器的高度 (默认为 false，即自适应包裹内容高度)
   final bool expand;
 
@@ -56,11 +59,12 @@ class FluentCard extends StatelessWidget {
     super.key,
     required this.child,
     this.onTap,
-    this.onClick,
     this.padding = const EdgeInsets.all(16.0),
     this.borderRadius = 12.0,
     this.backgroundColor,
     this.opacity = 1.0,
+    this.width,
+    this.selectable = false,
     this.expand = false,
     this.enableSizeAnimation = true,
     this.enableCursor = true,
@@ -73,7 +77,6 @@ class FluentCard extends StatelessWidget {
     Key? key,
     String? title,
     Widget? titleWidget,
-    String? subTitle,
     String? subtitle,
     Widget? leadingIcon,
     String? text,
@@ -81,9 +84,9 @@ class FluentCard extends StatelessWidget {
     Widget? child,
     bool initiallyExpanded = false,
     ValueChanged<bool>? onExpandedChanged,
-    Widget? trailingAction,
     Widget? actionIcon,
-    VoidCallback? actionOnClick,
+    VoidCallback? onActionTap,
+    VoidCallback? onTap,
     bool expandable = true,
     bool showDivider = false,
     EdgeInsetsGeometry padding = const EdgeInsets.all(16.0),
@@ -91,6 +94,8 @@ class FluentCard extends StatelessWidget {
     double borderRadius = 12.0,
     Color? backgroundColor,
     double opacity = 1.0,
+    double? width,
+    bool selectable = false,
     bool expand = false,
     bool enableCursor = true,
     Duration animationDuration = FluentMotionDuration.gentle,
@@ -100,16 +105,15 @@ class FluentCard extends StatelessWidget {
       key: key,
       title: title,
       titleWidget: titleWidget,
-      subTitle: subTitle,
       subtitle: subtitle,
       leadingIcon: leadingIcon,
       text: text,
       richText: richText,
       initiallyExpanded: initiallyExpanded,
       onExpandedChanged: onExpandedChanged,
-      trailingAction: trailingAction,
       actionIcon: actionIcon,
-      actionOnClick: actionOnClick,
+      onActionTap: onActionTap,
+      onTap: onTap,
       expandable: expandable,
       showDivider: showDivider,
       padding: padding,
@@ -117,6 +121,8 @@ class FluentCard extends StatelessWidget {
       borderRadius: borderRadius,
       backgroundColor: backgroundColor,
       opacity: opacity,
+      width: width,
+      selectable: selectable,
       expand: expand,
       enableCursor: enableCursor,
       animationDuration: animationDuration,
@@ -131,7 +137,6 @@ class FluentCard extends StatelessWidget {
     Key? key,
     String? title,
     Widget? titleWidget,
-    String? subTitle,
     String? subtitle,
     Widget? leadingIcon,
     String? text,
@@ -139,9 +144,9 @@ class FluentCard extends StatelessWidget {
     Widget? child,
     bool initiallyExpanded = false,
     ValueChanged<bool>? onExpandedChanged,
-    Widget? trailingAction,
     Widget? actionIcon,
-    VoidCallback? actionOnClick,
+    VoidCallback? onActionTap,
+    VoidCallback? onTap,
     bool expandable = true,
     bool showDivider = false,
     EdgeInsetsGeometry padding = const EdgeInsets.all(16.0),
@@ -149,6 +154,8 @@ class FluentCard extends StatelessWidget {
     double borderRadius = 12.0,
     Color? backgroundColor,
     double opacity = 1.0,
+    double? width,
+    bool selectable = false,
     bool expand = false,
     bool enableCursor = true,
     Duration animationDuration = FluentMotionDuration.gentle,
@@ -157,16 +164,15 @@ class FluentCard extends StatelessWidget {
     key: key,
     title: title,
     titleWidget: titleWidget,
-    subTitle: subTitle,
     subtitle: subtitle,
     leadingIcon: leadingIcon,
     text: text,
     richText: richText,
     initiallyExpanded: initiallyExpanded,
     onExpandedChanged: onExpandedChanged,
-    trailingAction: trailingAction,
     actionIcon: actionIcon,
-    actionOnClick: actionOnClick,
+    onActionTap: onActionTap,
+    onTap: onTap,
     expandable: expandable,
     showDivider: showDivider,
     padding: padding,
@@ -174,6 +180,8 @@ class FluentCard extends StatelessWidget {
     borderRadius: borderRadius,
     backgroundColor: backgroundColor,
     opacity: opacity,
+    width: width,
+    selectable: selectable,
     expand: expand,
     enableCursor: enableCursor,
     animationDuration: animationDuration,
@@ -184,28 +192,30 @@ class FluentCard extends StatelessWidget {
   /// [FluentFileCard] 构建方法: `FluentCard.file(...)`
   static Widget file({
     Key? key,
-    required String fileName,
-    required String subTitle,
+    required String title,
+    String? subtitle,
     Widget? leadingIcon,
     Widget? thumbnail,
-    Widget? actionOverflowIcon,
-    VoidCallback? actionOverflowOnClick,
+    Widget? actionIcon,
+    VoidCallback? onActionTap,
     VoidCallback? onTap,
-    VoidCallback? onClick,
     double opacity = 1.0,
+    double? width,
+    bool selectable = false,
     bool enableSizeAnimation = true,
   }) {
     return FluentFileCard(
       key: key,
-      fileName: fileName,
-      subTitle: subTitle,
+      title: title,
+      subtitle: subtitle,
       leadingIcon: leadingIcon,
       thumbnail: thumbnail,
-      actionOverflowIcon: actionOverflowIcon,
-      actionOverflowOnClick: actionOverflowOnClick,
+      actionIcon: actionIcon,
+      onActionTap: onActionTap,
       onTap: onTap,
-      onClick: onClick,
       opacity: opacity,
+      width: width,
+      selectable: selectable,
       enableSizeAnimation: enableSizeAnimation,
     );
   }
@@ -214,27 +224,29 @@ class FluentCard extends StatelessWidget {
   // ignore: non_constant_identifier_names
   static Widget File({
     Key? key,
-    required String fileName,
-    required String subTitle,
+    required String title,
+    String? subtitle,
     Widget? leadingIcon,
     Widget? thumbnail,
-    Widget? actionOverflowIcon,
-    VoidCallback? actionOverflowOnClick,
+    Widget? actionIcon,
+    VoidCallback? onActionTap,
     VoidCallback? onTap,
-    VoidCallback? onClick,
     double opacity = 1.0,
+    double? width,
+    bool selectable = false,
     bool enableSizeAnimation = true,
   }) => FluentCard.file(
     key: key,
-    fileName: fileName,
-    subTitle: subTitle,
+    title: title,
+    subtitle: subtitle,
     leadingIcon: leadingIcon,
     thumbnail: thumbnail,
-    actionOverflowIcon: actionOverflowIcon,
-    actionOverflowOnClick: actionOverflowOnClick,
+    actionIcon: actionIcon,
+    onActionTap: onActionTap,
     onTap: onTap,
-    onClick: onClick,
     opacity: opacity,
+    width: width,
+    selectable: selectable,
     enableSizeAnimation: enableSizeAnimation,
   );
 
@@ -242,25 +254,31 @@ class FluentCard extends StatelessWidget {
   static Widget announcement({
     Key? key,
     required String title,
-    required String description,
+    String? description,
+    String? subtitle,
     String? buttonText,
-    VoidCallback? buttonOnClick,
     VoidCallback? onActionTap,
     Widget? illustration,
+    Widget? leadingIcon,
     VoidCallback? onTap,
     double opacity = 1.0,
+    double? width,
+    bool selectable = false,
     bool enableSizeAnimation = true,
   }) {
     return FluentAnnouncementCard(
       key: key,
       title: title,
       description: description,
+      subtitle: subtitle,
       buttonText: buttonText,
-      buttonOnClick: buttonOnClick,
       onActionTap: onActionTap,
       illustration: illustration,
+      leadingIcon: leadingIcon,
       onTap: onTap,
       opacity: opacity,
+      width: width,
+      selectable: selectable,
       enableSizeAnimation: enableSizeAnimation,
     );
   }
@@ -270,24 +288,30 @@ class FluentCard extends StatelessWidget {
   static Widget Announcement({
     Key? key,
     required String title,
-    required String description,
+    String? description,
+    String? subtitle,
     String? buttonText,
-    VoidCallback? buttonOnClick,
     VoidCallback? onActionTap,
     Widget? illustration,
+    Widget? leadingIcon,
     VoidCallback? onTap,
     double opacity = 1.0,
+    double? width,
+    bool selectable = false,
     bool enableSizeAnimation = true,
   }) => FluentCard.announcement(
     key: key,
     title: title,
     description: description,
+    subtitle: subtitle,
     buttonText: buttonText,
-    buttonOnClick: buttonOnClick,
     onActionTap: onActionTap,
     illustration: illustration,
+    leadingIcon: leadingIcon,
     onTap: onTap,
     opacity: opacity,
+    width: width,
+    selectable: selectable,
     enableSizeAnimation: enableSizeAnimation,
   );
 
@@ -296,18 +320,26 @@ class FluentCard extends StatelessWidget {
     final theme = FluentTheme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
-    final VoidCallback? tapCallback = onTap ?? onClick;
-    final bool isClickable = tapCallback != null;
+    final bool isClickable = onTap != null;
 
     final Color baseBg = backgroundColor ?? theme.backgroundColor;
-    // 根据 opacity 计算最终的不透明背景色
     final Color effectiveBg = opacity < 1.0
         ? baseBg.withValues(alpha: baseBg.a * opacity)
         : baseBg;
 
     final bool isTranslucent = opacity < 1.0 || effectiveBg.a < 1.0;
 
+    final Color borderCol = isTranslucent
+        ? (isDark
+              ? Colors.white.withValues(alpha: 0.15)
+              : Colors.white.withValues(alpha: 0.6))
+        : theme.dividerColor.withValues(alpha: isDark ? 0.3 : 0.4);
+
     Widget cardBody = Padding(padding: padding, child: child);
+
+    if (selectable) {
+      cardBody = SelectionArea(child: cardBody);
+    }
 
     if (enableSizeAnimation) {
       cardBody = AnimatedSize(
@@ -318,17 +350,12 @@ class FluentCard extends StatelessWidget {
       );
     }
 
+    final double effectiveWidth = width ?? double.infinity;
+
     final BoxDecoration decoration = BoxDecoration(
       color: effectiveBg,
       borderRadius: BorderRadius.circular(borderRadius),
-      border: Border.all(
-        color: isTranslucent
-            ? (isDark
-                  ? Colors.white.withValues(alpha: 0.15)
-                  : Colors.white.withValues(alpha: 0.6))
-            : theme.dividerColor.withValues(alpha: isDark ? 0.3 : 0.4),
-        width: 1.0,
-      ),
+      border: Border.all(color: borderCol, width: 1.0),
       boxShadow: [
         BoxShadow(
           color: Colors.black.withValues(
@@ -340,7 +367,6 @@ class FluentCard extends StatelessWidget {
       ],
     );
 
-    // 优化的悬浮/按压触控色彩：避免脏色，在磨砂玻璃与纯色背景上均保持通透高亮
     final Color hoverOverlay = isDark
         ? Colors.white.withValues(alpha: 0.06)
         : (isTranslucent
@@ -357,18 +383,23 @@ class FluentCard extends StatelessWidget {
 
     Widget cardWidget;
     if (!isClickable) {
-      cardWidget = Container(decoration: decoration, child: cardBody);
+      cardWidget = Container(
+        width: effectiveWidth,
+        decoration: decoration,
+        child: cardBody,
+      );
     } else {
       cardWidget = Container(
+        width: effectiveWidth,
         decoration: decoration,
         child: Material(
           color: Colors.transparent,
           borderRadius: BorderRadius.circular(borderRadius),
           child: InkWell(
-            onTap: tapCallback,
-            mouseCursor: enableCursor
+            onTap: onTap,
+            mouseCursor: (enableCursor && !selectable)
                 ? SystemMouseCursors.click
-                : SystemMouseCursors.basic,
+                : MouseCursor.defer,
             borderRadius: BorderRadius.circular(borderRadius),
             hoverColor: hoverOverlay,
             highlightColor: highlightOverlay,
@@ -376,6 +407,13 @@ class FluentCard extends StatelessWidget {
             child: cardBody,
           ),
         ),
+      );
+    }
+
+    if (enableCursor && isClickable && !selectable) {
+      cardWidget = MouseRegion(
+        cursor: SystemMouseCursors.click,
+        child: cardWidget,
       );
     }
 
@@ -395,41 +433,44 @@ class FluentCard extends StatelessWidget {
 ///
 /// 完全移植自 Android Kotlin FileCard.kt 与 V2CardUITest.kt
 class FluentFileCard extends StatelessWidget {
-  final String fileName;
-  final String subTitle;
+  final String title;
+  final String? subtitle;
   final Widget? leadingIcon;
   final Widget? thumbnail;
-  final Widget? actionOverflowIcon;
-  final VoidCallback? actionOverflowOnClick;
+  final Widget? actionIcon;
+  final VoidCallback? onActionTap;
   final VoidCallback? onTap;
-  final VoidCallback? onClick;
   final double opacity;
+  final double? width;
+  final bool selectable;
   final bool enableSizeAnimation;
 
   const FluentFileCard({
     super.key,
-    required this.fileName,
-    required this.subTitle,
+    required this.title,
+    this.subtitle,
     this.leadingIcon,
     this.thumbnail,
-    this.actionOverflowIcon,
-    this.actionOverflowOnClick,
+    this.actionIcon,
+    this.onActionTap,
     this.onTap,
-    this.onClick,
     this.opacity = 1.0,
+    this.width,
+    this.selectable = false,
     this.enableSizeAnimation = true,
   });
 
   @override
   Widget build(BuildContext context) {
     final theme = FluentTheme.of(context);
-    final VoidCallback? cardTap = onTap ?? onClick;
-    final bool showMoreOption = actionOverflowOnClick != null;
+    final bool showMoreOption = onActionTap != null;
 
     return FluentCard(
-      onTap: cardTap,
+      onTap: onTap,
       padding: const EdgeInsets.all(12.0),
       opacity: opacity,
+      width: width,
+      selectable: selectable,
       enableSizeAnimation: enableSizeAnimation,
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -472,7 +513,7 @@ class FluentFileCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      fileName,
+                      title,
                       style: TextStyle(
                         fontSize: 14.0,
                         fontWeight: FontWeight.bold,
@@ -481,23 +522,25 @@ class FluentFileCard extends StatelessWidget {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    const SizedBox(height: 2.0),
-                    Text(
-                      subTitle,
-                      style: TextStyle(
-                        fontSize: 12.0,
-                        color: theme.foregroundSecondaryColor,
+                    if (subtitle != null && subtitle!.isNotEmpty) ...[
+                      const SizedBox(height: 2.0),
+                      Text(
+                        subtitle!,
+                        style: TextStyle(
+                          fontSize: 12.0,
+                          color: theme.foregroundSecondaryColor,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
+                    ],
                   ],
                 ),
               ),
               if (showMoreOption) ...[
                 const SizedBox(width: 8.0),
                 GestureDetector(
-                  onTap: actionOverflowOnClick,
+                  onTap: onActionTap,
                   child: MouseRegion(
                     cursor: SystemMouseCursors.click,
                     child: Padding(
@@ -507,8 +550,7 @@ class FluentFileCard extends StatelessWidget {
                           color: theme.foregroundSecondaryColor,
                           size: 20.0,
                         ),
-                        child:
-                            actionOverflowIcon ?? const Icon(Icons.more_vert),
+                        child: actionIcon ?? const Icon(Icons.more_vert),
                       ),
                     ),
                   ),
@@ -527,47 +569,56 @@ class FluentFileCard extends StatelessWidget {
 /// 完全移植自 Android Kotlin AnnouncementCard.kt 与 V2CardUITest.kt
 class FluentAnnouncementCard extends StatelessWidget {
   final String title;
-  final String description;
+  final String? description;
+  final String? subtitle;
   final String? buttonText;
-  final VoidCallback? buttonOnClick;
   final VoidCallback? onActionTap;
   final Widget? illustration;
+  final Widget? leadingIcon;
   final VoidCallback? onTap;
   final double opacity;
+  final double? width;
+  final bool selectable;
   final bool enableSizeAnimation;
 
   const FluentAnnouncementCard({
     super.key,
     required this.title,
-    required this.description,
+    this.description,
+    this.subtitle,
     this.buttonText,
-    this.buttonOnClick,
     this.onActionTap,
     this.illustration,
+    this.leadingIcon,
     this.onTap,
     this.opacity = 1.0,
+    this.width,
+    this.selectable = false,
     this.enableSizeAnimation = true,
   });
 
   @override
   Widget build(BuildContext context) {
     final theme = FluentTheme.of(context);
-    final VoidCallback? btnCallback = buttonOnClick ?? onActionTap;
-    final bool showButton = btnCallback != null && buttonText != null;
+    final String effectiveDescription = description ?? subtitle ?? '';
+    final Widget? effectiveIllustration = illustration ?? leadingIcon;
+    final bool showButton = onActionTap != null && buttonText != null;
 
     return FluentCard(
       onTap: onTap,
       padding: const EdgeInsets.all(16.0),
       opacity: opacity,
+      width: width,
+      selectable: selectable,
       enableSizeAnimation: enableSizeAnimation,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (illustration != null) ...[
+          if (effectiveIllustration != null) ...[
             ClipRRect(
               borderRadius: BorderRadius.circular(8.0),
-              child: illustration!,
+              child: effectiveIllustration,
             ),
             const SizedBox(height: 12.0),
           ],
@@ -579,22 +630,24 @@ class FluentAnnouncementCard extends StatelessWidget {
               color: theme.foregroundColor,
             ),
           ),
-          const SizedBox(height: 4.0),
-          Text(
-            description,
-            style: TextStyle(
-              fontSize: 13.0,
-              color: theme.foregroundSecondaryColor,
-              height: 1.4,
+          if (effectiveDescription.isNotEmpty) ...[
+            const SizedBox(height: 4.0),
+            Text(
+              effectiveDescription,
+              style: TextStyle(
+                fontSize: 13.0,
+                color: theme.foregroundSecondaryColor,
+                height: 1.4,
+              ),
             ),
-          ),
+          ],
           if (showButton) ...[
             const SizedBox(height: 12.0),
             Align(
               alignment: Alignment.centerRight,
               child: FluentTextButton(
                 text: buttonText,
-                onPressed: btnCallback,
+                onPressed: onActionTap,
                 fontSize: 13.0,
               ),
             ),
