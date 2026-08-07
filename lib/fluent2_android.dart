@@ -75,8 +75,12 @@ export 'src/components/snackbar/fluent_snackbar.dart';
 export 'src/components/snackbar/fluent_banner.dart';
 export 'src/components/snackbar/fluent_card_nudge.dart';
 
+// Page & Transition Component
+export 'src/components/page/fluent_page_switcher.dart';
+
 // Progress Component
 export 'src/components/progress/fluent_progress_indicator.dart';
+
 
 // Transients Component
 export 'src/components/transients/fluent_shimmer.dart';

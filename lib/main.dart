@@ -191,24 +191,12 @@ class _MainAppState extends State<MainApp> with SingleTickerProviderStateMixin {
                 borderRadius: 0,
                 blur: 10.0,
                 opacity: 0.8,
-                child: AnimatedSwitcher(
-                  switchInCurve: Curves.easeOutCubic,
-                  switchOutCurve: Curves.easeOutCubic,
-                  duration: FluentMotionDuration.gentle,
-                  transitionBuilder: (child, animation) {
-                    return FadeTransition(
-                      opacity: animation,
-                      child: Container(
-                        alignment: AlignmentDirectional.topCenter,
-                        child: child,
-                      ),
-                    );
-                  },
-                  child: switch (_tabIndex) {
-                    0 => _buildHomeContent(context),
-                    1 => const _SettingsView(),
-                    _ => null,
-                  },
+                child: FluentTabSwitcher(
+                  selectedIndex: _tabIndex,
+                  onPageChanged: (index) => setState(() {
+                    _tabIndex = index;
+                  }),
+                  children: [_buildHomeContent(context), const _SettingsView()],
                 ),
               ),
             ),
