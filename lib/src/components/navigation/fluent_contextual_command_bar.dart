@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import '../../theme/fluent_colors.dart';
 import '../../theme/fluent_global_tokens.dart';
 import '../../theme/fluent_theme.dart';
+import '../../theme/fluent_theme_data.dart';
 
 /// 上下文命令项模型 [FluentCommandItem]
 class FluentCommandItem {
@@ -26,6 +28,7 @@ class FluentCommandItem {
 /// Fluent 2 上下文命令栏 [FluentContextualCommandBar]
 ///
 /// 移植自 Android Kotlin ContextualCommandBar.kt
+/// 支持可选主题色 [themeColor] / [selectedColor]，自动智能自适应继承 [FluentTheme] 或 MaterialApp [ColorScheme]。
 class FluentContextualCommandBar extends StatelessWidget {
   /// 命令项列表
   final List<FluentCommandItem> items;
@@ -36,6 +39,12 @@ class FluentContextualCommandBar extends StatelessWidget {
   /// 关闭按钮的回调
   final VoidCallback? onDismiss;
 
+  /// 主题色 / 品牌色 (可选。未传入时智能优先匹配 FluentTheme 或 MaterialApp ColorScheme 的 primary 主题色)
+  final Color? themeColor;
+
+  /// 选中命令项前景色 (可选)
+  final Color? selectedColor;
+
   /// 背景色 (可选)
   final Color? backgroundColor;
 
@@ -44,13 +53,35 @@ class FluentContextualCommandBar extends StatelessWidget {
     required this.items,
     this.showDismissButton = false,
     this.onDismiss,
+    this.themeColor,
+    this.selectedColor,
     this.backgroundColor,
   });
+
+  Color _resolvePrimaryThemeColor(BuildContext context, FluentThemeData fluentTheme) {
+    if (selectedColor != null) return selectedColor!;
+    if (themeColor != null) return themeColor!;
+
+    if (fluentTheme.primaryColor != FluentColors.communicationBlue) {
+      return fluentTheme.primaryColor;
+    }
+
+    final materialTheme = Theme.of(context);
+    final materialPrimary = materialTheme.colorScheme.primary;
+    if (materialPrimary != const Color(0xff6750a4) &&
+        materialPrimary != Colors.blue) {
+      return materialPrimary;
+    }
+
+    return fluentTheme.primaryColor;
+  }
 
   @override
   Widget build(BuildContext context) {
     final theme = FluentTheme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+
+    final Color resolvedPrimary = _resolvePrimaryThemeColor(context, theme);
 
     final Color barBackground = backgroundColor ??
         (isDark ? const Color(0xFF292929) : const Color(0xFFFAFAFA));
@@ -58,7 +89,7 @@ class FluentContextualCommandBar extends StatelessWidget {
     return Material(
       color: barBackground,
       elevation: FluentGlobalTokens.shadow14,
-      shadowColor: Colors.black.withAlpha(64),
+      shadowColor: Colors.black.withValues(alpha: 0.12),
       borderRadius: BorderRadius.circular(FluentGlobalTokens.cornerRadiusCircular),
       child: Container(
         height: 48.0,
@@ -67,7 +98,7 @@ class FluentContextualCommandBar extends StatelessWidget {
           color: barBackground,
           borderRadius: BorderRadius.circular(FluentGlobalTokens.cornerRadiusCircular),
           border: Border.all(
-            color: theme.dividerColor.withAlpha(64),
+            color: theme.dividerColor.withValues(alpha: 0.16),
             width: 1.0,
           ),
         ),
@@ -82,11 +113,11 @@ class FluentContextualCommandBar extends StatelessWidget {
                 final isEnabled = item.isEnabled;
 
                 final Color itemBg = isSelected
-                    ? theme.primaryColor.withAlpha(30)
+                    ? resolvedPrimary.withValues(alpha: 0.15)
                     : Colors.transparent;
 
                 final Color itemFg = isSelected
-                    ? theme.primaryColor
+                    ? resolvedPrimary
                     : (isEnabled ? theme.foregroundColor : theme.foregroundSecondaryColor);
 
                 return Padding(

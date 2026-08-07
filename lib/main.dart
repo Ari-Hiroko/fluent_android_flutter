@@ -13,7 +13,8 @@ class MainApp extends StatefulWidget {
 }
 
 class _MainAppState extends State<MainApp> with SingleTickerProviderStateMixin {
-  bool menuIsOpened = false;
+  bool _menuIsOpened = false;
+  int _tabIndex = 0;
   late final AnimationController _controller = AnimationController(
     vsync: this,
     duration: const Duration(milliseconds: 300),
@@ -28,11 +29,14 @@ class _MainAppState extends State<MainApp> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return FluentTheme(
-      themeData: FluentThemeData.light(),
+      themeData: FluentThemeData.fromSeed(
+        seedColor: Color.fromARGB(255, 215, 82, 131),
+      ),
       child: MaterialApp(
         title: "Fluent 2 Android",
         debugShowCheckedModeBanner: false,
         home: Scaffold(
+          backgroundColor: Colors.white,
           appBar: FluentTopAppBar(
             // appBarSize: FluentAppBarSize.small,
             leftActions: [
@@ -41,8 +45,8 @@ class _MainAppState extends State<MainApp> with SingleTickerProviderStateMixin {
                 child: IconButton(
                   onPressed: () {
                     setState(() {
-                      menuIsOpened = !menuIsOpened;
-                      if (menuIsOpened) {
+                      _menuIsOpened = !_menuIsOpened;
+                      if (_menuIsOpened) {
                         _controller.forward();
                       } else {
                         _controller.reverse();
@@ -58,7 +62,8 @@ class _MainAppState extends State<MainApp> with SingleTickerProviderStateMixin {
               ),
             ],
             elevation: 5,
-            backgroundColor: const Color.fromARGB(255, 215, 82, 131),
+            style: FluentStyle.brand,
+            // backgroundColor: const Color.fromARGB(255, 215, 82, 131),
             title: '测试软件',
             subTitle: '这是一个副标题',
             titleAlignment: TitleAlignment.left,
@@ -82,6 +87,26 @@ class _MainAppState extends State<MainApp> with SingleTickerProviderStateMixin {
             ],
           ),
           body: const Center(child: Text("Fluent 2 Android")),
+          bottomNavigationBar: FluentTabBar(
+            tabTextAlignment: FluentTabTextAlignment.vertical,
+            tabs: [
+              FluentTabItem(
+                icon: Icon(Icons.home),
+                title: '飞八分钱',
+                onClick: () => setState(() {
+                  _tabIndex = 0;
+                }),
+              ),
+              FluentTabItem(
+                icon: Icon(Icons.settings),
+                title: '设置',
+                onClick: () => setState(() {
+                  _tabIndex = 1;
+                }),
+              ),
+            ],
+            selectedIndex: _tabIndex,
+          ),
         ),
       ),
     );

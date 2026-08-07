@@ -100,20 +100,57 @@ class FluentThemeData {
     );
   }
 
+  /// 根据种子颜色 [seedColor] 动态衍生与生成 Fluent 2 主题配置 [FluentThemeData]
+  ///
+  /// 对标 Material 3 的 [ColorScheme.fromSeed]，能根据单一种子主调颜色自动匹配出配套的品牌前景色、选中态高亮与深浅色模式。
+  factory FluentThemeData.fromSeed({
+    required Color seedColor,
+    Brightness brightness = Brightness.light,
+    Color? backgroundColor,
+    Color? foregroundColor,
+    double cornerRadius = 8.0,
+    double elevation = 8.0,
+  }) {
+    final isDark = brightness == Brightness.dark;
+    final baseTheme = isDark ? FluentThemeData.dark() : FluentThemeData.light();
+    final colorScheme = ColorScheme.fromSeed(
+      seedColor: seedColor,
+      brightness: brightness,
+    );
+
+    final Color primary = seedColor;
+    final Color selectedColor = isDark ? colorScheme.primary : primary;
+
+    return FluentThemeData(
+      brightness: brightness,
+      primaryColor: primary,
+      backgroundColor: backgroundColor ?? baseTheme.backgroundColor,
+      backgroundPressedColor: baseTheme.backgroundPressedColor,
+      foregroundColor: foregroundColor ?? baseTheme.foregroundColor,
+      foregroundSelectedColor: selectedColor,
+      foregroundSecondaryColor: baseTheme.foregroundSecondaryColor,
+      dividerColor: baseTheme.dividerColor,
+      popupMenuBackgroundColor: baseTheme.popupMenuBackgroundColor,
+      popupMenuBackgroundPressedColor: baseTheme.popupMenuBackgroundPressedColor,
+      popupMenuItemTitleColor: baseTheme.popupMenuItemTitleColor,
+      popupMenuItemForegroundSelectedColor: selectedColor,
+      popupMenuItemIconTint: baseTheme.popupMenuItemIconTint,
+      popupMenuItemCheckboxTint: baseTheme.popupMenuItemCheckboxTint,
+      popupMenuItemRadiobuttonTint: baseTheme.popupMenuItemRadiobuttonTint,
+      cornerRadius: cornerRadius,
+      elevation: isDark ? 12.0 : elevation,
+    );
+  }
+
   /// 转换为 Material ThemeData，仅用于为 Flutter 控件提供通用配置
   ThemeData toMaterialTheme() {
     final isDark = brightness == Brightness.dark;
     return ThemeData(
       useMaterial3: true,
       brightness: brightness,
-      colorScheme: ColorScheme(
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: primaryColor,
         brightness: brightness,
-        primary: primaryColor,
-        onPrimary: Colors.white,
-        secondary: primaryColor,
-        onSecondary: Colors.white,
-        error: Colors.red,
-        onError: Colors.white,
         surface: backgroundColor,
         onSurface: foregroundColor,
       ),

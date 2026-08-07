@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../theme/fluent_colors.dart';
 import '../../theme/fluent_theme_data.dart';
 import '../../theme/fluent_theme.dart';
 import '../card/fluent_badge.dart';
@@ -23,7 +24,7 @@ class FluentSideRailItem {
 /// Fluent 2  SideRail 侧边栏垂直导航组件 [FluentSideRail]
 ///
 /// 移植自 Android Kotlin SideRail.kt 与 V2SideRailActivity.kt
-/// 专门用于平板、桌面或横屏模式下的左侧垂直侧边导航栏。
+/// 支持可选主题色 [themeColor] / [selectedColor]，自动智能自适应继承 [FluentTheme] 或 MaterialApp [ColorScheme]。
 class FluentSideRail extends StatelessWidget {
   /// 顶部 Header Widget (如用户头像 Avatar / 悬浮按键 FAB / Logo 图标)
   final Widget? header;
@@ -46,6 +47,12 @@ class FluentSideRail extends StatelessWidget {
   /// 底部选中回调
   final ValueChanged<int>? onBottomSelected;
 
+  /// 主题色 / 品牌色 (可选。未传入时智能优先匹配 FluentTheme 或 MaterialApp ColorScheme 的 primary 主题色)
+  final Color? themeColor;
+
+  /// 选中状态颜色 (可选)
+  final Color? selectedColor;
+
   /// 是否显示文字标签 (为 false 时为 Icon Only 模式)
   final bool enableText;
 
@@ -64,14 +71,35 @@ class FluentSideRail extends StatelessWidget {
     this.bottomSelectedIndex,
     this.onTopSelected,
     this.onBottomSelected,
+    this.themeColor,
+    this.selectedColor,
     this.enableText = true,
     this.enableCursor = true,
     this.width = 72.0,
   });
 
+  Color _resolvePrimaryThemeColor(BuildContext context, FluentThemeData fluentTheme) {
+    if (selectedColor != null) return selectedColor!;
+    if (themeColor != null) return themeColor!;
+
+    if (fluentTheme.primaryColor != FluentColors.communicationBlue) {
+      return fluentTheme.primaryColor;
+    }
+
+    final materialTheme = Theme.of(context);
+    final materialPrimary = materialTheme.colorScheme.primary;
+    if (materialPrimary != const Color(0xff6750a4) &&
+        materialPrimary != Colors.blue) {
+      return materialPrimary;
+    }
+
+    return fluentTheme.primaryColor;
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = FluentTheme.of(context);
+    final Color activeThemeColor = _resolvePrimaryThemeColor(context, theme);
 
     return Align(
       alignment: Alignment.centerLeft,
@@ -101,6 +129,7 @@ class FluentSideRail extends StatelessWidget {
                   return _buildRailItem(
                     context: context,
                     theme: theme,
+                    activeThemeColor: activeThemeColor,
                     item: item,
                     isSelected: isSelected,
                     onTap: () {
@@ -123,6 +152,7 @@ class FluentSideRail extends StatelessWidget {
                   return _buildRailItem(
                     context: context,
                     theme: theme,
+                    activeThemeColor: activeThemeColor,
                     item: item,
                     isSelected: isSelected,
                     onTap: () {
@@ -143,12 +173,13 @@ class FluentSideRail extends StatelessWidget {
   Widget _buildRailItem({
     required BuildContext context,
     required FluentThemeData theme,
+    required Color activeThemeColor,
     required FluentSideRailItem item,
     required bool isSelected,
     required VoidCallback onTap,
   }) {
     final Color itemColor = isSelected
-        ? theme.primaryColor
+        ? activeThemeColor
         : theme.foregroundSecondaryColor;
 
     final Widget iconWidget = (isSelected && item.selectedIcon != null)
@@ -178,7 +209,7 @@ class FluentSideRail extends StatelessWidget {
                       padding: const EdgeInsets.all(6.0),
                       decoration: BoxDecoration(
                         color: isSelected
-                            ? theme.primaryColor.withAlpha(20)
+                            ? activeThemeColor.withValues(alpha: 0.12)
                             : Colors.transparent,
                         borderRadius: BorderRadius.circular(16.0),
                       ),

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import '../../theme/fluent_colors.dart';
 import '../../theme/fluent_theme.dart';
+import '../../theme/fluent_theme_data.dart';
 import '../card/fluent_badge.dart';
 import 'fluent_top_app_bar.dart';
 
@@ -56,6 +58,7 @@ class FluentTabItem {
 /// Fluent 2  TabBar 底部/顶部选项卡组件 [FluentTabBar]
 ///
 /// 完全移植自 Android Kotlin TabBar.kt, TabBarTokens.kt, TabItemTokens.kt 与 V2TabBarActivity.kt
+/// 支持可选主题色 [themeColor] / [selectedColor]，自动智能自适应继承 [FluentTheme] 或 MaterialApp [ColorScheme]。
 class FluentTabBar extends StatelessWidget {
   /// Tab 项列表
   final List<FluentTabItem> tabs;
@@ -77,6 +80,9 @@ class FluentTabBar extends StatelessWidget {
 
   /// 是否显示顶部 1dp 分割线 (默认对标 Kotlin TabBarTokens.topBorderWidth)
   final bool showTopBorder;
+
+  /// 主题色 / 品牌色 (可选。未传入时智能优先匹配 FluentTheme 或 MaterialApp ColorScheme 的 primary 主题色)
+  final Color? themeColor;
 
   /// 自定义背景填充颜色 (可选)
   final Color? backgroundColor;
@@ -102,12 +108,37 @@ class FluentTabBar extends StatelessWidget {
     this.style = FluentStyle.neutral,
     this.showIndicator = true,
     this.showTopBorder = true,
+    this.themeColor,
     this.backgroundColor,
     this.selectedColor,
     this.unselectedColor,
     this.indicatorColor,
     this.enableCursor = true,
   });
+
+  /// 智能自适应解析主题色
+  Color _resolvePrimaryThemeColor(
+    BuildContext context,
+    FluentThemeData fluentTheme,
+  ) {
+    if (selectedColor != null) return selectedColor!;
+    if (themeColor != null) return themeColor!;
+
+    // 1. 若 FluentTheme 显式配置了非默认 primaryColor
+    if (fluentTheme.primaryColor != FluentColors.communicationBlue) {
+      return fluentTheme.primaryColor;
+    }
+
+    // 2. 自动兼容 MaterialApp ColorScheme.primary
+    final materialTheme = Theme.of(context);
+    final materialPrimary = materialTheme.colorScheme.primary;
+    if (materialPrimary != const Color(0xff6750a4) &&
+        materialPrimary != Colors.blue) {
+      return materialPrimary;
+    }
+
+    return fluentTheme.primaryColor;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -118,25 +149,26 @@ class FluentTabBar extends StatelessWidget {
         ? 56.0
         : 48.0;
 
-    // 默认背景色与前景色计算 (对标 TabBarTokens & TabItemTokens)
+    final Color resolvedPrimary = _resolvePrimaryThemeColor(context, theme);
+
+    // 默认背景色与前景色计算
     final Color effectiveBg =
-        backgroundColor ??
-        (isBrand ? theme.primaryColor : theme.backgroundColor);
+        backgroundColor ?? (isBrand ? resolvedPrimary : theme.backgroundColor);
 
     final Color effectiveSelectedColor =
-        selectedColor ?? (isBrand ? Colors.white : theme.primaryColor);
+        selectedColor ?? (isBrand ? Colors.white : resolvedPrimary);
 
     final Color effectiveUnselectedColor =
         unselectedColor ??
         (isBrand
-            ? Colors.white.withAlpha(180)
+            ? Colors.white.withValues(alpha: 0.7)
             : theme.foregroundSecondaryColor);
 
     final Color effectiveIndicatorColor =
-        indicatorColor ?? (isBrand ? Colors.white : theme.primaryColor);
+        indicatorColor ?? (isBrand ? Colors.white : resolvedPrimary);
 
     final Color topBorderColor = isBrand
-        ? Colors.white.withAlpha(40)
+        ? Colors.white.withValues(alpha: 0.16)
         : theme.dividerColor;
 
     return Container(
@@ -178,10 +210,6 @@ class FluentTabBar extends StatelessWidget {
 }
 
 /// 每个 Tab 项的私有 StatefulWidget，持有动画控制器
-///
-/// 动画完全对标 Kotlin `TabItem.kt`：
-///   - 颜色渐变：`animateColorAsState(tween(300ms))` → TweenAnimationBuilder
-///   - 指示条：`AnimatedVisibility(fadeIn + expandHorizontally)` → AnimationController 驱动
 class _FluentTabItemWidget extends StatefulWidget {
   final FluentTabItem tab;
   final bool isSelected;
@@ -213,7 +241,7 @@ class _FluentTabItemWidget extends StatefulWidget {
 
 class _FluentTabItemWidgetState extends State<_FluentTabItemWidget>
     with SingleTickerProviderStateMixin {
-  /// 指示条动画控制器（0.0 = 收缩隐藏，1.0 = 完全展开可见）
+  /// 指示条动画控制器
   late final AnimationController _indicatorCtrl;
   late final Animation<double> _indicatorWidth;
   late final Animation<double> _indicatorOpacity;
@@ -226,12 +254,10 @@ class _FluentTabItemWidgetState extends State<_FluentTabItemWidget>
       duration: const Duration(milliseconds: 250),
       value: widget.isSelected ? 1.0 : 0.0,
     );
-    // expandHorizontally → width 0→32dp
     _indicatorWidth = Tween<double>(
       begin: 0.0,
       end: 32.0,
     ).animate(CurvedAnimation(parent: _indicatorCtrl, curve: Curves.easeInOut));
-    // fadeIn → opacity 0→1
     _indicatorOpacity = CurvedAnimation(
       parent: _indicatorCtrl,
       curve: Curves.easeIn,
@@ -262,9 +288,8 @@ class _FluentTabItemWidgetState extends State<_FluentTabItemWidget>
     final isSelected = widget.isSelected;
     final isEnabled = widget.isEnabled;
 
-    // 目标颜色（不带动画，用 TweenAnimationBuilder 包裹）
     final Color targetColor = !isEnabled
-        ? widget.unselectedColor.withAlpha(96)
+        ? widget.unselectedColor.withValues(alpha: 0.38)
         : (isSelected ? widget.selectedColor : widget.unselectedColor);
 
     final Widget iconWidget = (isSelected && tab.selectedIcon != null)
@@ -288,7 +313,6 @@ class _FluentTabItemWidgetState extends State<_FluentTabItemWidget>
             ? SystemMouseCursors.click
             : SystemMouseCursors.basic,
         onTap: widget.onTap,
-        // TweenAnimationBuilder 驱动颜色过渡（对标 animateColorAsState 300ms）
         child: TweenAnimationBuilder<Color?>(
           tween: ColorTween(end: targetColor),
           duration: const Duration(milliseconds: 300),
@@ -359,7 +383,6 @@ class _FluentTabItemWidgetState extends State<_FluentTabItemWidget>
             return Column(
               children: [
                 Expanded(child: Center(child: content)),
-                // 指示条：AnimationBuilder 驱动 expandHorizontally + fadeIn
                 if (widget.showIndicator)
                   AnimatedBuilder(
                     animation: _indicatorCtrl,
@@ -389,13 +412,6 @@ class _FluentTabItemWidgetState extends State<_FluentTabItemWidget>
   }
 }
 
-/// 精确复刻 Kotlin `TabItem.kt` CustomLayout badge 定位逻辑的 Flutter 组件
-///
-/// Kotlin 核心定位规则：
-///   hasContent = badge 宽度 > 16dp（即文字 badge，非小圆点）
-///   contentOffset = hasContent ? -2dp : 0
-///   badgeX (左边) = iconLeft + iconWidth/2 + contentOffset
-///   badgeY (顶边) = iconTop - 4dp  ← badge 顶部超出 icon 顶部 4dp
 class _BadgeWithIcon extends StatelessWidget {
   final Widget icon;
   final Widget? badge;
@@ -442,27 +458,19 @@ class _BadgeOverIconDelegate extends MultiChildLayoutDelegate {
 
   @override
   void performLayout(Size size) {
-    // 1. 先测量 badge
     final badgeSize = layoutChild(
       _BadgeSlot.badge,
       const BoxConstraints.tightForFinite(),
     );
-    // 2. 布局 icon（固定尺寸）
     layoutChild(
       _BadgeSlot.icon,
       BoxConstraints.tight(Size(iconSize, iconSize)),
     );
 
-    // 3. 定位 icon（在分配空间内水平居中，垂直向下偏移 4dp 以留出 badge 空间）
     final iconX = (size.width - iconSize) / 2;
-    const iconY = 4.0; // badge 超出顶部 4dp，icon 向下偏 4dp
+    const iconY = 4.0;
     positionChild(_BadgeSlot.icon, Offset(iconX, iconY));
 
-    // 4. 复刻 Kotlin 定位：
-    //    hasContent = badge 宽度 > 16dp（文字 badge vs. 圆点）
-    //    contentOffset = hasContent ? -2dp : 0dp
-    //    badge 左边 = icon 左边 + iconSize/2 + contentOffset
-    //    badge 顶边 = iconY - 4dp = 0
     final bool hasContent = badgeSize.width > 16.0;
     final double contentOffset = hasContent ? -2.0 : 0.0;
     final double badgeX = iconX + iconSize / 2 + contentOffset;
@@ -472,7 +480,6 @@ class _BadgeOverIconDelegate extends MultiChildLayoutDelegate {
 
   @override
   Size getSize(BoxConstraints constraints) {
-    // 宽度 = icon + 右侧 badge 溢出空间；高度 = icon + 4dp badge 顶部超出
     return constraints.constrain(Size(iconSize + 20.0, iconSize + 4.0));
   }
 

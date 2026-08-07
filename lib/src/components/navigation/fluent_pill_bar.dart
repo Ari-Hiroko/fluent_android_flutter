@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import '../../theme/fluent_colors.dart';
 import '../../theme/fluent_global_tokens.dart';
 import '../../theme/fluent_motion_tokens.dart';
 import '../../theme/fluent_theme.dart';
+import '../../theme/fluent_theme_data.dart';
 
 /// 单个 Pill 药丸按钮 [FluentPillButton]
 ///
@@ -25,6 +27,12 @@ class FluentPillButton extends StatefulWidget {
   /// 是否在右上角显示未读小红点 Notification Dot
   final bool notificationDot;
 
+  /// 主题色 / 品牌色 (可选，自动优先兼容 FluentTheme 或 MaterialApp ColorScheme 的 primary 主题色)
+  final Color? themeColor;
+
+  /// 选中状态颜色 (可选)
+  final Color? selectedColor;
+
   /// 点击回调
   final VoidCallback? onClick;
 
@@ -36,6 +44,8 @@ class FluentPillButton extends StatefulWidget {
     this.enabled = true,
     this.enableCursor = true,
     this.notificationDot = false,
+    this.themeColor,
+    this.selectedColor,
     this.onClick,
   });
 
@@ -57,7 +67,6 @@ class _FluentPillButtonState extends State<FluentPillButton>
       duration: const Duration(milliseconds: 200),
     );
 
-    // 对标 Kotlin Pill.kt: 0.95 -> 1.0 弹性 Spring 动画
     _scaleAnimation =
         TweenSequence<double>([
           TweenSequenceItem(tween: Tween(begin: 1.0, end: 0.95), weight: 30),
@@ -90,10 +99,30 @@ class _FluentPillButtonState extends State<FluentPillButton>
     widget.onClick?.call();
   }
 
+  Color _resolvePrimaryThemeColor(BuildContext context, FluentThemeData fluentTheme) {
+    if (widget.selectedColor != null) return widget.selectedColor!;
+    if (widget.themeColor != null) return widget.themeColor!;
+
+    if (fluentTheme.primaryColor != FluentColors.communicationBlue) {
+      return fluentTheme.primaryColor;
+    }
+
+    final materialTheme = Theme.of(context);
+    final materialPrimary = materialTheme.colorScheme.primary;
+    if (materialPrimary != const Color(0xff6750a4) &&
+        materialPrimary != Colors.blue) {
+      return materialPrimary;
+    }
+
+    return fluentTheme.primaryColor;
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = FluentTheme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+
+    final Color resolvedPrimary = _resolvePrimaryThemeColor(context, theme);
 
     Color bg;
     Color fg;
@@ -102,8 +131,8 @@ class _FluentPillButtonState extends State<FluentPillButton>
       bg = isDark ? const Color(0xFF242424) : const Color(0xFFE5E5E5);
       fg = isDark ? const Color(0xFF5C5C5C) : const Color(0xFFB3B3B3);
     } else if (widget.selected) {
-      bg = theme.primaryColor;
-      fg = Colors.white;
+      bg = resolvedPrimary;
+      fg = resolvedPrimary.computeLuminance() > 0.45 ? Colors.black : Colors.white;
     } else {
       bg = _isHovered
           ? (isDark ? const Color(0xFF383838) : const Color(0xFFE0E0E0))
@@ -134,8 +163,8 @@ class _FluentPillButtonState extends State<FluentPillButton>
               borderRadius: BorderRadius.circular(
                 FluentGlobalTokens.cornerRadiusCircular,
               ),
-              splashColor: fg.withAlpha(30),
-              highlightColor: fg.withAlpha(15),
+              splashColor: fg.withValues(alpha: 0.12),
+              highlightColor: fg.withValues(alpha: 0.06),
               child: Container(
                 height: 32.0,
                 padding: const EdgeInsets.symmetric(
@@ -209,6 +238,12 @@ class FluentPillBar extends StatelessWidget {
   /// 外边距
   final EdgeInsetsGeometry padding;
 
+  /// 主题色 / 品牌色 (可选，自动优先兼容 FluentTheme 或 MaterialApp ColorScheme 的 primary 主题色)
+  final Color? themeColor;
+
+  /// 选中项前景色/背景色 (可选)
+  final Color? selectedColor;
+
   /// 是否启用水平平滑滚动 (默认为 true)
   final bool isScrollable;
 
@@ -224,6 +259,8 @@ class FluentPillBar extends StatelessWidget {
     required this.selectedIndex,
     required this.onSelected,
     this.padding = const EdgeInsets.symmetric(horizontal: 16.0, vertical: 6.0),
+    this.themeColor,
+    this.selectedColor,
     this.isScrollable = true,
     this.enabled = true,
     this.enableCursor = true,
@@ -249,6 +286,8 @@ class FluentPillBar extends StatelessWidget {
           selected: isSelected,
           enabled: enabled,
           enableCursor: enableCursor,
+          themeColor: themeColor,
+          selectedColor: selectedColor,
           onClick: () => onSelected(index),
         ),
       );
