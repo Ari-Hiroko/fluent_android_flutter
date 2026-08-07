@@ -687,7 +687,7 @@ FluentCitation(
           demo: Column(
             children: [
               FluentCard(
-                enableSizeAnimation: true,
+                style: const FluentCardStyle(enableSizeAnimation: true),
                 onTap: () {
                   setState(() => _cardExpanded = !_cardExpanded);
                   _log(_cardExpanded ? '展开卡片详情' : '折叠卡片详情');

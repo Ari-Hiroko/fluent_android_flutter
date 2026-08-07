@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../theme/fluent_motion_tokens.dart';
 import '../../theme/fluent_theme.dart';
 import '../buttons/fluent_text_button.dart';
+import 'fluent_card.dart';
 import 'fluent_divider.dart';
 
 /// SectionHeader 风格类型
@@ -65,6 +66,21 @@ class FluentListItem extends StatefulWidget {
   /// 动画缓动曲线 (默认 FluentMotionCurve.standard)
   final Curve animationCurve;
 
+  /// 不透明度 (可选)
+  final double? opacity;
+
+  /// 透明背景控制 (默认为 null。若未指定，置于 [FluentCard] 内部时自动为 true 透出 Card 背景，否则为 false)
+  final bool? transparentBackground;
+
+  /// 自定义背景填充颜色 (可选)
+  final Color? backgroundColor;
+
+  /// 整体可选圆角半径 (如 [BorderRadius.circular(8.0)])
+  final BorderRadiusGeometry? borderRadius;
+
+  /// 是否使波纹颜色变更为主题色
+  final bool coloredSplash;
+
   const FluentListItem({
     super.key,
     required this.title,
@@ -84,6 +100,11 @@ class FluentListItem extends StatefulWidget {
     this.enableAnimation = true,
     this.animationDuration = FluentMotionDuration.fast,
     this.animationCurve = FluentMotionCurve.standard,
+    this.opacity,
+    this.transparentBackground,
+    this.backgroundColor,
+    this.borderRadius,
+    this.coloredSplash = false,
   });
 
   /// ListItem.item 对齐别名构造器
@@ -98,6 +119,11 @@ class FluentListItem extends StatefulWidget {
     this.enableCursor = true,
     this.onClick,
     this.showDivider = false,
+    this.opacity,
+    this.transparentBackground,
+    this.backgroundColor,
+    this.borderRadius,
+    this.coloredSplash = false,
   }) : title = text,
        subTitle = subText,
        tertiaryTitle = secondarySubText,
@@ -115,11 +141,15 @@ class FluentListItem extends StatefulWidget {
 }
 
 class _FluentListItemState extends State<FluentListItem> {
-  bool _isHovered = false;
-
   @override
   Widget build(BuildContext context) {
     final theme = FluentTheme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final cardScope = FluentCardScope.of(context);
+
+    // 智能推导背景透明控制：若在 FluentCard 内部默认透明背景
+    final bool isTransparent =
+        widget.transparentBackground ?? (cardScope != null);
 
     final bool hasSubTitle =
         widget.subTitle != null && widget.subTitle!.isNotEmpty;
@@ -156,9 +186,28 @@ class _FluentListItemState extends State<FluentListItem> {
     final double defaultInset =
         widget.dividerInset ?? (effectiveLeading != null ? 56.0 : 16.0);
 
-    final Color bgColor = (_isHovered && isClickable && widget.enableCursor)
-        ? theme.backgroundPressedColor
+    final Color defaultBgColor = isTransparent
+        ? Colors.transparent
         : theme.backgroundColor;
+
+    final Color bgColor = widget.backgroundColor ?? defaultBgColor;
+
+    final BorderRadiusGeometry effRadius =
+        widget.borderRadius ?? BorderRadius.zero;
+
+    final Color hoverColor = isDark
+        ? Colors.white.withValues(alpha: 0.06)
+        : (isTransparent
+              ? Colors.black.withValues(alpha: 0.04)
+              : theme.backgroundPressedColor.withValues(alpha: 0.5));
+
+    final Color highlightColor = isDark
+        ? Colors.white.withValues(alpha: 0.04)
+        : Colors.black.withValues(alpha: 0.04);
+
+    final Color splashColor = widget.coloredSplash
+        ? theme.primaryColor.withValues(alpha: 0.08)
+        : Colors.black12.withValues(alpha: 0.02);
 
     final Widget content = Container(
       constraints: BoxConstraints(minHeight: minHeight),
@@ -232,38 +281,26 @@ class _FluentListItemState extends State<FluentListItem> {
           ? widget.animationDuration
           : Duration.zero,
       curve: widget.animationCurve,
-      color: bgColor,
+      decoration: BoxDecoration(color: bgColor, borderRadius: effRadius),
       child: isClickable
           ? Material(
               color: Colors.transparent,
+              borderRadius: effRadius,
               child: InkWell(
                 onTap: tapCallback,
                 onLongPress: widget.enabled ? widget.onLongPress : null,
-                mouseCursor: isClickable
+                mouseCursor: (widget.enabled && widget.enableCursor)
                     ? SystemMouseCursors.click
                     : SystemMouseCursors.basic,
-                highlightColor: Colors.black.withAlpha(15),
-                splashColor: Colors.black.withAlpha(25),
+                borderRadius: effRadius is BorderRadius ? effRadius : null,
+                hoverColor: hoverColor,
+                highlightColor: highlightColor,
+                splashColor: splashColor,
                 child: content,
               ),
             )
           : content,
     );
-
-    if (widget.enableCursor) {
-      itemContainer = MouseRegion(
-        cursor: isClickable
-            ? SystemMouseCursors.click
-            : SystemMouseCursors.basic,
-        onEnter: (_) {
-          if (isClickable) setState(() => _isHovered = true);
-        },
-        onExit: (_) {
-          if (isClickable) setState(() => _isHovered = false);
-        },
-        child: itemContainer,
-      );
-    }
 
     return Column(
       mainAxisSize: MainAxisSize.min,

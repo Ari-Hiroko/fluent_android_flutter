@@ -26,6 +26,95 @@ class _MainAppState extends State<MainApp> with SingleTickerProviderStateMixin {
     super.dispose();
   }
 
+  Widget _buildHomeContent(BuildContext context) {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(8.0),
+      child: SizedBox(
+        width: double.infinity,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            FluentCard.Announcement(
+              style: FluentCardStyle(shadow: FluentShadow.shadow28(context)),
+              selectable: true,
+              opacity: 0.8,
+              title: '飞八分钱',
+              description: '大家好啊，我是公告喵，今天来点大家想看的东西',
+            ),
+            const SizedBox(height: 10),
+            FluentCard.Text(
+              opacity: 0.8,
+              expandable: false,
+              title: 'BIG 天皇 IS WATCHING YOU',
+              child: Center(
+                child: Container(
+                  height: 75,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: Image.asset('assets/sun.jpg').image,
+                      alignment: const AlignmentGeometry.xy(0, -0.2),
+                      fit: BoxFit.cover,
+                    ),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 10),
+            FluentCard.Text(
+              expandable: false,
+              opacity: 0.8,
+              title: '按钮测试',
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text('飞八分钱干飞马，干得飞马笑哈哈'),
+                  FluentTextButton(
+                    text: '飞八分钱',
+                    onPressed: () {
+                      showFluentSnackbarToast(
+                        context: context,
+                        title: '笑哈哈！',
+                        message: '干飞马成功',
+                        subTitle: '飞八分钱干飞马，干得飞马笑哈哈',
+                        leadingIcon: const Icon(Icons.face_2),
+                        actionText: '把碧玺',
+                        enableDismiss: true,
+                        enableSwipeToDismiss: true,
+                        style: FluentSnackbarStyle.accent,
+                        duration: FluentSnackbarDuration.long,
+                        offset: const Offset(0, -50),
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 10),
+            FluentCard.Text(
+              opacity: 0.8,
+              title: '咦？',
+              subtitle: '这都有火箭收的',
+              leadingIcon: const Icon(Icons.auto_fix_normal),
+              initiallyExpanded: true,
+              showDivider: true,
+              richText: const TextSpan(
+                text: '飞八分钱干飞马，干得飞马笑哈哈\n',
+                style: TextStyle(fontSize: 14),
+                children: [
+                  TextSpan(text: '哦对了\n'),
+                  TextSpan(text: '哦对了'),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return FluentTheme(
@@ -35,129 +124,272 @@ class _MainAppState extends State<MainApp> with SingleTickerProviderStateMixin {
       child: MaterialApp(
         title: "Fluent 2 Android",
         debugShowCheckedModeBanner: false,
-        home: Scaffold(
-          backgroundColor: Colors.white,
-          appBar: FluentTopAppBar(
-            leftActions: [
-              FluentTooltip(
-                message: '菜单',
-                child: IconButton(
-                  onPressed: () {
-                    setState(() {
-                      _menuIsOpened = !_menuIsOpened;
-                      if (_menuIsOpened) {
-                        _controller.forward();
-                      } else {
-                        _controller.reverse();
-                      }
-                    });
-                  },
-                  icon: AnimatedIcon(
-                    icon: AnimatedIcons.menu_close,
-                    progress: _controller,
+        home: Builder(
+          builder: (context) => Scaffold(
+            backgroundColor: Colors.white,
+            appBar: FluentTopAppBar(
+              leftActions: [
+                FluentTooltip(
+                  message: '菜单',
+                  child: IconButton(
+                    onPressed: () {
+                      setState(() {
+                        _menuIsOpened = !_menuIsOpened;
+                        if (_menuIsOpened) {
+                          _controller.forward();
+                        } else {
+                          _controller.reverse();
+                        }
+                      });
+                    },
+                    icon: AnimatedIcon(
+                      icon: AnimatedIcons.menu_close,
+                      progress: _controller,
+                    ),
+                    mouseCursor: SystemMouseCursors.click,
                   ),
-                  mouseCursor: SystemMouseCursors.click,
+                ),
+              ],
+              rightActions: [
+                FluentTooltip(
+                  message: '导航',
+                  child: IconButton(
+                    onPressed: () {},
+                    icon: const Icon(Icons.navigation),
+                    mouseCursor: SystemMouseCursors.click,
+                  ),
+                ),
+                FluentTooltip(
+                  message: '设置',
+                  child: IconButton(
+                    onPressed: () {
+                      setState(() {
+                        _tabIndex = 1;
+                      });
+                    },
+                    icon: const Icon(Icons.settings),
+                    mouseCursor: SystemMouseCursors.click,
+                  ),
+                ),
+              ],
+              elevation: 5,
+              style: FluentStyle.brand,
+              title: _tabIndex == 0 ? '测试软件' : '软件设置',
+              subTitle: _tabIndex == 0 ? '这是一个副标题' : '这是一个假的设置',
+              titleAlignment: TitleAlignment.left,
+            ),
+            body: Container(
+              width: double.infinity,
+              height: double.infinity,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: Image.asset('assets/sun.jpg').image,
+                  fit: BoxFit.cover,
                 ),
               ),
-            ],
-            rightActions: [
-              FluentTooltip(
-                message: '导航',
-                child: IconButton(
-                  onPressed: () {},
-                  icon: const Icon(Icons.navigation),
-                  mouseCursor: SystemMouseCursors.click,
+              child: FluentAcrylic(
+                borderRadius: 0,
+                blur: 10.0,
+                opacity: 0.8,
+                child: AnimatedSwitcher(
+                  switchInCurve: Curves.easeOutCubic,
+                  switchOutCurve: Curves.easeOutCubic,
+                  duration: FluentMotionDuration.gentle,
+                  transitionBuilder: (child, animation) {
+                    return FadeTransition(
+                      opacity: animation,
+                      child: Container(
+                        alignment: AlignmentDirectional.topCenter,
+                        child: child,
+                      ),
+                    );
+                  },
+                  child: switch (_tabIndex) {
+                    0 => _buildHomeContent(context),
+                    1 => const _SettingsView(),
+                    _ => null,
+                  },
                 ),
-              ),
-              FluentTooltip(
-                message: '设置',
-                child: IconButton(
-                  onPressed: () {},
-                  icon: const Icon(Icons.settings),
-                  mouseCursor: SystemMouseCursors.click,
-                ),
-              ),
-            ],
-            elevation: 5,
-            style: FluentStyle.brand,
-            title: '测试软件',
-            subTitle: '这是一个副标题',
-            titleAlignment: TitleAlignment.left,
-          ),
-          body: Container(
-            width: double.infinity,
-            height: double.infinity,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: Image.asset('assets/sun.jpg').image,
-                fit: BoxFit.cover,
               ),
             ),
-            child: FluentAcrylic(
-              borderRadius: 0,
-              blur: 10.0,
-              opacity: 0.8,
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.all(8.0),
-                child: SizedBox(
-                  width: double.infinity,
+            bottomNavigationBar: FluentTabBar(
+              tabTextAlignment: FluentTabTextAlignment.vertical,
+              selectedIndex: _tabIndex,
+              onTabSelected: (index) => setState(() {
+                _tabIndex = index;
+              }),
+              tabs: [
+                FluentTabItem(
+                  icon: const Icon(Icons.home),
+                  title: '飞八分钱',
+                  onClick: () => setState(() {
+                    _tabIndex = 0;
+                  }),
+                ),
+                FluentTabItem(
+                  icon: const Icon(Icons.settings),
+                  title: '设置',
+                  onClick: () => setState(() {
+                    _tabIndex = 1;
+                  }),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// 精美 Fluent 2 风格设置屏幕 Widget [_SettingsView]
+class _SettingsView extends StatefulWidget {
+  const _SettingsView();
+
+  @override
+  State<_SettingsView> createState() => _SettingsViewState();
+}
+
+class _SettingsViewState extends State<_SettingsView> {
+  bool _darkMode = false;
+  bool _notifications = true;
+  bool _acrylicEffect = true;
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(10.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // 个人 Profile 账户卡片
+          FluentCard(
+            style: const FluentCardStyle(opacity: 0.85),
+            child: Row(
+              children: [
+                const FluentAvatar(
+                  name: '公告喵',
+                  size: FluentAvatarSize.size56,
+                  image: AssetImage('assets/sun.jpg'),
+                ),
+                const SizedBox(width: 14.0),
+                Expanded(
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      FluentCard.Announcement(
-                        selectable: true,
-                        opacity: 0.8,
-                        title: '飞八分钱',
-                        description: '大家好啊，我是公告喵，今天来点大家想看的东西',
-                      ),
-                      SizedBox(height: 10),
-                      FluentCard.Text(
-                        opacity: 0.8,
-                        title: '咦？',
-                        subtitle: '这都有火箭收的',
-                        leadingIcon: const Icon(Icons.auto_fix_normal),
-                        initiallyExpanded: true,
-                        showDivider: true,
-                        richText: const TextSpan(
-                          text: '飞八分钱干飞马，干得飞马笑哈哈\n',
-                          style: TextStyle(fontSize: 14),
-                          children: [
-                            TextSpan(text: '哦对了\n'),
-                            TextSpan(text: '哦对了'),
-                          ],
+                    children: const [
+                      Text(
+                        '公告喵喵',
+                        style: TextStyle(
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.bold,
                         ),
+                      ),
+                      SizedBox(height: 2.0),
+                      Text(
+                        'gonggaomiao@fluent2.org',
+                        style: TextStyle(fontSize: 13.0, color: Colors.black54),
                       ),
                     ],
                   ),
                 ),
-              ),
+              ],
             ),
           ),
-          bottomNavigationBar: FluentTabBar(
-            tabTextAlignment: FluentTabTextAlignment.vertical,
-            selectedIndex: _tabIndex,
-            onTabSelected: (index) => setState(() {
-              _tabIndex = index;
-            }),
-            tabs: [
-              FluentTabItem(
-                icon: const Icon(Icons.home),
-                title: '飞八分钱',
-                onClick: () => setState(() {
-                  _tabIndex = 0;
-                }),
-              ),
-              FluentTabItem(
-                icon: const Icon(Icons.settings),
-                title: '设置',
-                onClick: () => setState(() {
-                  _tabIndex = 1;
-                }),
-              ),
-            ],
+          const SizedBox(height: 10),
+
+          // 通用与外观设置卡片
+          FluentCard(
+            style: const FluentCardStyle(opacity: 0.85),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  '通用与外观',
+                  style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 8.0),
+                FluentList(
+                  children: [
+                    FluentListItem(
+                      title: '暗黑模式',
+                      subTitle: '开启沉浸深色主题界面',
+                      leading: const Icon(Icons.dark_mode_outlined),
+                      borderRadius: BorderRadius.circular(8.0),
+                      trailing: FluentToggleSwitch(
+                        value: _darkMode,
+                        onChanged: (v) => setState(() => _darkMode = v),
+                      ),
+                    ),
+                    FluentListItem(
+                      title: '亚克力磨砂效果',
+                      subTitle: '启用流畅 UI Acrylic 材质背景',
+                      leading: const Icon(Icons.blur_on),
+                      borderRadius: BorderRadius.circular(8.0),
+                      trailing: FluentToggleSwitch(
+                        value: _acrylicEffect,
+                        onChanged: (v) => setState(() => _acrylicEffect = v),
+                      ),
+                    ),
+                    FluentListItem(
+                      title: '实时消息通知',
+                      subTitle: '允许后台推送 Toast 消息通知',
+                      leading: const Icon(Icons.notifications_none),
+                      borderRadius: BorderRadius.circular(8.0),
+                      trailing: FluentToggleSwitch(
+                        value: _notifications,
+                        onChanged: (v) => setState(() => _notifications = v),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
-        ),
+          const SizedBox(height: 10),
+
+          // 关于与系统维护卡片
+          FluentCard(
+            style: const FluentCardStyle(opacity: 0.85),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  '关于软件',
+                  style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 8.0),
+                FluentListItem(
+                  title: '检查软件更新',
+                  subTitle: '当前版本 v2.1.0-build.8',
+                  leading: const Icon(Icons.system_update_alt),
+                  onTap: () {
+                    showFluentSnackbarToast(
+                      context: context,
+                      title: '检查更新',
+                      message: '当前已是最新版本 v2.1.0',
+                      leadingIcon: const Icon(Icons.check_circle_outline),
+                      style: FluentSnackbarStyle.accent,
+                    );
+                  },
+                ),
+                const Divider(height: 1.0),
+                FluentListItem(
+                  title: '清除系统缓存',
+                  subTitle: '已占用 12.4 MB 临时资源',
+                  leading: const Icon(Icons.cleaning_services_outlined),
+                  onTap: () {
+                    showFluentSnackbarToast(
+                      context: context,
+                      title: '清理完成',
+                      message: '成功清理 12.4 MB 缓存空间',
+                      style: FluentSnackbarStyle.neutral,
+                    );
+                  },
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

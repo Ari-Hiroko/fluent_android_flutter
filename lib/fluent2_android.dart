@@ -10,6 +10,7 @@ export 'src/theme/fluent_motion_tokens.dart';
 export 'src/theme/control_tokens.dart';
 export 'src/theme/fluent_theme_data.dart';
 export 'src/theme/fluent_theme.dart';
+export 'src/theme/fluent_shadow.dart';
 
 // Icons Component
 export 'src/components/icons/fluent_icons.dart';
@@ -62,6 +63,7 @@ export 'src/components/sheet/fluent_bottom_sheet.dart';
 export 'src/components/sheet/fluent_drawer.dart';
 
 // Card & ListItem Component
+export 'src/components/card/fluent_list.dart';
 export 'src/components/card/fluent_list_item.dart';
 export 'src/components/card/fluent_list_sub_header.dart';
 export 'src/components/card/fluent_divider.dart';

@@ -59,15 +59,25 @@ class FluentTabItem {
 ///
 /// 完全移植自 Android Kotlin TabBar.kt, TabBarTokens.kt, TabItemTokens.kt 与 V2TabBarActivity.kt
 /// 支持可选主题色 [themeColor] / [selectedColor]，自动智能自适应继承 [FluentTheme] 或 MaterialApp [ColorScheme]。
-class FluentTabBar extends StatelessWidget {
+///
+/// **原生用法支持**：
+/// - 支持绑定 [TabController] 或自动识别人属上下文中的 [DefaultTabController]，与 [TabBarView] 无缝联动。
+/// - [selectedIndex] 变为可选参数，原生惯用 [onTap] 接口与 [onTabSelected] 双向兼容。
+class FluentTabBar extends StatefulWidget {
   /// Tab 项列表
   final List<FluentTabItem> tabs;
 
-  /// 当前选中的索引
-  final int selectedIndex;
+  /// 当前选中的索引 (可选。若未提供，自动从 [controller] 或 [DefaultTabController] 中获取)
+  final int? selectedIndex;
 
-  /// 选中回调
+  /// 选中回调 (原生习惯接口)
+  final ValueChanged<int>? onTap;
+
+  /// 选中回调 (兼容原接口)
   final ValueChanged<int>? onTabSelected;
+
+  /// 显式绑定的 [TabController] (可选，未提供时自动寻找 [DefaultTabController])
+  final TabController? controller;
 
   /// 文本与图标的排布对齐方式 (vertical, horizontal, noText)
   final FluentTabTextAlignment tabTextAlignment;
@@ -102,8 +112,10 @@ class FluentTabBar extends StatelessWidget {
   const FluentTabBar({
     super.key,
     required this.tabs,
-    required this.selectedIndex,
+    this.selectedIndex,
+    this.onTap,
     this.onTabSelected,
+    this.controller,
     this.tabTextAlignment = FluentTabTextAlignment.horizontal,
     this.style = FluentStyle.neutral,
     this.showIndicator = true,
@@ -116,13 +128,82 @@ class FluentTabBar extends StatelessWidget {
     this.enableCursor = true,
   });
 
+  @override
+  State<FluentTabBar> createState() => _FluentTabBarState();
+}
+
+class _FluentTabBarState extends State<FluentTabBar> {
+  TabController? _controller;
+  int _internalIndex = 0;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _updateTabController();
+  }
+
+  @override
+  void didUpdateWidget(FluentTabBar oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.controller != oldWidget.controller) {
+      _updateTabController();
+    }
+  }
+
+  void _updateTabController() {
+    final TabController? newController =
+        widget.controller ?? DefaultTabController.maybeOf(context);
+    if (newController != _controller) {
+      _controller?.removeListener(_handleTabControllerTick);
+      _controller = newController;
+      _controller?.addListener(_handleTabControllerTick);
+    }
+  }
+
+  void _handleTabControllerTick() {
+    if (_controller != null && mounted) {
+      setState(() {});
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller?.removeListener(_handleTabControllerTick);
+    super.dispose();
+  }
+
+  int get _effectiveSelectedIndex {
+    if (widget.selectedIndex != null) {
+      return widget.selectedIndex!;
+    }
+    if (_controller != null) {
+      return _controller!.index;
+    }
+    return _internalIndex;
+  }
+
+  void _handleTabClick(int index, FluentTabItem tab) {
+    tab.onClick?.call();
+
+    if (_controller != null) {
+      _controller!.animateTo(index);
+    } else if (widget.selectedIndex == null) {
+      setState(() {
+        _internalIndex = index;
+      });
+    }
+
+    widget.onTap?.call(index);
+    widget.onTabSelected?.call(index);
+  }
+
   /// 智能自适应解析主题色
   Color _resolvePrimaryThemeColor(
     BuildContext context,
     FluentThemeData fluentTheme,
   ) {
-    if (selectedColor != null) return selectedColor!;
-    if (themeColor != null) return themeColor!;
+    if (widget.selectedColor != null) return widget.selectedColor!;
+    if (widget.themeColor != null) return widget.themeColor!;
 
     // 1. 若 FluentTheme 显式配置了非默认 primaryColor
     if (fluentTheme.primaryColor != FluentColors.communicationBlue) {
@@ -143,9 +224,9 @@ class FluentTabBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = FluentTheme.of(context);
-    final isBrand = style == FluentStyle.brand;
+    final isBrand = widget.style == FluentStyle.brand;
 
-    final double barHeight = tabTextAlignment == FluentTabTextAlignment.vertical
+    final double barHeight = widget.tabTextAlignment == FluentTabTextAlignment.vertical
         ? 56.0
         : 48.0;
 
@@ -153,35 +234,37 @@ class FluentTabBar extends StatelessWidget {
 
     // 默认背景色与前景色计算
     final Color effectiveBg =
-        backgroundColor ?? (isBrand ? resolvedPrimary : theme.backgroundColor);
+        widget.backgroundColor ?? (isBrand ? resolvedPrimary : theme.backgroundColor);
 
     final Color effectiveSelectedColor =
-        selectedColor ?? (isBrand ? Colors.white : resolvedPrimary);
+        widget.selectedColor ?? (isBrand ? Colors.white : resolvedPrimary);
 
     final Color effectiveUnselectedColor =
-        unselectedColor ??
+        widget.unselectedColor ??
         (isBrand
             ? Colors.white.withValues(alpha: 0.7)
             : theme.foregroundSecondaryColor);
 
     final Color effectiveIndicatorColor =
-        indicatorColor ?? (isBrand ? Colors.white : resolvedPrimary);
+        widget.indicatorColor ?? (isBrand ? Colors.white : resolvedPrimary);
 
     final Color topBorderColor = isBrand
         ? Colors.white.withValues(alpha: 0.16)
         : theme.dividerColor;
 
+    final int selectedIndex = _effectiveSelectedIndex;
+
     return Container(
       height: barHeight,
       decoration: BoxDecoration(
         color: effectiveBg,
-        border: showTopBorder
+        border: widget.showTopBorder
             ? Border(top: BorderSide(color: topBorderColor, width: 1.0))
             : null,
       ),
       child: Row(
-        children: List.generate(tabs.length, (index) {
-          final tab = tabs[index];
+        children: List.generate(widget.tabs.length, (index) {
+          final tab = widget.tabs[index];
           final isSelected = index == selectedIndex;
           final isTabEnabled = tab.enabled;
           return Expanded(
@@ -192,15 +275,10 @@ class FluentTabBar extends StatelessWidget {
               selectedColor: effectiveSelectedColor,
               unselectedColor: effectiveUnselectedColor,
               indicatorColor: effectiveIndicatorColor,
-              tabTextAlignment: tabTextAlignment,
-              showIndicator: showIndicator,
-              enableCursor: enableCursor,
-              onTap: isTabEnabled
-                  ? () {
-                      tab.onClick?.call();
-                      onTabSelected?.call(index);
-                    }
-                  : null,
+              tabTextAlignment: widget.tabTextAlignment,
+              showIndicator: widget.showIndicator,
+              enableCursor: widget.enableCursor,
+              onTap: isTabEnabled ? () => _handleTabClick(index, tab) : null,
             ),
           );
         }),

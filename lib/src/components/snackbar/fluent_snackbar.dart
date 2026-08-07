@@ -54,6 +54,34 @@ enum FluentSnackbarStyle {
   danger,
 }
 
+/// Snackbar 相对目标绑定的垂直相对位置 [FluentSnackbarPosition]
+enum FluentSnackbarPosition {
+  /// 显示在目标组件上方
+  top,
+
+  /// 显示在目标组件下方
+  bottom,
+}
+
+/// FluentSnackbar Toast 控制器，可用于在代码中随时主动关闭 Toast 提示
+class FluentSnackbarController {
+  final VoidCallback _dismissCallback;
+  bool _isDismissed = false;
+
+  FluentSnackbarController(this._dismissCallback);
+
+  /// 手动主动关闭 Toast
+  void dismiss() {
+    if (!_isDismissed) {
+      _isDismissed = true;
+      _dismissCallback();
+    }
+  }
+
+  /// 是否已被关闭
+  bool get isDismissed => _isDismissed;
+}
+
 /// Fluent 2 消息提示条组件 [FluentSnackbar]
 ///
 /// 移植自 Android Kotlin Snackbar.kt, V2SnackbarActivity.kt 与 V2SnackbarActivityUITest.kt
@@ -266,12 +294,16 @@ class AnimatedFluentSnackbar extends StatefulWidget {
   final FluentSnackbarDuration duration;
   final bool enableSwipeToDismiss;
 
+  /// 入场/退场滑出的基准方向：若为 true 则从上方滑入，否则从下方滑入
+  final bool slideFromTop;
+
   const AnimatedFluentSnackbar({
     super.key,
     required this.child,
     this.onResult,
     this.duration = FluentSnackbarDuration.long,
     this.enableSwipeToDismiss = true,
+    this.slideFromTop = false,
   });
 
   @override
@@ -302,11 +334,17 @@ class _AnimatedFluentSnackbarState extends State<AnimatedFluentSnackbar>
       curve: Curves.easeInOut,
     );
 
-    // 对标 AnimationBehavior.onShowAnimation (OffsetY 40.0 -> 0.0)
-    _offsetAnimation =
-        Tween<Offset>(begin: const Offset(0.0, 0.4), end: Offset.zero).animate(
-          CurvedAnimation(parent: _controller, curve: Curves.fastOutSlowIn),
-        );
+    // 根据滑入方向设置始发 Offset (Top: -0.4, Bottom: 0.4)
+    final Offset beginOffset = widget.slideFromTop
+        ? const Offset(0.0, -0.4)
+        : const Offset(0.0, 0.4);
+
+    _offsetAnimation = Tween<Offset>(
+      begin: beginOffset,
+      end: Offset.zero,
+    ).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.fastOutSlowIn),
+    );
 
     // 对标 AnimationVariables.scale (0.85 -> 1.0)
     _scaleAnimation = Tween<double>(
@@ -408,8 +446,11 @@ class _AnimatedFluentSnackbarState extends State<AnimatedFluentSnackbar>
 
 /// 显示带有平滑弹跳、淡隐与 [Swipe-To-Dismiss] 滑动手势的 Overlay 浮动 Toast 消息 [showFluentSnackbarToast]
 ///
-/// 完全映射 Kotlin `snackbarState.showSnackbar` 与 `Modifier.swipeToDismiss`
-void showFluentSnackbarToast({
+/// 完全映射 Kotlin `snackbarState.showSnackbar` 与 `Modifier.swipeToDismiss`。
+/// 支持配置 `alignment` 对齐方向、`offset` 偏置偏移量、`margin` 内外边距，
+/// 以及绑定 `targetKey` / `targetContext` / `targetRect` 目标组件进行精准锚点定位。
+/// 返回 [FluentSnackbarController]，可用于在逻辑代码中随时主动关闭此 Toast 提示。
+FluentSnackbarController showFluentSnackbarToast({
   required BuildContext context,
   required String message,
   String? title,
@@ -424,50 +465,135 @@ void showFluentSnackbarToast({
   FluentSnackbarStyle style = FluentSnackbarStyle.neutral,
   FluentSnackbarDuration duration = FluentSnackbarDuration.long,
   Alignment alignment = Alignment.bottomCenter,
+  Offset offset = Offset.zero,
+  EdgeInsetsGeometry? margin,
+  GlobalKey? targetKey,
+  BuildContext? targetContext,
+  Rect? targetRect,
+  FluentSnackbarPosition targetPosition = FluentSnackbarPosition.bottom,
 }) {
-  final overlayState = Overlay.of(context);
+  final overlayState =
+      Overlay.maybeOf(context, rootOverlay: true) ??
+      Navigator.maybeOf(context, rootNavigator: true)?.overlay;
+
+  if (overlayState == null) {
+    assert(false, 'showFluentSnackbarToast 需要在 MaterialApp 之下的 context 中调用');
+    return FluentSnackbarController(() {});
+  }
+
   final fluentTheme = FluentTheme.of(context);
   late OverlayEntry entry;
+  bool isDismissed = false;
+
+  void dismissEntry(FluentNotificationResult result) {
+    if (!isDismissed) {
+      isDismissed = true;
+      try {
+        entry.remove();
+      } catch (_) {}
+      onResult?.call(result);
+    }
+  }
+
+  final controller = FluentSnackbarController(() {
+    dismissEntry(FluentNotificationResult.dismissed);
+  });
 
   entry = OverlayEntry(
     builder: (context) {
+      Rect? bounds = targetRect;
+      if (bounds == null) {
+        final ctx = targetKey?.currentContext ?? targetContext;
+        if (ctx != null) {
+          final renderBox = ctx.findRenderObject() as RenderBox?;
+          if (renderBox != null && renderBox.hasSize) {
+            final origin = renderBox.localToGlobal(Offset.zero);
+            bounds = origin & renderBox.size;
+          }
+        }
+      }
+
+      final bool slideFromTop = bounds != null
+          ? targetPosition == FluentSnackbarPosition.top
+          : alignment.y < 0;
+
+      Widget snackbarContent = AnimatedFluentSnackbar(
+        duration: duration,
+        enableSwipeToDismiss: enableSwipeToDismiss,
+        slideFromTop: slideFromTop,
+        onResult: (result) {
+          dismissEntry(result);
+        },
+        child: FluentSnackbar(
+          message: message,
+          title: title,
+          subTitle: subTitle,
+          actionText: actionText,
+          onActionTap: () {
+            dismissEntry(FluentNotificationResult.clicked);
+            onActionTap?.call();
+          },
+          leadingIcon: leadingIcon,
+          enableDismiss: enableDismiss,
+          onDismiss: () {
+            dismissEntry(FluentNotificationResult.dismissed);
+            onDismiss?.call();
+          },
+          style: style,
+          isFloating: true,
+        ),
+      );
+
+      if (bounds != null) {
+        final mediaQuery = MediaQuery.of(context);
+        final screenSize = mediaQuery.size;
+        final bool isTargetTop = targetPosition == FluentSnackbarPosition.top;
+
+        if (isTargetTop) {
+          final double bottomPadding = screenSize.height - bounds.top + 8.0 - offset.dy;
+          final double leftPos = (bounds.left + bounds.width / 2 - 160.0 + offset.dx)
+              .clamp(16.0, (screenSize.width - 336.0).clamp(16.0, double.infinity));
+          return Positioned(
+            left: leftPos,
+            bottom: bottomPadding,
+            width: (screenSize.width - 32.0).clamp(0.0, 320.0),
+            child: FluentTheme(
+              themeData: fluentTheme,
+              child: snackbarContent,
+            ),
+          );
+        } else {
+          final double topPadding = bounds.bottom + 8.0 + offset.dy;
+          final double leftPos = (bounds.left + bounds.width / 2 - 160.0 + offset.dx)
+              .clamp(16.0, (screenSize.width - 336.0).clamp(16.0, double.infinity));
+          return Positioned(
+            left: leftPos,
+            top: topPadding,
+            width: (screenSize.width - 32.0).clamp(0.0, 320.0),
+            child: FluentTheme(
+              themeData: fluentTheme,
+              child: snackbarContent,
+            ),
+          );
+        }
+      }
+
+      final EdgeInsetsGeometry effMargin = margin ??
+          const EdgeInsets.symmetric(
+            horizontal: 20.0,
+            vertical: 16.0,
+          );
+
       return SafeArea(
         child: Align(
           alignment: alignment,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 20.0,
-              vertical: 16.0,
-            ),
-            child: FluentTheme(
-              themeData: fluentTheme,
-              child: AnimatedFluentSnackbar(
-                duration: duration,
-                enableSwipeToDismiss: enableSwipeToDismiss,
-                onResult: (result) {
-                  entry.remove();
-                  onResult?.call(result);
-                },
-                child: FluentSnackbar(
-                  message: message,
-                  title: title,
-                  subTitle: subTitle,
-                  actionText: actionText,
-                  onActionTap: () {
-                    entry.remove();
-                    onActionTap?.call();
-                    onResult?.call(FluentNotificationResult.clicked);
-                  },
-                  leadingIcon: leadingIcon,
-                  enableDismiss: enableDismiss,
-                  onDismiss: () {
-                    entry.remove();
-                    onDismiss?.call();
-                    onResult?.call(FluentNotificationResult.dismissed);
-                  },
-                  style: style,
-                  isFloating: true,
-                ),
+          child: Transform.translate(
+            offset: offset,
+            child: Padding(
+              padding: effMargin,
+              child: FluentTheme(
+                themeData: fluentTheme,
+                child: snackbarContent,
               ),
             ),
           ),
@@ -477,6 +603,7 @@ void showFluentSnackbarToast({
   );
 
   overlayState.insert(entry);
+  return controller;
 }
 
 /// 标准 Scaffold 系统的 [showFluentSnackbar] 弹出助手
