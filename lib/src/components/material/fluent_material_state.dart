@@ -2,23 +2,11 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-/// @docImport 'package:flutter/scheduler.dart';
-///
-/// @docImport 'action_chip.dart';
-/// @docImport 'button_style.dart';
-/// @docImport 'elevated_button.dart';
-/// @docImport 'ink_well.dart';
-/// @docImport 'input_decorator.dart';
-/// @docImport 'list_tile.dart';
-/// @docImport 'outlined_button.dart';
-/// @docImport 'text_button.dart';
-/// @docImport 'text_field.dart';
-/// @docImport 'time_picker_theme.dart';
 library;
 
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 
-import 'input_border.dart';
+
 
 // Examples can assume:
 // late BuildContext context;
@@ -594,3 +582,62 @@ typedef MaterialStatePropertyAll<T> = WidgetStatePropertyAll<T>;
   'This feature was deprecated after v3.19.0-0.3.pre.',
 )
 typedef MaterialStatesController = WidgetStatesController;
+
+/// 对应 FluentUI Android [StateBrush] (参考 GradientTokens.kt)
+///
+/// 根据 Widget 交互状态（rest, pressed, hovered, focused, selected, disabled）
+/// 解析对应的 [Gradient] (或渐变 Brush)
+class StateBrush implements WidgetStateProperty<Gradient?> {
+  final Gradient? rest;
+  final Gradient? pressed;
+  final Gradient? hovered;
+  final Gradient? focused;
+  final Gradient? selected;
+  final Gradient? disabled;
+
+  const StateBrush({
+    this.rest,
+    this.pressed,
+    this.hovered,
+    this.focused,
+    this.selected,
+    this.disabled,
+  });
+
+  /// 从单特效渐变快捷创建 [StateBrush]
+  factory StateBrush.all(Gradient? gradient) {
+    return StateBrush(
+      rest: gradient,
+      pressed: gradient,
+      hovered: gradient,
+      focused: gradient,
+      selected: gradient,
+      disabled: gradient,
+    );
+  }
+
+  @override
+  Gradient? resolve(Set<WidgetState> states) {
+    if (states.contains(WidgetState.disabled) && disabled != null) {
+      return disabled;
+    }
+    if (states.contains(WidgetState.pressed) && pressed != null) {
+      return pressed;
+    }
+    if (states.contains(WidgetState.hovered) && hovered != null) {
+      return hovered;
+    }
+    if (states.contains(WidgetState.focused) && focused != null) {
+      return focused;
+    }
+    if (states.contains(WidgetState.selected) && selected != null) {
+      return selected;
+    }
+    return rest;
+  }
+}
+
+/// [WidgetStateProperty] 的 [Gradient] 扩展辅助类
+typedef MaterialStateGradient = WidgetStateProperty<Gradient?>;
+typedef WidgetStateGradient = WidgetStateProperty<Gradient?>;
+

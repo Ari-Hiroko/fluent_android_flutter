@@ -413,8 +413,8 @@ class FluentCard extends StatelessWidget {
         child: FluentInkWell(
           onTap: onTap,
           splashColor: isDark
-              ? Colors.white.withAlpha(10)
-              : Colors.black.withAlpha(10),
+              ? Colors.white.withAlpha(75)
+              : Colors.black.withAlpha(75),
           mouseCursor: (effectiveStyle.enableCursor && !selectable)
               ? SystemMouseCursors.click
               : MouseCursor.defer,

@@ -161,6 +161,8 @@ class _MainAppState extends State<MainApp> with SingleTickerProviderStateMixin {
             // FluentInkWell 特效展示卡片
             FluentInkWell(
               onTap: () {},
+              highlightColor: Colors.red,
+              splashColor: Colors.red,
               child: Container(
                 padding: const EdgeInsets.all(16.0),
                 decoration: BoxDecoration(

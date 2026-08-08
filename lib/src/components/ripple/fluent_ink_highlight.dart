@@ -2,69 +2,43 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-/// @docImport 'ink_decoration.dart';
-/// @docImport 'ink_splash.dart';
-/// @docImport 'ink_well.dart';
 library;
 
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart' hide InkHighlight;
 
-import 'ink_well.dart' show InteractiveInkFeature;
-import 'material.dart';
+import '../material/fluent_material.dart';
 
 const Duration _kDefaultHighlightFadeDuration = Duration(milliseconds: 200);
 
-/// A visual emphasis on a part of a [Material] receiving user interaction.
-///
-/// This object is rarely created directly. Instead of creating an ink highlight
-/// directly, consider using an [InkResponse] or [InkWell] widget, which uses
-/// gestures (such as tap and long-press) to trigger ink highlights.
-///
-/// See also:
-///
-///  * [InkResponse], which uses gestures to trigger ink highlights and ink
-///    splashes in the parent [Material].
-///  * [InkWell], which is a rectangular [InkResponse] (the most common type of
-///    ink response).
-///  * [Material], which is the widget on which the ink highlight is painted.
-///  * [InkSplash], which is an ink feature that shows a reaction to user input
-///    on a [Material].
-///  * [Ink], a convenience widget for drawing images and other decorations on
-///    Material widgets.
-class InkHighlight extends InteractiveInkFeature {
-  /// Begin a highlight animation.
-  ///
-  /// The [controller] argument is typically obtained via
-  /// `Material.of(context)`.
-  ///
-  /// If a `rectCallback` is given, then it provides the highlight rectangle,
-  /// otherwise, the highlight rectangle is coincident with the [referenceBox].
-  ///
-  /// When the highlight is removed, `onRemoved` will be called.
-  InkHighlight({
+/// Microsoft Fluent 2 视觉高亮控件 [FluentInkHighlight]
+class FluentInkHighlight extends InteractiveInkFeature {
+  FluentInkHighlight({
     required super.controller,
     required super.referenceBox,
-    required super.color,
+    required Color color,
+    this.gradient,
     required TextDirection textDirection,
     BoxShape shape = BoxShape.rectangle,
     double? radius,
     BorderRadius? borderRadius,
-    super.customBorder,
+    ShapeBorder? customBorder,
     RectCallback? rectCallback,
     super.onRemoved,
     Duration fadeDuration = _kDefaultHighlightFadeDuration,
   }) : _shape = shape,
        _radius = radius,
        _borderRadius = borderRadius ?? BorderRadius.zero,
-
        _textDirection = textDirection,
-       _rectCallback = rectCallback {
+       _rectCallback = rectCallback,
+       super(color: color) {
     _alphaController =
         AnimationController(duration: fadeDuration, vsync: controller.vsync)
           ..addListener(controller.markNeedsPaint)
           ..addStatusListener(_handleAlphaStatusChanged)
           ..forward();
-    _alpha = _alphaController.drive(IntTween(begin: 0, end: color.alpha));
+    _alpha = _alphaController.drive(
+      IntTween(begin: 0, end: (color.a * 255.0).round().clamp(0, 255)),
+    );
 
     controller.addInkFeature(this);
   }
@@ -75,20 +49,20 @@ class InkHighlight extends InteractiveInkFeature {
   final RectCallback? _rectCallback;
   final TextDirection _textDirection;
 
+  /// FluentUI [GradientTokens.kt] 高亮渐变
+  final Gradient? gradient;
+
   late Animation<int> _alpha;
   late AnimationController _alphaController;
 
-  /// Whether this part of the material is being visually emphasized.
   bool get active => _active;
   bool _active = true;
 
-  /// Start visually emphasizing this part of the material.
   void activate() {
     _active = true;
     _alphaController.forward();
   }
 
-  /// Stop visually emphasizing this part of the material.
   void deactivate() {
     _active = false;
     _alphaController.reverse();
@@ -117,7 +91,7 @@ class InkHighlight extends InteractiveInkFeature {
       case BoxShape.circle:
         canvas.drawCircle(
           rect.center,
-          _radius ?? Material.defaultSplashRadius,
+          _radius ?? FluentMaterial.defaultSplashRadius,
           paint,
         );
       case BoxShape.rectangle:
@@ -144,6 +118,9 @@ class InkHighlight extends InteractiveInkFeature {
     final Rect rect = _rectCallback != null
         ? _rectCallback()
         : Offset.zero & referenceBox.size;
+    if (gradient != null) {
+      paint.shader = gradient!.createShader(rect);
+    }
     if (originOffset == null) {
       canvas.save();
       canvas.transform(transform.storage);
