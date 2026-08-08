@@ -1,6 +1,6 @@
 # Microsoft Fluent UI 2 (Android Style) 组件库全量 API 说明文档
 
-本文档收录了 `fluent2_android` (Android/iOS Fluent 2 视觉流) 提供的全部 35+ 款原生 Flutter 控件与全局便捷函数的详细说明、完整 API 属性列表以及调用示例。
+本文档收录了 `fluent_2_flutter` (Android/iOS Fluent 2 视觉流) 提供的全部 35+ 款原生 Flutter 控件与全局便捷函数的详细说明、完整 API 属性列表以及调用示例。
 
 ---
 

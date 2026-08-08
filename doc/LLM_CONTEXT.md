@@ -1,10 +1,10 @@
-# LLM Context - fluent2_android
+# LLM Context - fluent_2_flutter
 
-Compact reference guide for LLM agents consuming or extending `fluent2_android`.
+Compact reference guide for LLM agents consuming or extending `fluent_2_flutter`.
 
 ## Package Imports
 ```dart
-import 'package:fluent2_android/fluent2_android.dart';
+import 'package:fluent_2_flutter/fluent_2_flutter.dart';
 ```
 
 ## Quick Start

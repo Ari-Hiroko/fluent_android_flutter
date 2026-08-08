@@ -1,4 +1,4 @@
-import 'package:fluent2_android/fluent2_android.dart';
+import 'package:fluent_2_flutter/fluent_2_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -17,20 +17,11 @@ void main() {
               selectedIdx = index;
             },
             topItems: const [
-              FluentSideRailItem(
-                title: 'Home',
-                icon: Icon(Icons.home),
-              ),
-              FluentSideRailItem(
-                title: 'Search',
-                icon: Icon(Icons.search),
-              ),
+              FluentSideRailItem(title: 'Home', icon: Icon(Icons.home)),
+              FluentSideRailItem(title: 'Search', icon: Icon(Icons.search)),
             ],
             bottomItems: const [
-              FluentSideRailItem(
-                title: 'Settings',
-                icon: Icon(Icons.settings),
-              ),
+              FluentSideRailItem(title: 'Settings', icon: Icon(Icons.settings)),
             ],
           ),
         ),

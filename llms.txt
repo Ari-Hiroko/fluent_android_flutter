@@ -1,9 +1,9 @@
-# fluent2_android
+# fluent_2_flutter
 
 > Microsoft Fluent 2 Design System for Flutter (iOS/Android)
 
 ## Overview
-`fluent2_android` implements Microsoft's Fluent 2 design system for Flutter mobile applications, strictly matching Microsoft's Fluent 2 specs while honoring native FluentMaterial API parameter naming habits.
+`fluent_2_flutter` implements Microsoft's Fluent 2 design system for Flutter mobile applications, strictly matching Microsoft's Fluent 2 specs while honoring native FluentMaterial API parameter naming habits.
 
 ## Documentation
 - [COMPONENTS.md](COMPONENTS.md): Full component catalog with API parameter signatures and code examples.

@@ -19,7 +19,7 @@
 
 ```yaml
 dependencies:
-  fluent2_android:
+  fluent_2_flutter:
     git:
       url: https://github.com/Ari-Hiroko/fluent_android_flutter.git
       ref: main
@@ -37,7 +37,7 @@ flutter pub get
 
 ```dart
 import 'package:flutter/material.dart';
-import 'package:fluent2_android/fluent2_android.dart';
+import 'package:fluent_2_flutter/fluent_2_flutter.dart';
 
 void main() {
   runApp(const MyApp());

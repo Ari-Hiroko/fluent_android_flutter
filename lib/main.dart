@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fluent2_android/fluent2_android.dart';
+import 'package:fluent_2_flutter/fluent_2_flutter.dart';
 
 void main() {
   runApp(const MainApp());
