@@ -807,10 +807,7 @@ FluentFileCard(
                   ),
                 ),
                 actions: [
-                  IconButton(
-                    icon: const Icon(Icons.search),
-                    onPressed: () {},
-                  ),
+                  IconButton(icon: const Icon(Icons.search), onPressed: () {}),
                   IconButton(
                     icon: const Icon(Icons.more_vert),
                     onPressed: () {},
@@ -1209,6 +1206,58 @@ FluentPillButton(
               desc: '非空时是否自动呈现一键清空 X 按钮',
             ),
           ],
+        ),
+        const SizedBox(height: 16.0),
+
+        ComponentDocCard(
+          theme: theme,
+          name: 'FluentTextField 衍生模式',
+          description:
+              '包含密码显隐 (password)、搜索 (search)、数字步进 (number) 与 Form 表单校验 (FluentTextFormField)。',
+          demo: Column(
+            children: [
+              const FluentTextField.password(
+                label: '账户密码 (Outlined 模式)',
+                textFieldStyle: FluentTextFieldStyle.outlined,
+                hintText: '请输入登录密码',
+              ),
+              const SizedBox(height: 12.0),
+              FluentTextField.search(
+                label: '文档检索 (Filled 模式)',
+                textFieldStyle: FluentTextFieldStyle.filled,
+                onSubmitted: (q) => _log('搜索关键词: $q'),
+              ),
+              const SizedBox(height: 12.0),
+              FluentTextField.number(
+                label: '数量 / 步进器 (Flutter 原生水平台 Stepper)',
+                textFieldStyle: FluentTextFieldStyle.neutral,
+                stepperStyle: FluentNumberStepperStyle.horizontal,
+                hintText: '10',
+                step: 1,
+                minNumber: 0,
+                maxNumber: 100,
+              ),
+            ],
+          ),
+          codeSnippet: '''// 描边透明模式密码输入框
+FluentTextField.password(
+  label: '密码',
+  textFieldStyle: FluentTextFieldStyle.outlined,
+);
+
+// 填充模式搜索输入框
+FluentTextField.search(
+  label: '搜索',
+  textFieldStyle: FluentTextFieldStyle.filled,
+);
+
+// Flutter 原生两侧平铺 Stepper 数字输入框
+FluentTextField.number(
+  label: '数量',
+  stepperStyle: FluentNumberStepperStyle.horizontal,
+  step: 1,
+);''',
+          params: [],
         ),
         const SizedBox(height: 16.0),
 

@@ -142,7 +142,33 @@ class _MainAppState extends State<MainApp> with SingleTickerProviderStateMixin {
             ),
             const SizedBox(height: 10),
             FluentCard.Text(
-              opacity: 0.8,
+              showDivider: true,
+              opacity: 0.7,
+              expandable: false,
+              title: '大家好啊',
+              child: Column(
+                children: [
+                  const FluentTextField(
+                    // expands: true,
+                    hintText: 'hello (FluentTextField)',
+                    backgroundColor: Colors.transparent,
+                  ),
+                  const SizedBox(height: 8),
+                  const FluentTextField.password(
+                    hintText: '输入密码',
+                    backgroundColor: Colors.transparent,
+                  ),
+                  const SizedBox(height: 8),
+                  FluentTextField.number(
+                    hintText: '数值 (带 +/- 步进)',
+                    backgroundColor: Colors.transparent,
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 10),
+            FluentCard.Text(
+              opacity: 0.7,
               title: '咦？',
               subtitle: '这都有火箭收的',
               leadingIcon: const Icon(Icons.auto_fix_normal),
@@ -159,25 +185,28 @@ class _MainAppState extends State<MainApp> with SingleTickerProviderStateMixin {
             ),
             const SizedBox(height: 12),
             // FluentInkWell 特效展示卡片
-            FluentInkWell(
-              onTap: () {},
-              highlightColor: Colors.red,
-              splashColor: Colors.red,
-              child: Container(
-                padding: const EdgeInsets.all(16.0),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFF3F3F3),
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-                child: const Row(
-                  children: [
-                    Icon(Icons.touch_app, color: Color(0xFF0078D4)),
-                    SizedBox(width: 12),
-                    Text(
-                      'FluentInkWell',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                  ],
+            FluentMaterial(
+              color: Colors.white38,
+              borderRadius: BorderRadius.circular(8.0),
+              child: FluentInkWell(
+                borderRadius: BorderRadius.circular(8.0),
+                onTap: () {},
+                child: Container(
+                  padding: const EdgeInsets.all(16.0),
+                  decoration: BoxDecoration(
+                    // color: const Color(0xFFF3F3F3),
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  child: const Row(
+                    children: [
+                      Icon(Icons.touch_app, color: Color(0xFF0078D4)),
+                      SizedBox(width: 12),
+                      Text(
+                        'FluentInkWell',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -205,6 +234,27 @@ class _MainAppState extends State<MainApp> with SingleTickerProviderStateMixin {
                   message: '菜单',
                   child: IconButton(
                     onPressed: () {
+                      showFluentDrawer(
+                        context: context,
+                        child: const FluentSideRail(
+                          topItems: [
+                            FluentSideRailItem(
+                              title: '导航 1',
+                              icon: Icon(Icons.navigation),
+                            ),
+                            FluentSideRailItem(
+                              title: '导航 2',
+                              icon: Icon(Icons.explore),
+                            ),
+                          ],
+                          bottomItems: [
+                            FluentSideRailItem(
+                              title: '主页',
+                              icon: Icon(Icons.home),
+                            ),
+                          ],
+                        ),
+                      );
                       setState(() {
                         _menuIsOpened = !_menuIsOpened;
                         if (_menuIsOpened) {
@@ -226,7 +276,11 @@ class _MainAppState extends State<MainApp> with SingleTickerProviderStateMixin {
                 FluentTooltip(
                   message: '导航',
                   child: IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      setState(() {
+                        _tabIndex = 0;
+                      });
+                    },
                     icon: const Icon(Icons.navigation),
                     mouseCursor: SystemMouseCursors.click,
                   ),
@@ -324,7 +378,7 @@ class _SettingsViewState extends State<_SettingsView> {
         children: [
           // 个人 Profile 账户卡片
           FluentCard(
-            style: const FluentCardStyle(opacity: 0.85),
+            style: const FluentCardStyle(opacity: 0.7),
             child: Row(
               children: [
                 const FluentAvatar(
@@ -360,7 +414,7 @@ class _SettingsViewState extends State<_SettingsView> {
 
           // 通用与外观设置卡片
           FluentCard(
-            style: const FluentCardStyle(opacity: 0.85),
+            style: const FluentCardStyle(opacity: 0.7),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -413,7 +467,7 @@ class _SettingsViewState extends State<_SettingsView> {
 
           // 关于与系统维护卡片
           FluentCard(
-            style: const FluentCardStyle(opacity: 0.85),
+            style: const FluentCardStyle(opacity: 0.7),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -428,6 +482,7 @@ class _SettingsViewState extends State<_SettingsView> {
                   leading: const Icon(Icons.system_update_alt),
                   onTap: () {
                     showFluentSnackbarToast(
+                      offset: Offset(0, -50),
                       context: context,
                       title: '检查更新',
                       message: '当前已是最新版本 v1.1.4',
@@ -443,6 +498,7 @@ class _SettingsViewState extends State<_SettingsView> {
                   leading: const Icon(Icons.cleaning_services_outlined),
                   onTap: () {
                     showFluentSnackbarToast(
+                      offset: Offset(0, -50),
                       context: context,
                       title: '清理完成',
                       message: '成功清理 0.4 MB 缓存空间',
