@@ -139,7 +139,8 @@ class FluentThemeData {
       foregroundSecondaryColor: baseTheme.foregroundSecondaryColor,
       dividerColor: baseTheme.dividerColor,
       popupMenuBackgroundColor: baseTheme.popupMenuBackgroundColor,
-      popupMenuBackgroundPressedColor: baseTheme.popupMenuBackgroundPressedColor,
+      popupMenuBackgroundPressedColor:
+          baseTheme.popupMenuBackgroundPressedColor,
       popupMenuItemTitleColor: baseTheme.popupMenuItemTitleColor,
       popupMenuItemForegroundSelectedColor: selectedColor,
       popupMenuItemIconTint: baseTheme.popupMenuItemIconTint,
@@ -157,7 +158,7 @@ class FluentThemeData {
     return ThemeData(
       useMaterial3: true,
       brightness: brightness,
-      splashFactory: FluentSplashFactory.splashFactory,
+      // splashFactory: FluentSplashFactory.splashFactory,
       colorScheme: ColorScheme.fromSeed(
         seedColor: primaryColor,
         brightness: brightness,

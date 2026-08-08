@@ -394,8 +394,8 @@ class FluentCard extends StatelessWidget {
     final List<BoxShadow>? shadows = effectiveStyle.shadow;
 
     final Color hoverOverlay = isDark
-        ? Colors.white.withAlpha(5)
-        : Colors.black.withAlpha(5);
+        ? Colors.white.withAlpha(15)
+        : Colors.black.withAlpha(15);
 
     Widget cardSurface = Container(
       decoration: BoxDecoration(

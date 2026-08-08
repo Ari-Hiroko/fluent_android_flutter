@@ -54,7 +54,9 @@ class FluentLinearProgressIndicator extends StatelessWidget {
     final indicatorColor = color ?? theme.primaryColor;
 
     return ClipRRect(
-      borderRadius: BorderRadius.circular(FluentGlobalTokens.cornerRadiusCircular),
+      borderRadius: BorderRadius.circular(
+        FluentGlobalTokens.cornerRadiusCircular,
+      ),
       child: SizedBox(
         height: height,
         child: LinearProgressIndicator(
