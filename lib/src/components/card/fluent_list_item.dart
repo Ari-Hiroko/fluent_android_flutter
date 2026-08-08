@@ -201,10 +201,6 @@ class _FluentListItemState extends State<FluentListItem> {
               ? Colors.black.withValues(alpha: 0.04)
               : theme.backgroundPressedColor.withValues(alpha: 0.5));
 
-    final Color highlightColor = isDark
-        ? Colors.white.withValues(alpha: 0.04)
-        : Colors.black.withValues(alpha: 0.04);
-
     final Color splashColor = widget.coloredSplash
         ? theme.primaryColor.withValues(alpha: 0.08)
         : Colors.black12.withValues(alpha: 0.02);
@@ -283,10 +279,10 @@ class _FluentListItemState extends State<FluentListItem> {
       curve: widget.animationCurve,
       decoration: BoxDecoration(color: bgColor, borderRadius: effRadius),
       child: isClickable
-          ? Material(
+          ? FluentMaterial(
               color: Colors.transparent,
-              borderRadius: effRadius,
-              child: InkWell(
+              borderRadius: effRadius is BorderRadius ? effRadius : null,
+              child: FluentInkWell(
                 onTap: tapCallback,
                 onLongPress: widget.enabled ? widget.onLongPress : null,
                 mouseCursor: (widget.enabled && widget.enableCursor)
@@ -294,7 +290,6 @@ class _FluentListItemState extends State<FluentListItem> {
                     : SystemMouseCursors.basic,
                 borderRadius: effRadius is BorderRadius ? effRadius : null,
                 hoverColor: hoverColor,
-                highlightColor: highlightColor,
                 splashColor: splashColor,
                 child: content,
               ),

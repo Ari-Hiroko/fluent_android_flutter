@@ -1426,7 +1426,6 @@ showFluentBottomSheet(
                         leadingIcon: const Icon(Icons.email_outlined),
                         actionText: '查看详情',
                         enableDismiss: true,
-                        enableSwipeToDismiss: true,
                         style: FluentSnackbarStyle.accent,
                         duration: FluentSnackbarDuration.long,
                         onResult: (res) => _log('Snackbar 交互结果: $res'),

@@ -81,7 +81,6 @@ export 'src/components/page/fluent_page_switcher.dart';
 // Progress Component
 export 'src/components/progress/fluent_progress_indicator.dart';
 
-
 // Transients Component
 export 'src/components/transients/fluent_shimmer.dart';
 export 'src/components/transients/fluent_tooltip.dart';
@@ -89,3 +88,7 @@ export 'src/components/transients/fluent_acrylic.dart';
 
 // Calendar Component
 export 'src/components/calendar/fluent_calendar.dart';
+
+// Surface FluentMaterial & InkWell Component
+export 'src/components/material/fluent_material.dart';
+export 'src/components/ripple/fluent_ink_well.dart';

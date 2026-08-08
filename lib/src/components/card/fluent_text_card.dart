@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../theme/fluent_theme.dart';
-import '../../theme/fluent_theme_data.dart';
 import 'fluent_card.dart';
 
 /// Fluent 2 可展开/固定文本与自定义内容卡片 [FluentTextCard]
@@ -192,13 +191,6 @@ class _FluentTextCardState extends State<FluentTextCard>
       );
 
       Widget headerWidget = headerContent;
-      if (effectiveStyle.enableCursor &&
-          (widget.expandable || widget.onActionTap != null)) {
-        headerWidget = MouseRegion(
-          cursor: SystemMouseCursors.click,
-          child: headerContent,
-        );
-      }
 
       cardChild = Column(
         mainAxisSize: MainAxisSize.min,

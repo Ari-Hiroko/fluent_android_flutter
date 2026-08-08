@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../theme/fluent_colors.dart';
-import '../../theme/fluent_theme_data.dart';
 import '../../theme/fluent_theme.dart';
 import '../card/fluent_badge.dart';
 
@@ -78,7 +77,10 @@ class FluentSideRail extends StatelessWidget {
     this.width = 72.0,
   });
 
-  Color _resolvePrimaryThemeColor(BuildContext context, FluentThemeData fluentTheme) {
+  Color _resolvePrimaryThemeColor(
+    BuildContext context,
+    FluentThemeData fluentTheme,
+  ) {
     if (selectedColor != null) return selectedColor!;
     if (themeColor != null) return themeColor!;
 
@@ -188,9 +190,9 @@ class FluentSideRail extends StatelessWidget {
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6.0),
-      child: Material(
+      child: FluentMaterial(
         color: Colors.transparent,
-        child: InkWell(
+        child: FluentInkWell(
           mouseCursor: enableCursor
               ? SystemMouseCursors.click
               : SystemMouseCursors.basic,

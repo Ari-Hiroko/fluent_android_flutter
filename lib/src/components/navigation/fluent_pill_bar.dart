@@ -3,7 +3,6 @@ import '../../theme/fluent_colors.dart';
 import '../../theme/fluent_global_tokens.dart';
 import '../../theme/fluent_motion_tokens.dart';
 import '../../theme/fluent_theme.dart';
-import '../../theme/fluent_theme_data.dart';
 
 /// 单个 Pill 药丸按钮 [FluentPillButton]
 ///
@@ -99,7 +98,10 @@ class _FluentPillButtonState extends State<FluentPillButton>
     widget.onClick?.call();
   }
 
-  Color _resolvePrimaryThemeColor(BuildContext context, FluentThemeData fluentTheme) {
+  Color _resolvePrimaryThemeColor(
+    BuildContext context,
+    FluentThemeData fluentTheme,
+  ) {
     if (widget.selectedColor != null) return widget.selectedColor!;
     if (widget.themeColor != null) return widget.themeColor!;
 
@@ -132,7 +134,9 @@ class _FluentPillButtonState extends State<FluentPillButton>
       fg = isDark ? const Color(0xFF5C5C5C) : const Color(0xFFB3B3B3);
     } else if (widget.selected) {
       bg = resolvedPrimary;
-      fg = resolvedPrimary.computeLuminance() > 0.45 ? Colors.black : Colors.white;
+      fg = resolvedPrimary.computeLuminance() > 0.45
+          ? Colors.black
+          : Colors.white;
     } else {
       bg = _isHovered
           ? (isDark ? const Color(0xFF383838) : const Color(0xFFE0E0E0))
@@ -150,12 +154,12 @@ class _FluentPillButtonState extends State<FluentPillButton>
         onTap: _handleTap,
         child: ScaleTransition(
           scale: _scaleAnimation,
-          child: Material(
+          child: FluentMaterial(
             color: bg,
             borderRadius: BorderRadius.circular(
               FluentGlobalTokens.cornerRadiusCircular,
             ),
-            child: InkWell(
+            child: FluentInkWell(
               onTap: _handleTap,
               mouseCursor: isClickable
                   ? SystemMouseCursors.click

@@ -27,7 +27,7 @@
 
 ### 1.1 `FluentTheme` & `FluentThemeData`
 
-提供 Fluent UI 2 全局主题上下文接入。支持深/浅色模式与原生 Material 主题转换。
+提供 Fluent UI 2 全局主题上下文接入。支持深/浅色模式与原生 FluentMaterial 主题转换。
 
 #### 代码示例
 ```dart
@@ -178,7 +178,7 @@ FluentToggleSwitch(
 
 #### 代码示例
 ```dart
-// 1. 符合 Material 习惯的按键组件
+// 1. 符合 FluentMaterial 习惯的按键组件
 FluentPopupMenuButton<String>(
   onSelected: (val) => print(val),
   itemBuilder: (context) => [

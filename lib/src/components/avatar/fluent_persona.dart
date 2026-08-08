@@ -38,7 +38,7 @@ class FluentPersona extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = FluentTheme.of(context);
 
-    return InkWell(
+    return FluentInkWell(
       onTap: onTap,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
@@ -88,10 +88,7 @@ class FluentPersona extends StatelessWidget {
                 ],
               ),
             ),
-            if (trailing != null) ...[
-              const SizedBox(width: 8.0),
-              trailing!,
-            ],
+            if (trailing != null) ...[const SizedBox(width: 8.0), trailing!],
           ],
         ),
       ),

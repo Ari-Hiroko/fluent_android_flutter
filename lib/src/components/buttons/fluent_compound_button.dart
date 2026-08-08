@@ -55,10 +55,10 @@ class FluentCompoundButton extends StatelessWidget {
               : theme.foregroundSecondaryColor)
         : theme.foregroundSecondaryColor;
 
-    return Material(
+    return FluentMaterial(
       color: backgroundColor,
       borderRadius: BorderRadius.circular(FluentGlobalTokens.cornerRadius120),
-      child: InkWell(
+      child: FluentInkWell(
         mouseCursor: enableCursor
             ? SystemMouseCursors.click
             : SystemMouseCursors.basic,

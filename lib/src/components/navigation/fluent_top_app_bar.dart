@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../theme/fluent_colors.dart';
 import '../../theme/fluent_theme.dart';
-import '../../theme/fluent_theme_data.dart';
 
 /// TopAppBar 的尺寸形态 [FluentAppBarSize]
 enum FluentAppBarSize {
@@ -338,7 +337,7 @@ class FluentTopAppBar extends StatelessWidget implements PreferredSizeWidget {
 
     Widget titleWidget = Expanded(
       child: onTitleTap != null
-          ? InkWell(
+          ? FluentInkWell(
               onTap: onTitleTap,
               hoverColor: effectiveFg.withValues(alpha: 0.06),
               splashColor: effectiveFg.withValues(alpha: 0.12),

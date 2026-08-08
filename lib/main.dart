@@ -76,10 +76,11 @@ class _MainAppState extends State<MainApp> with SingleTickerProviderStateMixin {
                       FluentButton.danger(
                         text: '飞八',
                         onPressed: () {
-                          showFluentSnackbarToast(
+                          showFluentStackableSnackbarToast(
+                            offset: const Offset(0, -50),
                             context: context,
                             title: '危险动作',
-                            message: '成功触发了 FluentButton.danger 红色按钮',
+                            message: '飞八惊坐起了',
                             style: FluentSnackbarStyle.danger,
                           );
                         },
@@ -88,10 +89,12 @@ class _MainAppState extends State<MainApp> with SingleTickerProviderStateMixin {
                       FluentButton.primary(
                         text: '哦对了',
                         onPressed: () {
-                          showFluentSnackbarToast(
+                          showFluentStackableSnackbarToast(
+                            offset: const Offset(0, -50),
+
                             context: context,
-                            title: '哦对了',
-                            message: '成功触发了 FluentButton.secondary 灰色按钮',
+                            title: '哦对了，',
+                            message: '你妈妈一定不好',
                           );
                         },
                       ),
@@ -128,7 +131,6 @@ class _MainAppState extends State<MainApp> with SingleTickerProviderStateMixin {
                         leadingIcon: const Icon(Icons.face_2),
                         actionText: '把碧玺',
                         enableDismiss: true,
-                        enableSwipeToDismiss: true,
                         style: FluentSnackbarStyle.accent,
                         duration: FluentSnackbarDuration.long,
                         offset: const Offset(0, -50),
@@ -144,7 +146,7 @@ class _MainAppState extends State<MainApp> with SingleTickerProviderStateMixin {
               title: '咦？',
               subtitle: '这都有火箭收的',
               leadingIcon: const Icon(Icons.auto_fix_normal),
-              initiallyExpanded: true,
+              // initiallyExpanded: true,
               showDivider: true,
               richText: const TextSpan(
                 text: '飞八分钱干飞马，干得飞马笑哈哈\n',
@@ -153,6 +155,28 @@ class _MainAppState extends State<MainApp> with SingleTickerProviderStateMixin {
                   TextSpan(text: '哦对了\n'),
                   TextSpan(text: '哦对了'),
                 ],
+              ),
+            ),
+            const SizedBox(height: 12),
+            // FluentInkWell 特效展示卡片
+            FluentInkWell(
+              onTap: () {},
+              child: Container(
+                padding: const EdgeInsets.all(16.0),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF3F3F3),
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                child: const Row(
+                  children: [
+                    Icon(Icons.touch_app, color: Color(0xFF0078D4)),
+                    SizedBox(width: 12),
+                    Text(
+                      'FluentInkWell',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
               ),
             ),
           ],
@@ -350,6 +374,9 @@ class _SettingsViewState extends State<_SettingsView> {
                       subTitle: '开启沉浸深色主题界面',
                       leading: const Icon(Icons.dark_mode_outlined),
                       borderRadius: BorderRadius.circular(8.0),
+                      onClick: () {
+                        setState(() => _darkMode = !_darkMode);
+                      },
                       trailing: FluentToggleSwitch(
                         value: _darkMode,
                         onChanged: (v) => setState(() => _darkMode = v),

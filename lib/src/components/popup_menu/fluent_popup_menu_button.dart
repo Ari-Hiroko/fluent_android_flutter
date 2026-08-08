@@ -1,3 +1,4 @@
+import '../../theme/fluent_theme.dart';
 import 'package:flutter/material.dart';
 import 'fluent_popup_menu.dart';
 import 'popup_menu_item.dart';
@@ -56,7 +57,7 @@ class FluentPopupMenuButton<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (child != null) {
-      return InkWell(onTap: () => _showMenu(context), child: child);
+      return FluentInkWell(onTap: () => _showMenu(context), child: child);
     }
 
     return IconButton(

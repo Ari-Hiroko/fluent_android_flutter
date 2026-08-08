@@ -36,7 +36,7 @@ class FluentDrawer extends StatelessWidget {
     final theme = FluentTheme.of(context);
     final isLeft = position == FluentDrawerPosition.left;
 
-    return Material(
+    return FluentMaterial(
       color: theme.backgroundColor,
       elevation: FluentGlobalTokens.shadow28,
       shadowColor: Colors.black.withAlpha(80),

@@ -146,10 +146,10 @@ class FluentChip extends StatelessWidget {
       );
     }
 
-    return Material(
+    return FluentMaterial(
       color: bg,
       borderRadius: BorderRadius.circular(borderRadius),
-      child: InkWell(
+      child: FluentInkWell(
         onTap: tapCallback,
         mouseCursor: (enabled && enableCursor)
             ? SystemMouseCursors.click

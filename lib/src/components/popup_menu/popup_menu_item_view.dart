@@ -95,16 +95,15 @@ class FluentPopupMenuItemView<T> extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Material(
+          FluentMaterial(
             color: Colors.transparent,
-            child: InkWell(
+            child: FluentInkWell(
               mouseCursor: enableCursor
                   ? SystemMouseCursors.click
                   : SystemMouseCursors.basic,
               onTap: isEnabled ? onItemClicked : null,
               hoverColor: theme.popupMenuBackgroundPressedColor,
               splashColor: theme.popupMenuBackgroundPressedColor,
-              highlightColor: theme.popupMenuBackgroundPressedColor,
               child: Container(
                 constraints: const BoxConstraints(
                   minHeight: 42.0,

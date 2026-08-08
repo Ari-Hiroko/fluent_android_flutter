@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../theme/fluent_colors.dart';
 import '../../theme/fluent_theme.dart';
-import '../../theme/fluent_theme_data.dart';
 import '../card/fluent_badge.dart';
 import 'fluent_top_app_bar.dart';
 
@@ -226,7 +225,8 @@ class _FluentTabBarState extends State<FluentTabBar> {
     final theme = FluentTheme.of(context);
     final isBrand = widget.style == FluentStyle.brand;
 
-    final double barHeight = widget.tabTextAlignment == FluentTabTextAlignment.vertical
+    final double barHeight =
+        widget.tabTextAlignment == FluentTabTextAlignment.vertical
         ? 56.0
         : 48.0;
 
@@ -234,7 +234,8 @@ class _FluentTabBarState extends State<FluentTabBar> {
 
     // 默认背景色与前景色计算
     final Color effectiveBg =
-        widget.backgroundColor ?? (isBrand ? resolvedPrimary : theme.backgroundColor);
+        widget.backgroundColor ??
+        (isBrand ? resolvedPrimary : theme.backgroundColor);
 
     final Color effectiveSelectedColor =
         widget.selectedColor ?? (isBrand ? Colors.white : resolvedPrimary);
@@ -384,9 +385,9 @@ class _FluentTabItemWidgetState extends State<_FluentTabItemWidget>
               )
             : null);
 
-    return Material(
+    return FluentMaterial(
       color: Colors.transparent,
-      child: InkWell(
+      child: FluentInkWell(
         mouseCursor: (isEnabled && widget.enableCursor)
             ? SystemMouseCursors.click
             : SystemMouseCursors.basic,

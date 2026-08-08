@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../theme/fluent_theme_data.dart';
 import '../../theme/fluent_theme.dart';
 import 'fluent_avatar.dart';
 

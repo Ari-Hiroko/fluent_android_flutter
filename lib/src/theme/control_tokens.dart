@@ -85,3 +85,60 @@ class TextFieldTokens implements IControlToken {
   Color get idleBorderColor => theme.dividerColor;
   double get cornerRadius => FluentGlobalTokens.cornerRadius80;
 }
+
+/// Snackbar Control Tokens
+class SnackbarTokens implements IControlToken {
+  final FluentThemeData theme;
+  const SnackbarTokens(this.theme);
+
+  Color backgroundColor(dynamic style) {
+    final String name = style.toString().split('.').last;
+    switch (name) {
+      case 'neutral':
+        return theme.brightness == Brightness.dark
+            ? const Color(0xFF3B3B3B)
+            : const Color(0xFF292929);
+      case 'contrast':
+        return const Color(0xFF111111);
+      case 'accent':
+      case 'brand':
+        return theme.primaryColor;
+      case 'success':
+        return const Color(0xFF107C41);
+      case 'info':
+        return const Color(0xFF0078D4);
+      case 'warning':
+        return const Color(0xFFD83B01);
+      case 'danger':
+        return const Color(0xFFD13438);
+      default:
+        return const Color(0xFF292929);
+    }
+  }
+
+  Color actionTextColor(dynamic style) {
+    final String name = style.toString().split('.').last;
+    switch (name) {
+      case 'neutral':
+        return theme.brightness == Brightness.dark
+            ? const Color(0xFF2896F3)
+            : const Color(0xFF60A5FA);
+      case 'contrast':
+        return const Color(0xFF2896F3);
+      case 'accent':
+      case 'brand':
+      case 'success':
+      case 'info':
+      case 'warning':
+      case 'danger':
+      default:
+        return Colors.white;
+    }
+  }
+
+  Color textColor(dynamic style) => Colors.white;
+  Color secondaryTextColor(dynamic style) => Colors.white.withAlpha(204);
+
+  double get cornerRadius => FluentGlobalTokens.cornerRadius80;
+  double get elevation => FluentGlobalTokens.shadow14;
+}

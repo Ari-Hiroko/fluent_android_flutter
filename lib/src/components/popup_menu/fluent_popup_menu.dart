@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../theme/fluent_theme.dart';
-import '../../theme/fluent_theme_data.dart';
 import 'popup_menu_item.dart';
 import 'popup_menu_item_view.dart';
 
@@ -97,7 +96,7 @@ class _FluentPopupMenuState<T> extends State<FluentPopupMenu<T>> {
     final theme = FluentTheme.of(context);
     final minWidth = _calculateMinWidth();
 
-    return Material(
+    return FluentMaterial(
       color: Colors.transparent,
       elevation: theme.elevation,
       shadowColor: Colors.black.withAlpha(64),

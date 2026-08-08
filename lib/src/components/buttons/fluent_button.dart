@@ -264,9 +264,9 @@ class _FluentButtonState extends State<FluentButton> {
                 ? Border.fromBorderSide(borderSide)
                 : null,
           ),
-          child: Material(
+          child: FluentMaterial(
             color: Colors.transparent,
-            child: InkWell(
+            child: FluentInkWell(
               onTap: widget.onPressed,
               onHighlightChanged: (highlighted) {
                 if (widget.enableAnimation && isEnabled) {

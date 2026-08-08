@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../components/ripple/fluent_ink_well.dart';
 import 'fluent_colors.dart';
 import 'fluent_typography.dart';
 
@@ -32,6 +33,9 @@ class FluentThemeData {
   final double cornerRadius; // fluentui_popup_menu_corner_radius (8.0 / 4.0)
   final double elevation;
 
+  /// 是否开启主题品牌高亮水波纹 (默认 false，为 false 时水波纹为标准中性灰色)
+  final bool themedRippleColor;
+
   const FluentThemeData({
     required this.brightness,
     required this.primaryColor,
@@ -50,11 +54,12 @@ class FluentThemeData {
     required this.popupMenuItemRadiobuttonTint,
     this.cornerRadius = 8.0,
     this.elevation = 8.0,
+    this.themedRippleColor = false,
   });
 
   /// Fluent 2 浅色主题 (Theme.FluentUI Light)
-  factory FluentThemeData.light() {
-    return const FluentThemeData(
+  factory FluentThemeData.light({bool themedRippleColor = false}) {
+    return FluentThemeData(
       brightness: Brightness.light,
       primaryColor: FluentColors.communicationBlue,
       backgroundColor: FluentColors.white,
@@ -73,12 +78,13 @@ class FluentThemeData {
       popupMenuItemRadiobuttonTint: FluentColors.popupMenuItemCheckboxTintLight,
       cornerRadius: 8.0,
       elevation: 8.0,
+      themedRippleColor: themedRippleColor,
     );
   }
 
   /// Fluent 2 深色主题 (Theme.FluentUI Dark)
-  factory FluentThemeData.dark() {
-    return const FluentThemeData(
+  factory FluentThemeData.dark({bool themedRippleColor = false}) {
+    return FluentThemeData(
       brightness: Brightness.dark,
       primaryColor: FluentColors.communicationBlue,
       backgroundColor: FluentColors.darkBackground1,
@@ -97,12 +103,11 @@ class FluentThemeData {
       popupMenuItemRadiobuttonTint: FluentColors.popupMenuItemCheckboxTintDark,
       cornerRadius: 8.0,
       elevation: 12.0,
+      themedRippleColor: themedRippleColor,
     );
   }
 
   /// 根据种子颜色 [seedColor] 动态衍生与生成 Fluent 2 主题配置 [FluentThemeData]
-  ///
-  /// 对标 Material 3 的 [ColorScheme.fromSeed]，能根据单一种子主调颜色自动匹配出配套的品牌前景色、选中态高亮与深浅色模式。
   factory FluentThemeData.fromSeed({
     required Color seedColor,
     Brightness brightness = Brightness.light,
@@ -110,9 +115,12 @@ class FluentThemeData {
     Color? foregroundColor,
     double cornerRadius = 8.0,
     double elevation = 8.0,
+    bool themedRippleColor = false,
   }) {
     final isDark = brightness == Brightness.dark;
-    final baseTheme = isDark ? FluentThemeData.dark() : FluentThemeData.light();
+    final baseTheme = isDark
+        ? FluentThemeData.dark(themedRippleColor: themedRippleColor)
+        : FluentThemeData.light(themedRippleColor: themedRippleColor);
     final colorScheme = ColorScheme.fromSeed(
       seedColor: seedColor,
       brightness: brightness,
@@ -139,6 +147,7 @@ class FluentThemeData {
       popupMenuItemRadiobuttonTint: baseTheme.popupMenuItemRadiobuttonTint,
       cornerRadius: cornerRadius,
       elevation: isDark ? 12.0 : elevation,
+      themedRippleColor: themedRippleColor,
     );
   }
 
@@ -148,6 +157,7 @@ class FluentThemeData {
     return ThemeData(
       useMaterial3: true,
       brightness: brightness,
+      splashFactory: FluentSplashFactory.splashFactory,
       colorScheme: ColorScheme.fromSeed(
         seedColor: primaryColor,
         brightness: brightness,

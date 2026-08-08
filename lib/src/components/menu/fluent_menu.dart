@@ -77,7 +77,7 @@ class _FluentMenuState extends State<FluentMenu>
           scale: _scaleAnimation.value,
           child: Opacity(
             opacity: _fadeAnimation.value,
-            child: Material(
+            child: FluentMaterial(
               color: Colors.transparent,
               elevation: shadowElevation,
               shadowColor: Colors.black.withAlpha(48),

@@ -99,7 +99,7 @@ class _FluentTextButtonState extends State<FluentTextButton> {
       ),
     );
 
-    // 启用波纹 (Ripple InkWell 模式)
+    // 启用波纹 (Ripple FluentInkWell 模式)
     if (widget.enableRipple) {
       final double scale =
           (_isPressed && widget.enablePressFeedback && isEnabled)
@@ -110,10 +110,10 @@ class _FluentTextButtonState extends State<FluentTextButton> {
         scale: scale,
         duration: FluentMotionDuration.ultraFast,
         curve: FluentMotionCurve.standard,
-        child: Material(
+        child: FluentMaterial(
           color: Colors.transparent,
           borderRadius: BorderRadius.circular(6.0),
-          child: InkWell(
+          child: FluentInkWell(
             onTap: isEnabled ? widget.onPressed : null,
             mouseCursor: isEnabled
                 ? SystemMouseCursors.click

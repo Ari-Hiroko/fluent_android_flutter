@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import '../../theme/fluent_colors.dart';
 import '../../theme/fluent_global_tokens.dart';
 import '../../theme/fluent_theme.dart';
-import '../../theme/fluent_theme_data.dart';
 
 /// 上下文命令项模型 [FluentCommandItem]
 class FluentCommandItem {
@@ -58,7 +57,10 @@ class FluentContextualCommandBar extends StatelessWidget {
     this.backgroundColor,
   });
 
-  Color _resolvePrimaryThemeColor(BuildContext context, FluentThemeData fluentTheme) {
+  Color _resolvePrimaryThemeColor(
+    BuildContext context,
+    FluentThemeData fluentTheme,
+  ) {
     if (selectedColor != null) return selectedColor!;
     if (themeColor != null) return themeColor!;
 
@@ -83,20 +85,25 @@ class FluentContextualCommandBar extends StatelessWidget {
 
     final Color resolvedPrimary = _resolvePrimaryThemeColor(context, theme);
 
-    final Color barBackground = backgroundColor ??
+    final Color barBackground =
+        backgroundColor ??
         (isDark ? const Color(0xFF292929) : const Color(0xFFFAFAFA));
 
-    return Material(
+    return FluentMaterial(
       color: barBackground,
       elevation: FluentGlobalTokens.shadow14,
       shadowColor: Colors.black.withValues(alpha: 0.12),
-      borderRadius: BorderRadius.circular(FluentGlobalTokens.cornerRadiusCircular),
+      borderRadius: BorderRadius.circular(
+        FluentGlobalTokens.cornerRadiusCircular,
+      ),
       child: Container(
         height: 48.0,
         padding: const EdgeInsets.symmetric(horizontal: 6.0),
         decoration: BoxDecoration(
           color: barBackground,
-          borderRadius: BorderRadius.circular(FluentGlobalTokens.cornerRadiusCircular),
+          borderRadius: BorderRadius.circular(
+            FluentGlobalTokens.cornerRadiusCircular,
+          ),
           border: Border.all(
             color: theme.dividerColor.withValues(alpha: 0.16),
             width: 1.0,
@@ -118,28 +125,34 @@ class FluentContextualCommandBar extends StatelessWidget {
 
                 final Color itemFg = isSelected
                     ? resolvedPrimary
-                    : (isEnabled ? theme.foregroundColor : theme.foregroundSecondaryColor);
+                    : (isEnabled
+                          ? theme.foregroundColor
+                          : theme.foregroundSecondaryColor);
 
                 return Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 2.0),
-                  child: Material(
+                  child: FluentMaterial(
                     color: itemBg,
-                    borderRadius: BorderRadius.circular(FluentGlobalTokens.cornerRadiusCircular),
-                    child: InkWell(
+                    borderRadius: BorderRadius.circular(
+                      FluentGlobalTokens.cornerRadiusCircular,
+                    ),
+                    child: FluentInkWell(
                       onTap: isEnabled ? item.onPressed : null,
                       onLongPress: isEnabled ? item.onLongPress : null,
-                      borderRadius: BorderRadius.circular(FluentGlobalTokens.cornerRadiusCircular),
+                      borderRadius: BorderRadius.circular(
+                        FluentGlobalTokens.cornerRadiusCircular,
+                      ),
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12.0,
+                          vertical: 8.0,
+                        ),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             if (item.icon != null)
                               IconTheme(
-                                data: IconThemeData(
-                                  color: itemFg,
-                                  size: 20.0,
-                                ),
+                                data: IconThemeData(color: itemFg, size: 20.0),
                                 child: item.icon!,
                               ),
                             if (item.icon != null && item.label != null)
@@ -149,7 +162,9 @@ class FluentContextualCommandBar extends StatelessWidget {
                                 item.label!,
                                 style: TextStyle(
                                   fontSize: 13.0,
-                                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+                                  fontWeight: isSelected
+                                      ? FontWeight.w600
+                                      : FontWeight.normal,
                                   color: itemFg,
                                 ),
                               ),

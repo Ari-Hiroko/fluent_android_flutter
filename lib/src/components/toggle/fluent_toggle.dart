@@ -63,9 +63,9 @@ class FluentCheckBox extends StatelessWidget {
       );
     }
 
-    return Material(
+    return FluentMaterial(
       color: Colors.transparent,
-      child: InkWell(
+      child: FluentInkWell(
         onTap: isEnabled ? () => onChanged!(!value) : null,
         mouseCursor: (isEnabled && enableCursor)
             ? SystemMouseCursors.click
@@ -165,9 +165,9 @@ class FluentRadioButton<T> extends StatelessWidget {
       );
     }
 
-    return Material(
+    return FluentMaterial(
       color: Colors.transparent,
-      child: InkWell(
+      child: FluentInkWell(
         onTap: isEnabled ? () => onChanged!(value) : null,
         mouseCursor: (isEnabled && enableCursor)
             ? SystemMouseCursors.click
@@ -271,9 +271,9 @@ class FluentToggleSwitch extends StatelessWidget {
       );
     }
 
-    return Material(
+    return FluentMaterial(
       color: Colors.transparent,
-      child: InkWell(
+      child: FluentInkWell(
         onTap: isEnabled ? () => onChanged!(!value) : null,
         mouseCursor: (isEnabled && enableCursor)
             ? SystemMouseCursors.click

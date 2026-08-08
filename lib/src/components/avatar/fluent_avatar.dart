@@ -19,20 +19,10 @@ enum FluentAvatarSize {
 }
 
 /// 在线/忙碌状态 [FluentPresence]
-enum FluentPresence {
-  none,
-  available,
-  away,
-  busy,
-  dnd,
-  offline,
-}
+enum FluentPresence { none, available, away, busy, dnd, offline }
 
 /// 头像形状 [FluentAvatarStyle]
-enum FluentAvatarStyle {
-  circle,
-  square,
-}
+enum FluentAvatarStyle { circle, square }
 
 /// Fluent 2 头像组件 [FluentAvatar]
 ///
@@ -153,20 +143,14 @@ class FluentAvatar extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: borderRadius,
         border: hasRing
-            ? Border.all(
-                color: theme.primaryColor,
-                width: 2.0,
-              )
+            ? Border.all(color: theme.primaryColor, width: 2.0)
             : null,
       ),
-      child: ClipRRect(
-        borderRadius: borderRadius,
-        child: avatarContent,
-      ),
+      child: ClipRRect(borderRadius: borderRadius, child: avatarContent),
     );
 
     if (onTap != null) {
-      mainAvatar = InkWell(
+      mainAvatar = FluentInkWell(
         onTap: onTap,
         borderRadius: borderRadius,
         child: mainAvatar,
@@ -191,10 +175,7 @@ class FluentAvatar extends StatelessWidget {
             decoration: BoxDecoration(
               color: _getPresenceColor(),
               shape: BoxShape.circle,
-              border: Border.all(
-                color: theme.backgroundColor,
-                width: 1.5,
-              ),
+              border: Border.all(color: theme.backgroundColor, width: 1.5),
             ),
           ),
         ),

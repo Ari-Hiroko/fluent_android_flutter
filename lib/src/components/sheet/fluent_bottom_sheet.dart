@@ -40,7 +40,7 @@ class FluentBottomSheet extends StatelessWidget {
     final theme = FluentTheme.of(context);
     final radius = cornerRadius ?? FluentGlobalTokens.cornerRadius160;
 
-    return Material(
+    return FluentMaterial(
       color: theme.backgroundColor,
       elevation: FluentGlobalTokens.shadow28,
       borderRadius: BorderRadius.only(

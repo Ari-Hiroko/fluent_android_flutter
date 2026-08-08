@@ -122,7 +122,7 @@ class FluentDialog extends StatelessWidget {
         horizontal: 24.0,
         vertical: 40.0,
       ),
-      child: Material(
+      child: FluentMaterial(
         color: Colors.transparent,
         elevation: shadowElevation,
         shadowColor: Colors.black.withAlpha(80),

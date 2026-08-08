@@ -31,29 +31,28 @@ class FluentFloatingActionButton extends StatelessWidget {
 
     return Tooltip(
       message: tooltip ?? text ?? '',
-      child: Material(
+      child: FluentMaterial(
         color: theme.primaryColor,
         elevation: FluentGlobalTokens.shadow14,
         shadowColor: Colors.black.withAlpha(80),
-        borderRadius: BorderRadius.circular(FluentGlobalTokens.cornerRadiusCircular),
-        child: InkWell(
+        borderRadius: BorderRadius.circular(
+          FluentGlobalTokens.cornerRadiusCircular,
+        ),
+        child: FluentInkWell(
           onTap: onPressed,
-          borderRadius: BorderRadius.circular(FluentGlobalTokens.cornerRadiusCircular),
+          borderRadius: BorderRadius.circular(
+            FluentGlobalTokens.cornerRadiusCircular,
+          ),
           child: Container(
             height: 48.0,
-            padding: EdgeInsets.symmetric(
-              horizontal: isExtended ? 20.0 : 12.0,
-            ),
+            padding: EdgeInsets.symmetric(horizontal: isExtended ? 20.0 : 12.0),
             constraints: const BoxConstraints(minWidth: 48.0),
             alignment: Alignment.center,
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 IconTheme(
-                  data: const IconThemeData(
-                    color: Colors.white,
-                    size: 24.0,
-                  ),
+                  data: const IconThemeData(color: Colors.white, size: 24.0),
                   child: icon,
                 ),
                 if (isExtended) ...[
