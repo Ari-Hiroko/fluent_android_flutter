@@ -54,6 +54,10 @@ class FluentSplashFactory extends InteractiveInkFeatureFactory {
   }
 }
 
+const Duration _kFadeInDuration = Duration(milliseconds: 60);
+const Duration _kRadiusDuration = Duration(milliseconds: 250);
+const Duration _kFadeOutDuration = Duration(milliseconds: 225);
+
 /// 对应 Fluent 2 边缘羽化带 [RadialGradient] 扩散的 InkRipple
 class FluentInkRipple extends InteractiveInkFeature {
   FluentInkRipple({
@@ -73,7 +77,7 @@ class FluentInkRipple extends InteractiveInkFeature {
        _textDirection = textDirection,
        _targetRadius =
            radius ??
-           _getTargetRadius(referenceBox, containedInkWell, rectCallback),
+           _getTargetRadius(referenceBox, position, containedInkWell, rectCallback),
        _clipCallback = _getClipCallback(
          referenceBox,
          containedInkWell,
@@ -82,7 +86,7 @@ class FluentInkRipple extends InteractiveInkFeature {
        super(color: color) {
     _fadeInController =
         AnimationController(
-            duration: const Duration(milliseconds: 75),
+            duration: _kFadeInDuration,
             vsync: controller.vsync,
           )
           ..addListener(controller.markNeedsPaint)
@@ -93,27 +97,30 @@ class FluentInkRipple extends InteractiveInkFeature {
 
     _radiusController =
         AnimationController(
-            duration: const Duration(milliseconds: 225),
+            duration: _kRadiusDuration,
             vsync: controller.vsync,
           )
           ..addListener(controller.markNeedsPaint)
           ..forward();
     _radius = _radiusController.drive(
       Tween<double>(
-        begin: _targetRadius * 0.30,
-        end: _targetRadius + 5.0,
-      ).chain(CurveTween(curve: Curves.ease)),
+        begin: _targetRadius * 0.10,
+        end: _targetRadius,
+      ).chain(CurveTween(curve: Curves.easeOutCubic)),
     );
 
     _fadeOutController =
         AnimationController(
-            duration: const Duration(milliseconds: 375),
+            duration: _kFadeOutDuration,
             vsync: controller.vsync,
           )
           ..addListener(controller.markNeedsPaint)
           ..addStatusListener(_handleAlphaStatusChanged);
     _fadeOut = _fadeOutController.drive(
-      IntTween(begin: (color.a * 255.0).round().clamp(0, 255), end: 0),
+      IntTween(
+        begin: (color.a * 255.0).round().clamp(0, 255),
+        end: 0,
+      ).chain(CurveTween(curve: Curves.easeOut)),
     );
 
     controller.addInkFeature(this);
@@ -127,8 +134,10 @@ class FluentInkRipple extends InteractiveInkFeature {
 
   late Animation<double> _radius;
   late AnimationController _radiusController;
+
   late Animation<int> _fadeIn;
   late AnimationController _fadeInController;
+
   late Animation<int> _fadeOut;
   late AnimationController _fadeOutController;
 
@@ -144,16 +153,19 @@ class FluentInkRipple extends InteractiveInkFeature {
 
   static double _getTargetRadius(
     RenderBox referenceBox,
+    Offset position,
     bool containedInkWell,
     RectCallback? rectCallback,
   ) {
     final Size size = rectCallback != null
         ? rectCallback().size
         : referenceBox.size;
-    final double d1 = size.bottomRight(Offset.zero).distance;
-    final double d2 =
-        (size.topRight(Offset.zero) - size.bottomLeft(Offset.zero)).distance;
-    return math.max(d1, d2) / 2.0;
+    final double d1 = (position - Offset.zero).distance;
+    final double d2 = (position - Offset(size.width, 0)).distance;
+    final double d3 = (position - Offset(0, size.height)).distance;
+    final double d4 = (position - Offset(size.width, size.height)).distance;
+    final double maxDistance = math.max(math.max(d1, d2), math.max(d3, d4));
+    return maxDistance * 1.6;
   }
 
   @override
@@ -164,6 +176,7 @@ class FluentInkRipple extends InteractiveInkFeature {
 
   @override
   void cancel() {
+    _fadeInController.stop();
     _fadeOutController.forward();
   }
 
@@ -183,30 +196,19 @@ class FluentInkRipple extends InteractiveInkFeature {
 
   @override
   void paintFeature(Canvas canvas, Matrix4 transform) {
-    final int alpha;
-    if (_fadeOutController.isAnimating || _fadeOutController.isCompleted) {
-      alpha = _fadeOut.value;
-    } else if (_fadeInController.isAnimating) {
-      alpha = _fadeIn.value;
-    } else {
-      alpha = (color.a * 255.0).round().clamp(0, 255);
-    }
+    final int alpha =
+        _fadeInController.isAnimating ? _fadeIn.value : _fadeOut.value;
     if (alpha <= 0 || _radius.value <= 0) return;
 
     final Color solidColor = color.withAlpha(alpha);
     final Color transparentColor = color.withAlpha(0);
 
-    final Rect? rect = _clipCallback?.call();
-    final Offset center = Offset.lerp(
-      _position,
-      rect != null ? rect.center : referenceBox.size.center(Offset.zero),
-      Curves.ease.transform(_radiusController.value),
-    )!;
+    final Offset center = _position;
 
     final Paint paint = Paint()
       ..shader = RadialGradient(
         colors: [solidColor, solidColor, transparentColor],
-        stops: const [0.0, 0.45, 1.0],
+        stops: const [0.0, 0.60, 1.0],
       ).createShader(Rect.fromCircle(center: center, radius: _radius.value));
 
     paintInkCircle(
@@ -855,7 +857,16 @@ class _FluentInkResponseState extends State<_FluentInkResponseStateWidget>
     }
   }
 
+  void handleDoubleTap() {
+    _currentSplash?.confirm();
+    _currentSplash = null;
+    updateHighlight(_HighlightType.pressed, value: false);
+    widget.onDoubleTap?.call();
+  }
+
   void handleLongPress() {
+    _currentSplash?.confirm();
+    _currentSplash = null;
     if (widget.onLongPress != null) {
       if (widget.enableFeedback) {
         Feedback.forLongPress(context);
@@ -891,11 +902,12 @@ class _FluentInkResponseState extends State<_FluentInkResponseStateWidget>
         onEnter: handleMouseEnter,
         onExit: handleMouseExit,
         child: GestureDetector(
-          onTapDown: handleTapDown,
-          onTapUp: handleTapUp,
-          onTap: handleTap,
-          onTapCancel: handleTapCancel,
-          onLongPress: handleLongPress,
+          onTapDown: enabled ? handleTapDown : null,
+          onTapUp: enabled ? handleTapUp : null,
+          onTap: enabled ? handleTap : null,
+          onTapCancel: enabled ? handleTapCancel : null,
+          onDoubleTap: widget.onDoubleTap != null ? handleDoubleTap : null,
+          onLongPress: widget.onLongPress != null ? handleLongPress : null,
           behavior: HitTestBehavior.opaque,
           child: widget.child,
         ),

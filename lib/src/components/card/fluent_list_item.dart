@@ -202,8 +202,8 @@ class _FluentListItemState extends State<FluentListItem> {
               : theme.backgroundPressedColor.withValues(alpha: 0.5));
 
     final Color splashColor = widget.coloredSplash
-        ? theme.primaryColor.withValues(alpha: 0.08)
-        : Colors.black12.withValues(alpha: 0.02);
+        ? theme.primaryColor.withValues(alpha: 0.1)
+        : Colors.black12.withValues(alpha: 0.1);
 
     final Widget content = Container(
       constraints: BoxConstraints(minHeight: minHeight),
