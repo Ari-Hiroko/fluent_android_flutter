@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../theme/fluent_motion_tokens.dart';
 
-/// Fluent 2 卡片类型 [FluentCardType]
-enum FluentCardType {
+/// Fluent 2 卡片/容器类型 [FluentContainerType]
+enum FluentContainerType {
   /// 悬浮卡片 (默认：包含 Fluent 2 阴影 `FluentShadow.shadow2`)
   elevated,
 
@@ -10,14 +10,15 @@ enum FluentCardType {
   outlined,
 }
 
-/// Fluent 2 卡片组件样式与高级配置参数 [FluentCardStyle]
+/// Fluent 2 卡片/容器组件样式与高级配置参数 [FluentContainerStyle]
 ///
-/// 将不常用的外观控制（内边距、圆角、背景色、透明度、宽度）、伸缩控制（[expand]）、
-/// 分割线控制（[showDivider]）与动画配置（持续时间、曲线、平滑过渡开关）封装在此对象中。
+/// 将外观控制（内边距、圆角、背景色、透明度、宽度）、边框开关（[border]，默认 true）、
+/// 边框样式（[borderStyle]）、伸缩控制（[expand]）、分割线控制（[showDivider]）与
+/// 动画配置（持续时间、曲线、平滑过渡开关）封装在此对象中。
 @immutable
-class FluentCardStyle {
-  /// 卡片类型 ([FluentCardType.elevated] 或 [FluentCardType.outlined])
-  final FluentCardType? cardType;
+class FluentContainerStyle {
+  /// 卡片类型 ([FluentContainerType.elevated] 或 [FluentContainerType.outlined])
+  final FluentContainerType? cardType;
 
   /// 卡片外侧内边距
   final EdgeInsetsGeometry? padding;
@@ -70,13 +71,16 @@ class FluentCardStyle {
   /// 自定义阴影配置 (若为 null 且 cardType == elevated，默认显示 FluentShadow.shadow2)
   final List<BoxShadow>? shadow;
 
-  /// 自定义卡片边框 (可选，若指定则覆盖默认边框)
-  final BoxBorder? border;
+  /// 是否显示卡片边框 (默认 true，对应 Default.svg 描边容器设计)
+  final bool border;
+
+  /// 自定义卡片边框样式 (可选，若指定且 border == true 则覆盖默认边框样式)
+  final BoxBorder? borderStyle;
 
   /// 是否禁用 InkWell 默认的瞬间硬蒙层 (隐式动画 Hover 卡片启用)
   final bool disableHoverOverlay;
 
-  const FluentCardStyle({
+  const FluentContainerStyle({
     this.cardType,
     this.padding,
     this.contentPadding,
@@ -85,7 +89,8 @@ class FluentCardStyle {
     this.opacity = 1.0,
     this.width,
     this.shadow,
-    this.border,
+    this.border = true,
+    this.borderStyle,
     this.expand = false,
     this.showDivider = false,
     this.enableSizeAnimation = true,
@@ -100,8 +105,8 @@ class FluentCardStyle {
   });
 
   /// 复制并替换样式属性
-  FluentCardStyle copyWith({
-    FluentCardType? cardType,
+  FluentContainerStyle copyWith({
+    FluentContainerType? cardType,
     EdgeInsetsGeometry? padding,
     EdgeInsetsGeometry? contentPadding,
     double? borderRadius,
@@ -109,7 +114,8 @@ class FluentCardStyle {
     double? opacity,
     double? width,
     List<BoxShadow>? shadow,
-    BoxBorder? border,
+    bool? border,
+    BoxBorder? borderStyle,
     bool? expand,
     bool? showDivider,
     bool? enableSizeAnimation,
@@ -122,7 +128,7 @@ class FluentCardStyle {
     BoxFit? imageFit,
     AlignmentGeometry? imageAlignment,
   }) {
-    return FluentCardStyle(
+    return FluentContainerStyle(
       cardType: cardType ?? this.cardType,
       padding: padding ?? this.padding,
       contentPadding: contentPadding ?? this.contentPadding,
@@ -132,6 +138,7 @@ class FluentCardStyle {
       width: width ?? this.width,
       shadow: shadow ?? this.shadow,
       border: border ?? this.border,
+      borderStyle: borderStyle ?? this.borderStyle,
       expand: expand ?? this.expand,
       showDivider: showDivider ?? this.showDivider,
       enableSizeAnimation: enableSizeAnimation ?? this.enableSizeAnimation,
@@ -149,7 +156,7 @@ class FluentCardStyle {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is FluentCardStyle &&
+      other is FluentContainerStyle &&
           runtimeType == other.runtimeType &&
           cardType == other.cardType &&
           padding == other.padding &&
@@ -160,10 +167,12 @@ class FluentCardStyle {
           width == other.width &&
           shadow == other.shadow &&
           border == other.border &&
+          borderStyle == other.borderStyle &&
           expand == other.expand &&
           showDivider == other.showDivider &&
           enableSizeAnimation == other.enableSizeAnimation &&
           enableCursor == other.enableCursor &&
+          disableHoverOverlay == other.disableHoverOverlay &&
           animationDuration == other.animationDuration &&
           animationCurve == other.animationCurve &&
           imageHeight == other.imageHeight &&
@@ -173,26 +182,26 @@ class FluentCardStyle {
 
   @override
   int get hashCode => Object.hashAll([
-        cardType,
-        padding,
-        contentPadding,
-        borderRadius,
-        backgroundColor,
-        opacity,
-        width,
-        shadow,
-        border,
-        expand,
-        showDivider,
-        enableSizeAnimation,
-        enableCursor,
-        animationDuration,
-        animationCurve,
-        imageHeight,
-        imageWidth,
-        imageFit,
-        imageAlignment,
-      ]);
+    cardType,
+    padding,
+    contentPadding,
+    borderRadius,
+    backgroundColor,
+    opacity,
+    width,
+    shadow,
+    border,
+    borderStyle,
+    expand,
+    showDivider,
+    enableSizeAnimation,
+    enableCursor,
+    disableHoverOverlay,
+    animationDuration,
+    animationCurve,
+    imageHeight,
+    imageWidth,
+    imageFit,
+    imageAlignment,
+  ]);
 }
-
-

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../../theme/fluent_motion_tokens.dart';
 import '../../theme/fluent_theme.dart';
 import '../buttons/fluent_text_button.dart';
-import 'fluent_card.dart';
+import 'fluent_container.dart';
 import 'fluent_divider.dart';
 
 /// SectionHeader 风格类型
@@ -69,7 +69,7 @@ class FluentListItem extends StatefulWidget {
   /// 不透明度 (可选)
   final double? opacity;
 
-  /// 透明背景控制 (默认为 null。若未指定，置于 [FluentCard] 内部时自动为 true 透出 Card 背景，否则为 false)
+  /// 透明背景控制 (默认为 null。若未指定，置于 [FluentContainer] 内部时自动为 true 透出 Card 背景，否则为 false)
   final bool? transparentBackground;
 
   /// 自定义背景填充颜色 (可选)
@@ -145,9 +145,9 @@ class _FluentListItemState extends State<FluentListItem> {
   Widget build(BuildContext context) {
     final theme = FluentTheme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-    final cardScope = FluentCardScope.of(context);
+    final cardScope = FluentContainerScope.of(context);
 
-    // 智能推导背景透明控制：若在 FluentCard 内部默认透明背景
+    // 智能推导背景透明控制：若在 FluentContainer 内部默认透明背景
     final bool isTransparent =
         widget.transparentBackground ?? (cardScope != null);
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../theme/fluent_theme.dart';
-import 'fluent_card.dart';
+import 'fluent_container.dart';
 import 'fluent_list_item.dart';
 
 /// Fluent 2 列表组容器组件 [FluentList]
@@ -38,10 +38,12 @@ class FluentList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = FluentTheme.of(context);
-    final cardScope = FluentCardScope.of(context);
+    final cardScope = FluentContainerScope.of(context);
 
     final double? effOpacity = opacity ?? cardScope?.opacity;
-    final Color defaultBg = cardScope != null ? Colors.transparent : theme.backgroundColor;
+    final Color defaultBg = cardScope != null
+        ? Colors.transparent
+        : theme.backgroundColor;
     final Color effectiveBg = backgroundColor ?? defaultBg;
     final BorderRadiusGeometry effRadius = borderRadius ?? BorderRadius.zero;
 
@@ -86,10 +88,7 @@ class FluentList extends StatelessWidget {
 
     Widget listContainer = Container(
       padding: padding,
-      decoration: BoxDecoration(
-        color: effectiveBg,
-        borderRadius: effRadius,
-      ),
+      decoration: BoxDecoration(color: effectiveBg, borderRadius: effRadius),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -98,17 +97,11 @@ class FluentList extends StatelessWidget {
     );
 
     if (effRadius != BorderRadius.zero) {
-      listContainer = ClipRRect(
-        borderRadius: effRadius,
-        child: listContainer,
-      );
+      listContainer = ClipRRect(borderRadius: effRadius, child: listContainer);
     }
 
     if (effOpacity != null && effOpacity < 1.0) {
-      listContainer = Opacity(
-        opacity: effOpacity,
-        child: listContainer,
-      );
+      listContainer = Opacity(opacity: effOpacity, child: listContainer);
     }
 
     return listContainer;

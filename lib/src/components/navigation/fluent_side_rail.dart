@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../theme/fluent_colors.dart';
 import '../../theme/fluent_theme.dart';
-import '../card/fluent_badge.dart';
+import '../container/fluent_badge.dart';
 import '../transients/fluent_tooltip.dart';
 
 /// SideRail Item 数据模型 [FluentSideRailItem]
@@ -249,10 +249,7 @@ class FluentSideRail extends StatelessWidget {
 
             if (footer != null) ...[
               Divider(height: 1.0, color: theme.dividerColor),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: footer!,
-              ),
+              Padding(padding: const EdgeInsets.all(8.0), child: footer!),
             ],
 
             const SizedBox(height: 12.0),
@@ -323,8 +320,9 @@ class FluentSideRail extends StatelessWidget {
                   item.title,
                   style: TextStyle(
                     fontSize: 14.0,
-                    fontWeight:
-                        isSelected ? FontWeight.bold : FontWeight.normal,
+                    fontWeight: isSelected
+                        ? FontWeight.bold
+                        : FontWeight.normal,
                     color: itemColor,
                   ),
                   maxLines: 1,
@@ -360,11 +358,7 @@ class FluentSideRail extends StatelessWidget {
                   ),
                 ),
                 if (item.badge != null || item.badgeText != null)
-                  Positioned(
-                    top: -2.0,
-                    right: -4.0,
-                    child: badgeWidget,
-                  ),
+                  Positioned(top: -2.0, right: -4.0, child: badgeWidget),
               ],
             ),
             if (enableText) ...[
@@ -373,8 +367,7 @@ class FluentSideRail extends StatelessWidget {
                 item.title,
                 style: TextStyle(
                   fontSize: 11.0,
-                  fontWeight:
-                      isSelected ? FontWeight.bold : FontWeight.normal,
+                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                   color: itemColor,
                 ),
                 maxLines: 1,
@@ -404,10 +397,7 @@ class FluentSideRail extends StatelessWidget {
 
     final tooltipMsg = item.tooltip ?? item.title;
     if (tooltipMsg.isNotEmpty && !isExpanded) {
-      itemTile = FluentTooltip(
-        message: tooltipMsg,
-        child: itemTile,
-      );
+      itemTile = FluentTooltip(message: tooltipMsg, child: itemTile);
     }
 
     return itemTile;

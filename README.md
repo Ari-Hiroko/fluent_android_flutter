@@ -99,8 +99,8 @@ class MyApp extends StatelessWidget {
 | **导航栏目** | `FluentAppBarLayout`, `FluentTopAppBar`, `FluentTabBar`, `FluentPillBar`, `FluentSideRail`, `FluentContextualCommandBar` | 支持 Brand / Neutral 风格、Avatar / BackIcon 指示及折叠滚动手势 |
 | **按钮与标签** | `FluentButton`, `FluentCompoundButton`, `FluentFAB`, `FluentChip`, `FluentBasicChip`, `FluentCitation`, `FluentTextButton` | 包含 Primary, Secondary, Borderless, Danger 样式形态 |
 | **选框与开关** | `FluentCheckBox`, `FluentRadioButton`, `FluentToggleSwitch` | 包含状态回调、热区文本及悬停光标支持 |
-| **列表与卡片** | `FluentListItem`, `FluentListSubHeader`, `FluentCard`, `FluentBadge`, `FluentDivider` | 包含 Elevated 与 Outlined 卡片及层次列表 |
-| **模态与通知** | `FluentBottomSheet`, `FluentDrawer`, `FluentDialog`, `FluentSnackbar`, `FluentBanner`, `FluentCardNudge` | 提供底部抽屉、对话框与卡片通知系统 |
+| **列表与卡片** | `FluentListItem`, `FluentListSubHeader`, `FluentContainer`, `FluentBadge`, `FluentDivider` | 包含 Elevated 与 Outlined 卡片及层次列表 |
+| **模态与通知** | `FluentBottomSheet`, `FluentDrawer`, `FluentDialog`, `FluentSnackbar`, `FluentBanner`, `FluentContainerNudge` | 提供底部抽屉、对话框与卡片通知系统 |
 | **人员与头像** | `FluentAvatar`, `FluentAvatarGroup`, `FluentPersona`, `FluentPeoplePicker`, `FluentAvatarCarousel` | 支持 Presence 在线状态指示与头像堆叠展示 |
 | **过渡与加载** | `FluentShimmer`, `FluentTooltip`, `FluentAcrylic`, `FluentProgressIndicator` | 包含骨架屏、Tooltip 气泡与亚克力效果 |
 | **日历与图标** | `FluentCalendar`, `FluentIcons` | 提供日历视图及 Fluent 图标包装 |

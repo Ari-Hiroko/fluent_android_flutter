@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../theme/fluent_colors.dart';
 import '../../theme/fluent_theme.dart';
-import '../card/fluent_badge.dart';
+import '../container/fluent_badge.dart';
 import 'fluent_top_app_bar.dart';
 
 /// Tab 项文本排布方式 [FluentTabTextAlignment]

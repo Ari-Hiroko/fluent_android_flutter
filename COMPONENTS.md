@@ -520,9 +520,9 @@ FluentBadge(
 );
 ```
 
-### 14.2 `FluentCard` & `FluentFileCard` (容器与文件预览卡片)
+### 14.2 `FluentContainer` & `FluentFileCard` (容器与文件预览卡片)
 ```dart
-FluentCard(
+FluentContainer(
   child: const Text('Card Content'),
 );
 
@@ -532,9 +532,9 @@ FluentFileCard(
 );
 ```
 
-### 14.3 `FluentCardNudge` (卡片通知提醒)
+### 14.3 `FluentContainerNudge` (卡片通知提醒)
 ```dart
-FluentCardNudge(
+FluentContainerNudge(
   title: '更新通知',
   message: '发现最新规范控件组件可供更新。',
   accentText: 'NEW',

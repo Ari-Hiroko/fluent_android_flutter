@@ -63,12 +63,12 @@ export 'src/components/sheet/fluent_bottom_sheet.dart';
 export 'src/components/sheet/fluent_drawer.dart';
 
 // Card & ListItem Component
-export 'src/components/card/fluent_list.dart';
-export 'src/components/card/fluent_list_item.dart';
-export 'src/components/card/fluent_list_sub_header.dart';
-export 'src/components/card/fluent_divider.dart';
-export 'src/components/card/fluent_badge.dart';
-export 'src/components/card/fluent_card.dart';
+export 'src/components/container/fluent_list.dart';
+export 'src/components/container/fluent_list_item.dart';
+export 'src/components/container/fluent_list_sub_header.dart';
+export 'src/components/container/fluent_divider.dart';
+export 'src/components/container/fluent_badge.dart';
+export 'src/components/container/fluent_container.dart';
 
 // Snackbar & Notification Component
 export 'src/components/snackbar/fluent_snackbar.dart';

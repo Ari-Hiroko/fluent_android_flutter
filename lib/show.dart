@@ -679,15 +679,15 @@ FluentCitation(
         ),
         const SizedBox(height: 16.0),
 
-        // FluentCard, FluentFileCard / FluentAnnouncementCard
+        // FluentContainer, FluentFileCard / FluentAnnouncementCard
         ComponentDocCard(
           theme: theme,
-          name: 'FluentCard',
+          name: 'FluentContainer',
           description: '支持内容改变时的平滑 AnimatedSize 伸缩动画、Preview 预览图与溢出菜单。',
           demo: Column(
             children: [
-              FluentCard(
-                style: const FluentCardStyle(enableSizeAnimation: true),
+              FluentContainer(
+                style: const FluentContainerStyle(enableSizeAnimation: true),
                 onTap: () {
                   setState(() => _cardExpanded = !_cardExpanded);
                   _log(_cardExpanded ? '展开卡片详情' : '折叠卡片详情');
@@ -741,7 +741,7 @@ FluentCitation(
               ),
             ],
           ),
-          codeSnippet: '''FluentCard(
+          codeSnippet: '''FluentContainer(
   enableSizeAnimation: true, // 开启内容改变平滑伸缩
   onTap: () => setState(() => isExpanded = !isExpanded),
   child: const Text('Card Content'),
@@ -1563,12 +1563,12 @@ showFluentSnackbarToast(
         ),
         const SizedBox(height: 16.0),
 
-        //  FluentCardNudge
+        //  FluentContainerNudge
         ComponentDocCard(
           theme: theme,
-          name: 'FluentCardNudge',
+          name: 'FluentContainerNudge',
           description: '微软带有操作与撤销功能的 CardNudge 通知卡片。',
-          demo: FluentCardNudge(
+          demo: FluentContainerNudge(
             title: '更新通知',
             message: '发现 Fluent 2 视觉库最新组件可供使用。',
             accentText: 'NEW',
@@ -1577,7 +1577,7 @@ showFluentSnackbarToast(
             onActionTap: () => _log('点击了 CardNudge 动作'),
             onDismiss: () => _log('点击了 CardNudge 关闭'),
           ),
-          codeSnippet: '''FluentCardNudge(
+          codeSnippet: '''FluentContainerNudge(
   title: '更新通知',
   message: '最新组件可供更新使用',
   accentText: 'NEW',

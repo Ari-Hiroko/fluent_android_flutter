@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import '../../theme/fluent_theme.dart';
 import '../buttons/fluent_text_button.dart';
 
-/// Fluent 2  CardNudge 提醒通知卡片 [FluentCardNudge]
+/// Fluent 2  CardNudge 提醒通知卡片 [FluentContainerNudge]
 ///
 /// 移植自 Android Kotlin V2CardNudgeActivity.kt 与 CardNudge.kt
-class FluentCardNudge extends StatelessWidget {
+class FluentContainerNudge extends StatelessWidget {
   /// 主标题
   final String title;
 
@@ -27,7 +27,7 @@ class FluentCardNudge extends StatelessWidget {
   /// 关闭按键回调
   final VoidCallback? onDismiss;
 
-  const FluentCardNudge({
+  const FluentContainerNudge({
     super.key,
     required this.title,
     required this.message,

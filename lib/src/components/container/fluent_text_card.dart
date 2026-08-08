@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../theme/fluent_theme.dart';
-import 'fluent_card.dart';
+import 'fluent_container.dart';
 
 /// Fluent 2 可展开/固定文本与自定义内容卡片 [FluentTextCard]
 ///
@@ -52,20 +52,23 @@ class FluentTextCard extends StatefulWidget {
   /// 卡片不透明度 (可选，高频直接参数，范围 0.0 ~ 1.0)
   final double? opacity;
 
-  /// 卡片类型 [FluentCardType] (可选)
-  final FluentCardType? cardType;
+  /// 卡片类型 [FluentContainerType] (可选)
+  final FluentContainerType? cardType;
 
   /// 自定义阴影配置 (可选)
   final List<BoxShadow>? shadow;
 
-  /// 自定义卡片边框 (可选)
-  final BoxBorder? border;
+  /// 是否显示卡片边框 (可选)
+  final bool? border;
+
+  /// 自定义卡片边框样式 (可选)
+  final BoxBorder? borderStyle;
 
   /// 是否在内容区域上方显示 1dp 分割线 (默认 false)
   final bool showDivider;
 
-  /// 卡片外观、动画与分割线配置包 [FluentCardStyle] (可选)
-  final FluentCardStyle style;
+  /// 卡片外观、动画与分割线配置包 [FluentContainerStyle] (可选)
+  final FluentContainerStyle style;
 
   const FluentTextCard({
     super.key,
@@ -87,8 +90,9 @@ class FluentTextCard extends StatefulWidget {
     this.cardType,
     this.shadow,
     this.border,
+    this.borderStyle,
     this.showDivider = false,
-    this.style = const FluentCardStyle(),
+    this.style = const FluentContainerStyle(),
   });
 
   @override
@@ -116,13 +120,14 @@ class _FluentTextCardState extends State<FluentTextCard>
     widget.onExpandedChanged?.call(_isExpanded);
   }
 
-  FluentCardStyle _getEffectiveStyle() {
+  FluentContainerStyle _getEffectiveStyle() {
     return widget.style.copyWith(
       opacity: widget.opacity ?? widget.style.opacity,
       showDivider: widget.showDivider ? true : widget.style.showDivider,
       cardType: widget.cardType ?? widget.style.cardType,
       shadow: widget.shadow ?? widget.style.shadow,
       border: widget.border ?? widget.style.border,
+      borderStyle: widget.borderStyle ?? widget.style.borderStyle,
     );
   }
 
@@ -131,7 +136,8 @@ class _FluentTextCardState extends State<FluentTextCard>
     final theme = FluentTheme.of(context);
     final effectiveStyle = _getEffectiveStyle();
 
-    final bool hasHeader = widget.title != null ||
+    final bool hasHeader =
+        widget.title != null ||
         widget.titleWidget != null ||
         widget.subtitle != null ||
         widget.leadingIcon != null ||
@@ -151,10 +157,7 @@ class _FluentTextCardState extends State<FluentTextCard>
         children: [
           if (widget.leadingIcon != null) ...[
             IconTheme(
-              data: IconThemeData(
-                color: theme.foregroundColor,
-                size: 22.0,
-              ),
+              data: IconThemeData(color: theme.foregroundColor, size: 22.0),
               child: widget.leadingIcon!,
             ),
             const SizedBox(width: 12.0),
@@ -230,7 +233,8 @@ class _FluentTextCardState extends State<FluentTextCard>
                           ),
                         ],
                         Padding(
-                          padding: effectiveStyle.contentPadding ??
+                          padding:
+                              effectiveStyle.contentPadding ??
                               const EdgeInsets.only(top: 12.0),
                           child: _buildBodyContent(context, theme),
                         ),
@@ -246,10 +250,13 @@ class _FluentTextCardState extends State<FluentTextCard>
       cardChild = SelectionArea(child: cardChild);
     }
 
-    final bool inCardScope = FluentCardScope.of(context) != null;
+    final bool inCardScope = FluentContainerScope.of(context) != null;
     if (inCardScope) {
-      final VoidCallback? tapCallback = widget.onTap ??
-          (widget.expandable || widget.onActionTap != null ? _toggleExpand : null);
+      final VoidCallback? tapCallback =
+          widget.onTap ??
+          (widget.expandable || widget.onActionTap != null
+              ? _toggleExpand
+              : null);
       if (tapCallback != null) {
         return GestureDetector(
           behavior: HitTestBehavior.opaque,
@@ -260,9 +267,13 @@ class _FluentTextCardState extends State<FluentTextCard>
       return cardChild;
     }
 
-    return FluentCard(
+    return FluentContainer(
       style: effectiveStyle,
-      onTap: widget.onTap ?? (widget.expandable || widget.onActionTap != null ? _toggleExpand : null),
+      onTap:
+          widget.onTap ??
+          (widget.expandable || widget.onActionTap != null
+              ? _toggleExpand
+              : null),
       selectable: widget.selectable,
       child: cardChild,
     );

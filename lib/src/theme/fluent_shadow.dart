@@ -18,6 +18,63 @@ enum FluentShadowLevel {
   shadow64Brand,
 }
 
+/// 来自 tokens.json 的阴影颜色 Token 规范 [FluentShadowTokens]
+abstract class FluentShadowTokens {
+  // Light Mode Colors (来自 tokens.json mode.light)
+  static const Color lightShadowAmbient = Color(
+    0x1E000000,
+  ); // #0000001e (Alpha: 0.12)
+  static const Color lightShadowAmbientLighter = Color(
+    0x0F000000,
+  ); // #0000000f (Alpha: 0.06)
+  static const Color lightShadowAmbientDarker = Color(
+    0x33000000,
+  ); // #00000033 (Alpha: 0.20)
+  static const Color lightShadowBrandAmbient = Color(
+    0x3F000000,
+  ); // #0000003f (Alpha: 0.25)
+
+  static const Color lightShadowKey = Color(
+    0x23000000,
+  ); // #00000023 (Alpha: 0.14)
+  static const Color lightShadowKeyLighter = Color(
+    0x11000000,
+  ); // #00000011 (Alpha: 0.07)
+  static const Color lightShadowKeyDarker = Color(
+    0x3D000000,
+  ); // #0000003d (Alpha: 0.24)
+  static const Color lightShadowBrandKey = Color(
+    0x4C000000,
+  ); // #0000004c (Alpha: 0.30)
+
+  // Dark Mode Colors (来自 tokens.json mode.dark)
+  static const Color darkShadowAmbient = Color(
+    0x3D000000,
+  ); // #0000003d (Alpha: 0.24)
+  static const Color darkShadowAmbientLighter = Color(
+    0x1E000000,
+  ); // #0000001e (Alpha: 0.12)
+  static const Color darkShadowAmbientDarker = Color(
+    0x66000000,
+  ); // #00000066 (Alpha: 0.40)
+  static const Color darkShadowBrandAmbient = Color(
+    0x3F000000,
+  ); // #0000003f (Alpha: 0.25)
+
+  static const Color darkShadowKey = Color(
+    0x47000000,
+  ); // #00000047 (Alpha: 0.28)
+  static const Color darkShadowKeyLighter = Color(
+    0x23000000,
+  ); // #00000023 (Alpha: 0.14)
+  static const Color darkShadowKeyDarker = Color(
+    0x7A000000,
+  ); // #0000007a (Alpha: 0.48)
+  static const Color darkShadowBrandKey = Color(
+    0x4C000000,
+  ); // #0000004c (Alpha: 0.30)
+}
+
 /// Fluent 2 阴影类 [FluentShadow]
 ///
 /// 继承自 Flutter 标准 [BoxShadow]（间接继承 [Shadow]），完全兼容 FluentMaterial 3 与所有 Flutter 原生组件。
@@ -106,365 +163,239 @@ class FluentShadow extends BoxShadow {
         FluentShadowLevel.shadow64,
       );
 
-  /// 品牌色彩阴影 Tokens
-  static List<BoxShadow> brand2([BuildContext? context, Color? brandColor]) =>
-      getShadows(
-        context,
-        FluentShadowLevel.shadow2Brand,
-        brandColor: brandColor,
-      );
+  /// Brand 品牌感知彩光阴影 (基于主题 Brand 颜色进行微散)
+  static List<BoxShadow> brand2(BuildContext context) => _getBrandShadows(
+    context,
+    elevation: 2.0,
+    blur: 2.0,
+    alpha: 0.18,
+    level: FluentShadowLevel.shadow2Brand,
+  );
 
-  static List<BoxShadow> brand4([BuildContext? context, Color? brandColor]) =>
-      getShadows(
-        context,
-        FluentShadowLevel.shadow4Brand,
-        brandColor: brandColor,
-      );
+  static List<BoxShadow> brand4(BuildContext context) => _getBrandShadows(
+    context,
+    elevation: 4.0,
+    blur: 4.0,
+    alpha: 0.22,
+    level: FluentShadowLevel.shadow4Brand,
+  );
 
-  static List<BoxShadow> brand8([BuildContext? context, Color? brandColor]) =>
-      getShadows(
-        context,
-        FluentShadowLevel.shadow8Brand,
-        brandColor: brandColor,
-      );
+  static List<BoxShadow> brand8(BuildContext context) => _getBrandShadows(
+    context,
+    elevation: 8.0,
+    blur: 8.0,
+    alpha: 0.25,
+    level: FluentShadowLevel.shadow8Brand,
+  );
 
-  static List<BoxShadow> brand16([BuildContext? context, Color? brandColor]) =>
-      getShadows(
-        context,
-        FluentShadowLevel.shadow16Brand,
-        brandColor: brandColor,
-      );
+  static List<BoxShadow> brand16(BuildContext context) => _getBrandShadows(
+    context,
+    elevation: 16.0,
+    blur: 16.0,
+    alpha: 0.28,
+    level: FluentShadowLevel.shadow16Brand,
+  );
 
-  static List<BoxShadow> brand28([BuildContext? context, Color? brandColor]) =>
-      getShadows(
-        context,
-        FluentShadowLevel.shadow28Brand,
-        brandColor: brandColor,
-      );
+  static List<BoxShadow> brand28(BuildContext context) => _getBrandShadows(
+    context,
+    elevation: 28.0,
+    blur: 28.0,
+    alpha: 0.30,
+    level: FluentShadowLevel.shadow28Brand,
+  );
 
-  static List<BoxShadow> brand64([BuildContext? context, Color? brandColor]) =>
-      getShadows(
-        context,
-        FluentShadowLevel.shadow64Brand,
-        brandColor: brandColor,
-      );
+  static List<BoxShadow> brand64(BuildContext context) => _getBrandShadows(
+    context,
+    elevation: 64.0,
+    blur: 64.0,
+    alpha: 0.32,
+    level: FluentShadowLevel.shadow64Brand,
+  );
 
+  // ---------------- 内部 Helper ----------------
   static List<BoxShadow> _getConstantShadows(
     BuildContext? context,
-    List<BoxShadow> light,
-    List<BoxShadow> dark,
+    List<BoxShadow> lightShadows,
+    List<BoxShadow> darkShadows,
     FluentShadowLevel level,
   ) {
-    if (context == null) return light;
+    if (context == null) return lightShadows;
     final bool isDark = FluentTheme.of(context).brightness == Brightness.dark;
-    return isDark ? dark : light;
+    return isDark ? darkShadows : lightShadows;
   }
 
-  /// 依据 [context] 与 [FluentShadowLevel] 动态生成阴影列表
-  static List<BoxShadow> getShadows(
-    BuildContext? context,
-    FluentShadowLevel level, {
-    Color? brandColor,
-    bool? isDarkOverride,
-    Offset? offset,
+  static List<BoxShadow> _getBrandShadows(
+    BuildContext context, {
+    required double elevation,
+    required double blur,
+    required double alpha,
+    required FluentShadowLevel level,
   }) {
-    if (level == FluentShadowLevel.none) return const [];
-
-    final bool isDark = context != null
-        ? (isDarkOverride ??
-              (FluentTheme.of(context).brightness == Brightness.dark))
-        : (isDarkOverride ?? false);
-
-    List<BoxShadow> baseShadows;
-
-    switch (level) {
-      case FluentShadowLevel.shadow2:
-        baseShadows = isDark ? _darkShadow2 : _lightShadow2;
-        break;
-      case FluentShadowLevel.shadow4:
-        baseShadows = isDark ? _darkShadow4 : _lightShadow4;
-        break;
-      case FluentShadowLevel.shadow8:
-        baseShadows = isDark ? _darkShadow8 : _lightShadow8;
-        break;
-      case FluentShadowLevel.shadow16:
-        baseShadows = isDark ? _darkShadow16 : _lightShadow16;
-        break;
-      case FluentShadowLevel.shadow28:
-        baseShadows = isDark ? _darkShadow28 : _lightShadow28;
-        break;
-      case FluentShadowLevel.shadow64:
-        baseShadows = isDark ? _darkShadow64 : _lightShadow64;
-        break;
-      default:
-        final Color effectiveBrandColor = context != null
-            ? (brandColor ?? FluentTheme.of(context).primaryColor)
-            : (brandColor ?? const Color(0xFF0078D4));
-        baseShadows = _generateBrandShadows(level, effectiveBrandColor);
-        break;
-    }
-
-    if (offset != null && offset != Offset.zero) {
-      return baseShadows
-          .map(
-            (s) => BoxShadow(
-              offset: s.offset + offset,
-              blurRadius: s.blurRadius,
-              spreadRadius: s.spreadRadius,
-              color: s.color,
-            ),
-          )
-          .toList();
-    }
-
-    return baseShadows;
+    final theme = FluentTheme.of(context);
+    final brandColor = theme.primaryColor;
+    return [
+      BoxShadow(
+        offset: Offset(0, elevation / 2),
+        blurRadius: blur,
+        color: brandColor.withValues(alpha: alpha),
+      ),
+    ];
   }
 
-  static List<BoxShadow> _generateBrandShadows(
-    FluentShadowLevel level,
-    Color brandColor,
-  ) {
-    switch (level) {
-      case FluentShadowLevel.shadow2Brand:
-        return [
-          BoxShadow(
-            offset: Offset.zero,
-            blurRadius: 2.0,
-            color: _getBrandShadowColor(brandColor, 0.20),
-          ),
-          BoxShadow(
-            offset: const Offset(0, 1),
-            blurRadius: 2.0,
-            color: _getBrandShadowColor(brandColor, 0.15),
-          ),
-        ];
-      case FluentShadowLevel.shadow4Brand:
-        return [
-          BoxShadow(
-            offset: Offset.zero,
-            blurRadius: 2.0,
-            color: _getBrandShadowColor(brandColor, 0.20),
-          ),
-          BoxShadow(
-            offset: const Offset(0, 2),
-            blurRadius: 4.0,
-            color: _getBrandShadowColor(brandColor, 0.15),
-          ),
-        ];
-      case FluentShadowLevel.shadow8Brand:
-        return [
-          BoxShadow(
-            offset: Offset.zero,
-            blurRadius: 2.0,
-            color: _getBrandShadowColor(brandColor, 0.20),
-          ),
-          BoxShadow(
-            offset: const Offset(0, 4),
-            blurRadius: 8.0,
-            color: _getBrandShadowColor(brandColor, 0.15),
-          ),
-        ];
-      case FluentShadowLevel.shadow16Brand:
-        return [
-          BoxShadow(
-            offset: Offset.zero,
-            blurRadius: 2.0,
-            color: _getBrandShadowColor(brandColor, 0.20),
-          ),
-          BoxShadow(
-            offset: const Offset(0, 8),
-            blurRadius: 16.0,
-            color: _getBrandShadowColor(brandColor, 0.15),
-          ),
-        ];
-      case FluentShadowLevel.shadow28Brand:
-        return [
-          BoxShadow(
-            offset: Offset.zero,
-            blurRadius: 8.0,
-            color: _getBrandShadowColor(brandColor, 0.20),
-          ),
-          BoxShadow(
-            offset: const Offset(0, 14),
-            blurRadius: 28.0,
-            color: _getBrandShadowColor(brandColor, 0.15),
-          ),
-        ];
-      case FluentShadowLevel.shadow64Brand:
-        return [
-          BoxShadow(
-            offset: Offset.zero,
-            blurRadius: 8.0,
-            color: _getBrandShadowColor(brandColor, 0.20),
-          ),
-          BoxShadow(
-            offset: const Offset(0, 32),
-            blurRadius: 64.0,
-            color: _getBrandShadowColor(brandColor, 0.15),
-          ),
-        ];
-      default:
-        return const [];
-    }
-  }
-
-  static Color _getBrandShadowColor(Color brandColor, double alphaFraction) {
-    return Color.fromRGBO(
-      (brandColor.r * 255 * 0.2).round().clamp(0, 255),
-      (brandColor.g * 255 * 0.2).round().clamp(0, 255),
-      (brandColor.b * 255 * 0.2).round().clamp(0, 255),
-      alphaFraction,
-    );
-  }
-
-  // ---------------- 常量预设列表 ----------------
+  // ---------------- 常量预设列表 (根据自然光源物理投影与 Figma 效果调优) ----------------
+  // Shadow 02 (顶部 0 上溢，侧方微窄，下方自然沉降)
   static const List<BoxShadow> _lightShadow2 = [
     BoxShadow(
-      offset: Offset.zero,
-      blurRadius: 2.0,
-      color: Color.fromRGBO(0, 0, 0, 0.06),
+      offset: Offset(0, 0.5),
+      blurRadius: 1.5,
+      color: FluentShadowTokens.lightShadowAmbientLighter,
     ),
     BoxShadow(
-      offset: Offset(0, 1),
+      offset: Offset(0, 1.5),
       blurRadius: 2.0,
-      color: Color.fromRGBO(0, 0, 0, 0.08),
+      color: FluentShadowTokens.lightShadowKeyLighter,
     ),
   ];
   static const List<BoxShadow> _darkShadow2 = [
     BoxShadow(
-      offset: Offset.zero,
-      blurRadius: 2.0,
-      color: Color.fromRGBO(0, 0, 0, 0.16),
+      offset: Offset(0, 0.5),
+      blurRadius: 1.5,
+      color: FluentShadowTokens.darkShadowAmbientLighter,
     ),
     BoxShadow(
-      offset: Offset(0, 1),
+      offset: Offset(0, 1.5),
       blurRadius: 2.0,
-      color: Color.fromRGBO(0, 0, 0, 0.20),
+      color: FluentShadowTokens.darkShadowKeyLighter,
     ),
   ];
 
+  // Shadow 04 (顶部精洁，下方产生 3~4px 主方向阴影)
   static const List<BoxShadow> _lightShadow4 = [
     BoxShadow(
-      offset: Offset.zero,
+      offset: Offset(0, 1.0),
       blurRadius: 2.0,
-      color: Color.fromRGBO(0, 0, 0, 0.06),
+      color: FluentShadowTokens.lightShadowAmbient,
     ),
     BoxShadow(
-      offset: Offset(0, 2),
+      offset: Offset(0, 3.0),
       blurRadius: 4.0,
-      color: Color.fromRGBO(0, 0, 0, 0.08),
+      color: FluentShadowTokens.lightShadowKey,
     ),
   ];
   static const List<BoxShadow> _darkShadow4 = [
     BoxShadow(
-      offset: Offset.zero,
+      offset: Offset(0, 1.0),
       blurRadius: 2.0,
-      color: Color.fromRGBO(0, 0, 0, 0.16),
+      color: FluentShadowTokens.darkShadowAmbient,
     ),
     BoxShadow(
-      offset: Offset(0, 2),
+      offset: Offset(0, 3.0),
       blurRadius: 4.0,
-      color: Color.fromRGBO(0, 0, 0, 0.20),
+      color: FluentShadowTokens.darkShadowKey,
     ),
   ];
 
+  // Shadow 08 (顶部近乎无阴影，侧边极窄，下方为 6~8px 主投影区)
   static const List<BoxShadow> _lightShadow8 = [
     BoxShadow(
-      offset: Offset.zero,
+      offset: Offset(0, 1.0),
       blurRadius: 2.0,
-      color: Color.fromRGBO(0, 0, 0, 0.06),
+      color: FluentShadowTokens.lightShadowAmbient,
     ),
     BoxShadow(
-      offset: Offset(0, 4),
+      offset: Offset(0, 6.0),
       blurRadius: 8.0,
-      color: Color.fromRGBO(0, 0, 0, 0.08),
+      color: FluentShadowTokens.lightShadowKey,
     ),
   ];
   static const List<BoxShadow> _darkShadow8 = [
     BoxShadow(
-      offset: Offset.zero,
+      offset: Offset(0, 1.0),
       blurRadius: 2.0,
-      color: Color.fromRGBO(0, 0, 0, 0.16),
+      color: FluentShadowTokens.darkShadowAmbient,
     ),
     BoxShadow(
-      offset: Offset(0, 4),
+      offset: Offset(0, 6.0),
       blurRadius: 8.0,
-      color: Color.fromRGBO(0, 0, 0, 0.20),
+      color: FluentShadowTokens.darkShadowKey,
     ),
   ];
 
+  // Shadow 16 (顶部干净，下方集中垂直延伸 12px)
   static const List<BoxShadow> _lightShadow16 = [
     BoxShadow(
-      offset: Offset.zero,
-      blurRadius: 2.0,
-      color: Color.fromRGBO(0, 0, 0, 0.08),
+      offset: Offset(0, 2.0),
+      blurRadius: 4.0,
+      color: FluentShadowTokens.lightShadowAmbient,
     ),
     BoxShadow(
-      offset: Offset(0, 8),
+      offset: Offset(0, 12.0),
       blurRadius: 16.0,
-      color: Color.fromRGBO(0, 0, 0, 0.10),
+      color: FluentShadowTokens.lightShadowKeyDarker,
     ),
   ];
   static const List<BoxShadow> _darkShadow16 = [
     BoxShadow(
-      offset: Offset.zero,
-      blurRadius: 2.0,
-      color: Color.fromRGBO(0, 0, 0, 0.18),
+      offset: Offset(0, 2.0),
+      blurRadius: 4.0,
+      color: FluentShadowTokens.darkShadowAmbient,
     ),
     BoxShadow(
-      offset: Offset(0, 8),
+      offset: Offset(0, 12.0),
       blurRadius: 16.0,
-      color: Color.fromRGBO(0, 0, 0, 0.22),
+      color: FluentShadowTokens.darkShadowKeyDarker,
     ),
   ];
 
+  // Shadow 28 (模态面板下沉阴影)
   static const List<BoxShadow> _lightShadow28 = [
     BoxShadow(
-      offset: Offset.zero,
+      offset: Offset(0, 4.0),
       blurRadius: 8.0,
-      color: Color.fromRGBO(0, 0, 0, 0.08),
+      color: FluentShadowTokens.lightShadowAmbientDarker,
     ),
     BoxShadow(
-      offset: Offset(0, 14),
+      offset: Offset(0, 20.0),
       blurRadius: 28.0,
-      color: Color.fromRGBO(0, 0, 0, 0.10),
+      color: FluentShadowTokens.lightShadowKeyDarker,
     ),
   ];
   static const List<BoxShadow> _darkShadow28 = [
     BoxShadow(
-      offset: Offset.zero,
+      offset: Offset(0, 4.0),
       blurRadius: 8.0,
-      color: Color.fromRGBO(0, 0, 0, 0.18),
+      color: FluentShadowTokens.darkShadowAmbientDarker,
     ),
     BoxShadow(
-      offset: Offset(0, 14),
+      offset: Offset(0, 20.0),
       blurRadius: 28.0,
-      color: Color.fromRGBO(0, 0, 0, 0.22),
+      color: FluentShadowTokens.darkShadowKeyDarker,
     ),
   ];
 
+  // Shadow 64 (大悬浮层下沉阴影)
   static const List<BoxShadow> _lightShadow64 = [
     BoxShadow(
-      offset: Offset.zero,
-      blurRadius: 8.0,
-      color: Color.fromRGBO(0, 0, 0, 0.10),
+      offset: Offset(0, 8.0),
+      blurRadius: 16.0,
+      color: FluentShadowTokens.lightShadowAmbientDarker,
     ),
     BoxShadow(
-      offset: Offset(0, 32),
+      offset: Offset(0, 48.0),
       blurRadius: 64.0,
-      color: Color.fromRGBO(0, 0, 0, 0.12),
+      color: FluentShadowTokens.lightShadowKeyDarker,
     ),
   ];
   static const List<BoxShadow> _darkShadow64 = [
     BoxShadow(
-      offset: Offset.zero,
-      blurRadius: 8.0,
-      color: Color.fromRGBO(0, 0, 0, 0.20),
+      offset: Offset(0, 8.0),
+      blurRadius: 16.0,
+      color: FluentShadowTokens.darkShadowAmbientDarker,
     ),
     BoxShadow(
-      offset: Offset(0, 32),
+      offset: Offset(0, 48.0),
       blurRadius: 64.0,
-      color: Color.fromRGBO(0, 0, 0, 0.24),
+      color: FluentShadowTokens.darkShadowKeyDarker,
     ),
   ];
 }

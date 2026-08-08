@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../theme/fluent_theme.dart';
 import '../buttons/fluent_text_button.dart';
-import 'fluent_card.dart';
+import 'fluent_container.dart';
 
 /// 图片在卡片中的排列位置 [FluentImageCardPosition]
 enum FluentImageCardPosition {
@@ -74,17 +74,20 @@ class FluentImageCard extends StatelessWidget {
   /// 卡片不透明度 (可选，高频直接参数，范围 0.0 ~ 1.0)
   final double? opacity;
 
-  /// 卡片类型 [FluentCardType] (可选)
-  final FluentCardType? cardType;
+  /// 卡片类型 [FluentContainerType] (可选)
+  final FluentContainerType? cardType;
 
   /// 自定义阴影配置 (可选)
   final List<BoxShadow>? shadow;
 
-  /// 自定义卡片边框 (可选)
-  final BoxBorder? border;
+  /// 是否显示卡片边框 (可选)
+  final bool? border;
 
-  /// 卡片外观、尺寸、图片 fit 与动画配置包 [FluentCardStyle] (可选)
-  final FluentCardStyle style;
+  /// 自定义卡片边框样式 (可选)
+  final BoxBorder? borderStyle;
+
+  /// 卡片外观、尺寸、图片 fit 与动画配置包 [FluentContainerStyle] (可选)
+  final FluentContainerStyle style;
 
   /// 自定义 Child 视图 (可选)
   final Widget? child;
@@ -110,16 +113,18 @@ class FluentImageCard extends StatelessWidget {
     this.cardType,
     this.shadow,
     this.border,
-    this.style = const FluentCardStyle(),
+    this.borderStyle,
+    this.style = const FluentContainerStyle(),
     this.child,
   });
 
-  FluentCardStyle _getEffectiveStyle() {
+  FluentContainerStyle _getEffectiveStyle() {
     return style.copyWith(
       opacity: opacity ?? style.opacity,
       cardType: cardType ?? style.cardType,
       shadow: shadow ?? style.shadow,
       border: border ?? style.border,
+      borderStyle: borderStyle ?? style.borderStyle,
     );
   }
 
@@ -142,7 +147,10 @@ class FluentImageCard extends StatelessWidget {
 
   /// 构建顶部/底部大图模式卡片
   Widget _buildVerticalCard(
-      BuildContext context, dynamic theme, FluentCardStyle effectiveStyle) {
+    BuildContext context,
+    dynamic theme,
+    FluentContainerStyle effectiveStyle,
+  ) {
     final Widget? imgWidget = _buildImageWidget(effectiveStyle);
 
     final List<Widget> children = [];
@@ -151,23 +159,32 @@ class FluentImageCard extends StatelessWidget {
         effectiveStyle.padding ?? const EdgeInsets.all(16.0);
 
     if (position == FluentImageCardPosition.top && imgWidget != null) {
-      children.add(_buildClippedImage(imgWidget, radius,
-          height: effectiveStyle.imageHeight, isTop: true));
+      children.add(
+        _buildClippedImage(
+          imgWidget,
+          radius,
+          height: effectiveStyle.imageHeight,
+          isTop: true,
+        ),
+      );
     }
 
     children.add(
-      Padding(
-        padding: pad,
-        child: _buildTextAndContent(context, theme),
-      ),
+      Padding(padding: pad, child: _buildTextAndContent(context, theme)),
     );
 
     if (position == FluentImageCardPosition.bottom && imgWidget != null) {
-      children.add(_buildClippedImage(imgWidget, radius,
-          height: effectiveStyle.imageHeight, isBottom: true));
+      children.add(
+        _buildClippedImage(
+          imgWidget,
+          radius,
+          height: effectiveStyle.imageHeight,
+          isBottom: true,
+        ),
+      );
     }
 
-    return FluentCard(
+    return FluentContainer(
       onTap: onTap,
       style: effectiveStyle,
       padding: EdgeInsets.zero,
@@ -182,7 +199,10 @@ class FluentImageCard extends StatelessWidget {
 
   /// 构建左右侧水平缩略图卡片
   Widget _buildHorizontalCard(
-      BuildContext context, dynamic theme, FluentCardStyle effectiveStyle) {
+    BuildContext context,
+    dynamic theme,
+    FluentContainerStyle effectiveStyle,
+  ) {
     final Widget? imgWidget = _buildImageWidget(effectiveStyle);
     final double imgW = effectiveStyle.imageWidth ?? 100.0;
     final double imgH = effectiveStyle.imageHeight ?? 100.0;
@@ -198,31 +218,31 @@ class FluentImageCard extends StatelessWidget {
         child: ClipRRect(
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(
-                position == FluentImageCardPosition.left ? radius : 0),
+              position == FluentImageCardPosition.left ? radius : 0,
+            ),
             bottomLeft: Radius.circular(
-                position == FluentImageCardPosition.left ? radius : 0),
+              position == FluentImageCardPosition.left ? radius : 0,
+            ),
             topRight: Radius.circular(
-                position == FluentImageCardPosition.right ? radius : 0),
+              position == FluentImageCardPosition.right ? radius : 0,
+            ),
             bottomRight: Radius.circular(
-                position == FluentImageCardPosition.right ? radius : 0),
+              position == FluentImageCardPosition.right ? radius : 0,
+            ),
           ),
           child: Stack(
             fit: StackFit.expand,
             children: [
               imgWidget,
               if (badge != null || badgeText != null)
-                Positioned(
-                  top: 6.0,
-                  left: 6.0,
-                  child: _buildBadge(),
-                ),
+                Positioned(top: 6.0, left: 6.0, child: _buildBadge()),
             ],
           ),
         ),
       );
     }
 
-    return FluentCard(
+    return FluentContainer(
       onTap: onTap,
       style: effectiveStyle,
       padding: EdgeInsets.zero,
@@ -239,7 +259,8 @@ class FluentImageCard extends StatelessWidget {
                 child: _buildTextAndContent(context, theme),
               ),
             ),
-            if (position == FluentImageCardPosition.right && thumbWidget != null)
+            if (position == FluentImageCardPosition.right &&
+                thumbWidget != null)
               thumbWidget,
           ],
         ),
@@ -249,14 +270,17 @@ class FluentImageCard extends StatelessWidget {
 
   /// 构建全屏背景画报卡片
   Widget _buildBackgroundCard(
-      BuildContext context, dynamic theme, FluentCardStyle effectiveStyle) {
+    BuildContext context,
+    dynamic theme,
+    FluentContainerStyle effectiveStyle,
+  ) {
     final Widget? imgWidget = _buildImageWidget(effectiveStyle);
     final double height = effectiveStyle.imageHeight ?? 200.0;
     final double radius = effectiveStyle.borderRadius ?? 12.0;
     final EdgeInsetsGeometry pad =
         effectiveStyle.padding ?? const EdgeInsets.all(16.0);
 
-    return FluentCard(
+    return FluentContainer(
       onTap: onTap,
       style: effectiveStyle,
       padding: EdgeInsets.zero,
@@ -283,11 +307,7 @@ class FluentImageCard extends StatelessWidget {
                 ),
               ),
               if (badge != null || badgeText != null)
-                Positioned(
-                  top: 12.0,
-                  right: 12.0,
-                  child: _buildBadge(),
-                ),
+                Positioned(top: 12.0, right: 12.0, child: _buildBadge()),
               Positioned.fill(
                 child: Padding(
                   padding: pad,
@@ -356,7 +376,7 @@ class FluentImageCard extends StatelessWidget {
   }
 
   /// 生成 Image 核心 Widget
-  Widget? _buildImageWidget(FluentCardStyle style) {
+  Widget? _buildImageWidget(FluentContainerStyle style) {
     if (imageWidget != null) return imageWidget;
     if (image != null) {
       return Image(
@@ -369,8 +389,13 @@ class FluentImageCard extends StatelessWidget {
   }
 
   /// 给图片进行圆角裁剪与 Badge 叠加
-  Widget _buildClippedImage(Widget imgWidget, double borderRadius,
-      {double? height, bool isTop = false, bool isBottom = false}) {
+  Widget _buildClippedImage(
+    Widget imgWidget,
+    double borderRadius, {
+    double? height,
+    bool isTop = false,
+    bool isBottom = false,
+  }) {
     final double h = height ?? 160.0;
     return SizedBox(
       height: h,
@@ -387,11 +412,7 @@ class FluentImageCard extends StatelessWidget {
           children: [
             imgWidget,
             if (badge != null || badgeText != null)
-              Positioned(
-                top: 10.0,
-                right: 10.0,
-                child: _buildBadge(),
-              ),
+              Positioned(top: 10.0, right: 10.0, child: _buildBadge()),
           ],
         ),
       ),
@@ -410,10 +431,7 @@ class FluentImageCard extends StatelessWidget {
           children: [
             if (leadingIcon != null) ...[
               IconTheme(
-                data: IconThemeData(
-                  color: theme.foregroundColor,
-                  size: 22.0,
-                ),
+                data: IconThemeData(color: theme.foregroundColor, size: 22.0),
                 child: leadingIcon!,
               ),
               const SizedBox(width: 12.0),

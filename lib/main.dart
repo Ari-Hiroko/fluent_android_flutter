@@ -15,6 +15,7 @@ class MainApp extends StatefulWidget {
 
 class _MainAppState extends State<MainApp> with SingleTickerProviderStateMixin {
   bool _menuIsOpened = false;
+  bool _acrylicEffect = true;
   int _tabIndex = 0;
   late final AnimationController _controller = AnimationController(
     vsync: this,
@@ -36,15 +37,15 @@ class _MainAppState extends State<MainApp> with SingleTickerProviderStateMixin {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            FluentCard.Announcement(
-              // style: FluentCardStyle(shadow: FluentShadow.shadow16(context)),
+            FluentContainer.Announcement(
+              // style: FluentContainerStyle(shadow: FluentShadow.shadow16(context)),
               selectable: true,
               opacity: 0.8,
               title: '飞八分钱',
               description: '大家好啊，我是公告喵，今天来点大家想看的东西',
             ),
             const SizedBox(height: 10),
-            FluentCard.Text(
+            FluentContainer.Text(
               opacity: 0.8,
               expandable: false,
               title: 'BIG 天皇 IS WATCHING YOU',
@@ -64,7 +65,7 @@ class _MainAppState extends State<MainApp> with SingleTickerProviderStateMixin {
               ),
             ),
             const SizedBox(height: 10),
-            FluentCard.Text(
+            FluentContainer.Text(
               expandable: false,
               opacity: 0.8,
               title: '按钮测试',
@@ -113,9 +114,12 @@ class _MainAppState extends State<MainApp> with SingleTickerProviderStateMixin {
               ),
             ),
             const SizedBox(height: 10),
-            FluentCard.Text(
-              shadow: FluentShadow.shadow4(context),
-              border: Border.all(width: 0.5, color: Colors.black12),
+            FluentContainer.Text(
+              shadow: FluentShadow.shadow2(context),
+              borderStyle: Border.all(
+                width: 0.5,
+                color: FluentColors.colorNeutralStroke1,
+              ),
               expandable: false,
               // opacity: 0.8,
               title: '按钮测试',
@@ -144,8 +148,8 @@ class _MainAppState extends State<MainApp> with SingleTickerProviderStateMixin {
               ),
             ),
             const SizedBox(height: 10),
-            AnimatedFluentCard.hover(
-              // style: FluentCardStyle(shadow: FluentShadow.shadow2()),
+            AnimatedFluentContainer.hover(
+              // style: FluentContainerStyle(shadow: FluentShadow.shadow2()),
               // showDivider: true,
               // // opacity: 0.7,
               // expandable: false,
@@ -172,7 +176,7 @@ class _MainAppState extends State<MainApp> with SingleTickerProviderStateMixin {
               ),
             ),
             const SizedBox(height: 10),
-            FluentCard.Text(
+            FluentContainer.Text(
               opacity: 0.7,
               title: '咦？',
               subtitle: '这都有火箭收的',
@@ -233,6 +237,7 @@ class _MainAppState extends State<MainApp> with SingleTickerProviderStateMixin {
         home: Builder(
           builder: (context) => Scaffold(
             backgroundColor: Colors.white,
+            // backgroundColor: const Color(0xFFe0e5f3),
             appBar: FluentTopAppBar(
               leftActions: [
                 FluentTooltip(
@@ -313,21 +318,29 @@ class _MainAppState extends State<MainApp> with SingleTickerProviderStateMixin {
               width: double.infinity,
               height: double.infinity,
               decoration: BoxDecoration(
-                // image: DecorationImage(
-                // image: Image.asset('assets/sun.jpg').image,
-                // fit: BoxFit.cover,
-                // ),
+                image: DecorationImage(
+                  image: Image.asset('assets/sun.jpg').image,
+                  fit: BoxFit.cover,
+                ),
               ),
               child: FluentAcrylic(
                 borderRadius: 0,
-                blur: 10.0,
-                opacity: 0.8,
+                blur: _acrylicEffect ? 10.0 : 0,
+                opacity: _acrylicEffect ? 0.8 : 1.0,
                 child: FluentTabSwitcher(
                   selectedIndex: _tabIndex,
                   onPageChanged: (index) => setState(() {
                     _tabIndex = index;
                   }),
-                  children: [_buildHomeContent(context), const _SettingsView()],
+                  children: [
+                    _buildHomeContent(context),
+                    _SettingsView(
+                      acrylicEffect: _acrylicEffect,
+                      onAcrylicEffectChanged: (v) => setState(() {
+                        _acrylicEffect = v;
+                      }),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -363,7 +376,10 @@ class _MainAppState extends State<MainApp> with SingleTickerProviderStateMixin {
 
 /// 精美 Fluent 2 风格设置屏幕 Widget [_SettingsView]
 class _SettingsView extends StatefulWidget {
-  const _SettingsView();
+  final bool acrylicEffect;
+  final ValueChanged<bool>? onAcrylicEffectChanged;
+
+  const _SettingsView({this.acrylicEffect = true, this.onAcrylicEffectChanged});
 
   @override
   State<_SettingsView> createState() => _SettingsViewState();
@@ -372,7 +388,6 @@ class _SettingsView extends StatefulWidget {
 class _SettingsViewState extends State<_SettingsView> {
   bool _darkMode = false;
   bool _notifications = true;
-  bool _acrylicEffect = true;
 
   @override
   Widget build(BuildContext context) {
@@ -382,8 +397,8 @@ class _SettingsViewState extends State<_SettingsView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // 个人 Profile 账户卡片
-          FluentCard(
-            style: const FluentCardStyle(opacity: 0.7),
+          FluentContainer(
+            style: const FluentContainerStyle(opacity: 0.7),
             child: Row(
               children: [
                 const FluentAvatar(
@@ -418,8 +433,8 @@ class _SettingsViewState extends State<_SettingsView> {
           const SizedBox(height: 10),
 
           // 通用与外观设置卡片
-          FluentCard(
-            style: const FluentCardStyle(opacity: 0.7),
+          FluentContainer(
+            style: const FluentContainerStyle(opacity: 0.7),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -449,8 +464,10 @@ class _SettingsViewState extends State<_SettingsView> {
                       leading: const Icon(Icons.blur_on),
                       borderRadius: BorderRadius.circular(8.0),
                       trailing: FluentToggleSwitch(
-                        value: _acrylicEffect,
-                        onChanged: (v) => setState(() => _acrylicEffect = v),
+                        value: widget.acrylicEffect,
+                        onChanged: (v) {
+                          widget.onAcrylicEffectChanged?.call(v);
+                        },
                       ),
                     ),
                     FluentListItem(
@@ -471,8 +488,8 @@ class _SettingsViewState extends State<_SettingsView> {
           const SizedBox(height: 10),
 
           // 关于与系统维护卡片
-          FluentCard(
-            style: const FluentCardStyle(opacity: 0.7),
+          FluentContainer(
+            style: const FluentContainerStyle(opacity: 0.7),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
