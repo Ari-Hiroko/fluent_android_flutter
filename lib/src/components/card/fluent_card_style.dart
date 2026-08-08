@@ -1,12 +1,24 @@
 import 'package:flutter/material.dart';
 import '../../theme/fluent_motion_tokens.dart';
 
+/// Fluent 2 卡片类型 [FluentCardType]
+enum FluentCardType {
+  /// 悬浮卡片 (默认：包含 Fluent 2 阴影 `FluentShadow.shadow2`)
+  elevated,
+
+  /// 描边卡片 (无阴影，强化描边 Border)
+  outlined,
+}
+
 /// Fluent 2 卡片组件样式与高级配置参数 [FluentCardStyle]
 ///
 /// 将不常用的外观控制（内边距、圆角、背景色、透明度、宽度）、伸缩控制（[expand]）、
 /// 分割线控制（[showDivider]）与动画配置（持续时间、曲线、平滑过渡开关）封装在此对象中。
 @immutable
 class FluentCardStyle {
+  /// 卡片类型 ([FluentCardType.elevated] 或 [FluentCardType.outlined])
+  final FluentCardType? cardType;
+
   /// 卡片外侧内边距
   final EdgeInsetsGeometry? padding;
 
@@ -55,10 +67,17 @@ class FluentCardStyle {
   /// 图片对齐方式 (默认 Alignment.center)
   final AlignmentGeometry imageAlignment;
 
-  /// 自定义阴影配置 (默认为 null，即不绘制阴影)
+  /// 自定义阴影配置 (若为 null 且 cardType == elevated，默认显示 FluentShadow.shadow2)
   final List<BoxShadow>? shadow;
 
+  /// 自定义卡片边框 (可选，若指定则覆盖默认边框)
+  final BoxBorder? border;
+
+  /// 是否禁用 InkWell 默认的瞬间硬蒙层 (隐式动画 Hover 卡片启用)
+  final bool disableHoverOverlay;
+
   const FluentCardStyle({
+    this.cardType,
     this.padding,
     this.contentPadding,
     this.borderRadius,
@@ -66,10 +85,12 @@ class FluentCardStyle {
     this.opacity = 1.0,
     this.width,
     this.shadow,
+    this.border,
     this.expand = false,
     this.showDivider = false,
     this.enableSizeAnimation = true,
     this.enableCursor = true,
+    this.disableHoverOverlay = false,
     this.animationDuration = FluentMotionDuration.gentle,
     this.animationCurve = FluentMotionCurve.standard,
     this.imageHeight,
@@ -80,6 +101,7 @@ class FluentCardStyle {
 
   /// 复制并替换样式属性
   FluentCardStyle copyWith({
+    FluentCardType? cardType,
     EdgeInsetsGeometry? padding,
     EdgeInsetsGeometry? contentPadding,
     double? borderRadius,
@@ -87,10 +109,12 @@ class FluentCardStyle {
     double? opacity,
     double? width,
     List<BoxShadow>? shadow,
+    BoxBorder? border,
     bool? expand,
     bool? showDivider,
     bool? enableSizeAnimation,
     bool? enableCursor,
+    bool? disableHoverOverlay,
     Duration? animationDuration,
     Curve? animationCurve,
     double? imageHeight,
@@ -99,6 +123,7 @@ class FluentCardStyle {
     AlignmentGeometry? imageAlignment,
   }) {
     return FluentCardStyle(
+      cardType: cardType ?? this.cardType,
       padding: padding ?? this.padding,
       contentPadding: contentPadding ?? this.contentPadding,
       borderRadius: borderRadius ?? this.borderRadius,
@@ -106,10 +131,12 @@ class FluentCardStyle {
       opacity: opacity ?? this.opacity,
       width: width ?? this.width,
       shadow: shadow ?? this.shadow,
+      border: border ?? this.border,
       expand: expand ?? this.expand,
       showDivider: showDivider ?? this.showDivider,
       enableSizeAnimation: enableSizeAnimation ?? this.enableSizeAnimation,
       enableCursor: enableCursor ?? this.enableCursor,
+      disableHoverOverlay: disableHoverOverlay ?? this.disableHoverOverlay,
       animationDuration: animationDuration ?? this.animationDuration,
       animationCurve: animationCurve ?? this.animationCurve,
       imageHeight: imageHeight ?? this.imageHeight,
@@ -124,6 +151,7 @@ class FluentCardStyle {
       identical(this, other) ||
       other is FluentCardStyle &&
           runtimeType == other.runtimeType &&
+          cardType == other.cardType &&
           padding == other.padding &&
           contentPadding == other.contentPadding &&
           borderRadius == other.borderRadius &&
@@ -131,6 +159,7 @@ class FluentCardStyle {
           opacity == other.opacity &&
           width == other.width &&
           shadow == other.shadow &&
+          border == other.border &&
           expand == other.expand &&
           showDivider == other.showDivider &&
           enableSizeAnimation == other.enableSizeAnimation &&
@@ -144,6 +173,7 @@ class FluentCardStyle {
 
   @override
   int get hashCode => Object.hashAll([
+        cardType,
         padding,
         contentPadding,
         borderRadius,
@@ -151,6 +181,7 @@ class FluentCardStyle {
         opacity,
         width,
         shadow,
+        border,
         expand,
         showDivider,
         enableSizeAnimation,
@@ -163,4 +194,5 @@ class FluentCardStyle {
         imageAlignment,
       ]);
 }
+
 

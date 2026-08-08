@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import '../../theme/fluent_shadow.dart';
 import '../../theme/fluent_theme.dart';
 import '../buttons/fluent_text_button.dart';
 import 'fluent_card_style.dart';
 import 'fluent_image_card.dart';
 import 'fluent_text_card.dart';
 
+export 'animated_fluent_card.dart';
 export 'fluent_card_style.dart';
 export 'fluent_image_card.dart';
 export 'fluent_text_card.dart';
@@ -12,7 +14,8 @@ export 'fluent_text_card.dart';
 /// Fluent 2 BasicCard 基础卡片容器 [FluentCard]
 ///
 /// 完全移植自 Android Kotlin BasicCard.kt, V2CardActivity.kt 与 V2CardUITest.kt
-/// 顶层接收 [child] 内容、[onTap]、[selectable] 与高频参数 [opacity]，高级外观、尺寸与动画统一由 [style] 配置。
+/// 顶层接收 [child] 内容、[onTap]、[selectable]、高频参数 [opacity]、[cardType]、[shadow] 与 [border]，
+/// 高级外观、尺寸与动画由 [style] 配置。
 ///
 /// 同时也提供便利的衍生命名构建函数：
 /// - `FluentCard.text(...)` / `FluentCard.Text(...)` -> [FluentTextCard] (文本/展开卡片)
@@ -32,6 +35,15 @@ class FluentCard extends StatelessWidget {
   /// 卡片不透明度 (可选，高频直接参数，范围 0.0 ~ 1.0)
   final double? opacity;
 
+  /// 卡片类型 (可选，[FluentCardType.elevated] 或 [FluentCardType.outlined])
+  final FluentCardType? cardType;
+
+  /// 自定义卡片阴影 (可选，若提供则覆盖默认阴影；为空且 cardType 为 elevated 时默认展示 FluentShadow.shadow2)
+  final List<BoxShadow>? shadow;
+
+  /// 自定义卡片边框 (可选，若提供则覆盖默认边框)
+  final BoxBorder? border;
+
   /// 卡片外侧内边距 (可选，提供时覆盖 style.padding)
   final EdgeInsetsGeometry? padding;
 
@@ -44,6 +56,9 @@ class FluentCard extends StatelessWidget {
     this.onTap,
     this.selectable = false,
     this.opacity,
+    this.cardType,
+    this.shadow,
+    this.border,
     this.padding,
     this.style = const FluentCardStyle(),
   });
@@ -65,6 +80,9 @@ class FluentCard extends StatelessWidget {
     bool expandable = true,
     bool selectable = false,
     double? opacity,
+    FluentCardType? cardType,
+    List<BoxShadow>? shadow,
+    BoxBorder? border,
     bool showDivider = false,
     FluentCardStyle style = const FluentCardStyle(),
     Widget? child,
@@ -85,6 +103,9 @@ class FluentCard extends StatelessWidget {
       expandable: expandable,
       selectable: selectable,
       opacity: opacity,
+      cardType: cardType,
+      shadow: shadow,
+      border: border,
       showDivider: showDivider,
       style: style,
       child: child,
@@ -110,6 +131,9 @@ class FluentCard extends StatelessWidget {
     bool expandable = true,
     bool selectable = false,
     double? opacity,
+    FluentCardType? cardType,
+    List<BoxShadow>? shadow,
+    BoxBorder? border,
     bool showDivider = false,
     FluentCardStyle style = const FluentCardStyle(),
   }) => FluentCard.text(
@@ -128,6 +152,9 @@ class FluentCard extends StatelessWidget {
     expandable: expandable,
     selectable: selectable,
     opacity: opacity,
+    cardType: cardType,
+    shadow: shadow,
+    border: border,
     showDivider: showDivider,
     style: style,
     child: child,
@@ -152,6 +179,9 @@ class FluentCard extends StatelessWidget {
     VoidCallback? onTap,
     bool selectable = false,
     double? opacity,
+    FluentCardType? cardType,
+    List<BoxShadow>? shadow,
+    BoxBorder? border,
     FluentCardStyle style = const FluentCardStyle(),
     Widget? child,
   }) {
@@ -173,6 +203,9 @@ class FluentCard extends StatelessWidget {
       onTap: onTap,
       selectable: selectable,
       opacity: opacity,
+      cardType: cardType,
+      shadow: shadow,
+      border: border,
       style: style,
       child: child,
     );
@@ -198,6 +231,9 @@ class FluentCard extends StatelessWidget {
     VoidCallback? onTap,
     bool selectable = false,
     double? opacity,
+    FluentCardType? cardType,
+    List<BoxShadow>? shadow,
+    BoxBorder? border,
     FluentCardStyle style = const FluentCardStyle(),
     Widget? child,
   }) => FluentCard.image(
@@ -218,6 +254,9 @@ class FluentCard extends StatelessWidget {
     onTap: onTap,
     selectable: selectable,
     opacity: opacity,
+    cardType: cardType,
+    shadow: shadow,
+    border: border,
     style: style,
     child: child,
   );
@@ -234,6 +273,9 @@ class FluentCard extends StatelessWidget {
     VoidCallback? onTap,
     bool selectable = false,
     double? opacity,
+    FluentCardType? cardType,
+    List<BoxShadow>? shadow,
+    BoxBorder? border,
     FluentCardStyle style = const FluentCardStyle(),
   }) {
     return FluentFileCard(
@@ -247,6 +289,9 @@ class FluentCard extends StatelessWidget {
       onTap: onTap,
       selectable: selectable,
       opacity: opacity,
+      cardType: cardType,
+      shadow: shadow,
+      border: border,
       style: style,
     );
   }
@@ -264,6 +309,9 @@ class FluentCard extends StatelessWidget {
     VoidCallback? onTap,
     bool selectable = false,
     double? opacity,
+    FluentCardType? cardType,
+    List<BoxShadow>? shadow,
+    BoxBorder? border,
     FluentCardStyle style = const FluentCardStyle(),
   }) => FluentCard.file(
     key: key,
@@ -275,6 +323,10 @@ class FluentCard extends StatelessWidget {
     onActionTap: onActionTap,
     onTap: onTap,
     selectable: selectable,
+    opacity: opacity,
+    cardType: cardType,
+    shadow: shadow,
+    border: border,
     style: style,
   );
 
@@ -291,6 +343,9 @@ class FluentCard extends StatelessWidget {
     VoidCallback? onTap,
     bool selectable = false,
     double? opacity,
+    FluentCardType? cardType,
+    List<BoxShadow>? shadow,
+    BoxBorder? border,
     FluentCardStyle style = const FluentCardStyle(),
   }) {
     return FluentAnnouncementCard(
@@ -305,6 +360,9 @@ class FluentCard extends StatelessWidget {
       onTap: onTap,
       selectable: selectable,
       opacity: opacity,
+      cardType: cardType,
+      shadow: shadow,
+      border: border,
       style: style,
     );
   }
@@ -323,6 +381,9 @@ class FluentCard extends StatelessWidget {
     VoidCallback? onTap,
     bool selectable = false,
     double? opacity,
+    FluentCardType? cardType,
+    List<BoxShadow>? shadow,
+    BoxBorder? border,
     FluentCardStyle style = const FluentCardStyle(),
   }) => FluentCard.announcement(
     key: key,
@@ -336,14 +397,19 @@ class FluentCard extends StatelessWidget {
     onTap: onTap,
     selectable: selectable,
     opacity: opacity,
+    cardType: cardType,
+    shadow: shadow,
+    border: border,
     style: style,
   );
 
   FluentCardStyle _getEffectiveStyle() {
-    if (opacity != null) {
-      return style.copyWith(opacity: opacity);
-    }
-    return style;
+    return style.copyWith(
+      opacity: opacity ?? style.opacity,
+      cardType: cardType ?? style.cardType,
+      shadow: shadow ?? style.shadow,
+      border: border ?? style.border,
+    );
   }
 
   @override
@@ -352,6 +418,7 @@ class FluentCard extends StatelessWidget {
     final isDark = theme.brightness == Brightness.dark;
 
     final effectiveStyle = _getEffectiveStyle();
+    final effectiveCardType = effectiveStyle.cardType;
     final bool isClickable = onTap != null;
 
     final Color baseBg =
@@ -363,13 +430,32 @@ class FluentCard extends StatelessWidget {
 
     final bool isTranslucent = effOpacity < 1.0 || effectiveBg.a < 1.0;
 
-    final double effRadius = style.borderRadius ?? 12.0;
+    final double effRadius = effectiveStyle.borderRadius ?? 12.0;
 
-    final Color borderCol = isTranslucent
-        ? (isDark
-              ? Colors.white.withValues(alpha: 0.15)
-              : Colors.white.withValues(alpha: 0.6))
-        : theme.dividerColor.withValues(alpha: isDark ? 0.3 : 0.4);
+    // 算可选边框 Border
+    final BoxBorder? effectiveBorder;
+    if (effectiveStyle.border != null) {
+      effectiveBorder = effectiveStyle.border;
+    } else if (effectiveCardType == FluentCardType.outlined) {
+      effectiveBorder = Border.all(color: theme.dividerColor, width: 1.0);
+    } else {
+      final Color defaultBorderColor = isTranslucent
+          ? (isDark
+                ? Colors.white.withValues(alpha: 0.15)
+                : Colors.white.withValues(alpha: 0.6))
+          : theme.dividerColor.withValues(alpha: isDark ? 0.3 : 0.4);
+      effectiveBorder = Border.all(color: defaultBorderColor, width: 1.0);
+    }
+
+    // 算可选阴影 Shadow (默认不设置阴影，仅当显式指定 shadow 或 cardType 为 elevated 时生效)
+    final List<BoxShadow>? effectiveShadows;
+    if (effectiveStyle.shadow != null) {
+      effectiveShadows = effectiveStyle.shadow;
+    } else if (effectiveCardType == FluentCardType.elevated) {
+      effectiveShadows = FluentShadow.shadow2(context);
+    } else {
+      effectiveShadows = null;
+    }
 
     final EdgeInsetsGeometry effPadding =
         padding ?? effectiveStyle.padding ?? const EdgeInsets.all(16.0);
@@ -391,17 +477,17 @@ class FluentCard extends StatelessWidget {
 
     final double effectiveWidth = effectiveStyle.width ?? double.infinity;
 
-    final List<BoxShadow>? shadows = effectiveStyle.shadow;
-
-    final Color hoverOverlay = isDark
-        ? Colors.white.withAlpha(15)
-        : Colors.black.withAlpha(15);
+    final Color hoverOverlay = effectiveStyle.disableHoverOverlay
+        ? Colors.transparent
+        : (isDark
+            ? Colors.white.withAlpha(15)
+            : Colors.black.withAlpha(15));
 
     Widget cardSurface = Container(
       decoration: BoxDecoration(
         color: effectiveBg,
         borderRadius: BorderRadius.circular(effRadius),
-        border: Border.all(color: borderCol, width: 1.0),
+        border: effectiveBorder,
       ),
       child: cardBody,
     );
@@ -429,7 +515,7 @@ class FluentCard extends StatelessWidget {
       width: effectiveWidth,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(effRadius),
-        boxShadow: shadows,
+        boxShadow: effectiveShadows,
       ),
       child: cardSurface,
     );
@@ -488,6 +574,9 @@ class FluentFileCard extends StatelessWidget {
   final VoidCallback? onTap;
   final bool selectable;
   final double? opacity;
+  final FluentCardType? cardType;
+  final List<BoxShadow>? shadow;
+  final BoxBorder? border;
   final FluentCardStyle style;
 
   const FluentFileCard({
@@ -501,14 +590,19 @@ class FluentFileCard extends StatelessWidget {
     this.onTap,
     this.selectable = false,
     this.opacity,
+    this.cardType,
+    this.shadow,
+    this.border,
     this.style = const FluentCardStyle(),
   });
 
   FluentCardStyle _getEffectiveStyle() {
-    if (opacity != null) {
-      return style.copyWith(opacity: opacity);
-    }
-    return style;
+    return style.copyWith(
+      opacity: opacity ?? style.opacity,
+      cardType: cardType ?? style.cardType,
+      shadow: shadow ?? style.shadow,
+      border: border ?? style.border,
+    );
   }
 
   @override
@@ -633,6 +727,9 @@ class FluentAnnouncementCard extends StatelessWidget {
   final VoidCallback? onTap;
   final bool selectable;
   final double? opacity;
+  final FluentCardType? cardType;
+  final List<BoxShadow>? shadow;
+  final BoxBorder? border;
   final FluentCardStyle style;
 
   const FluentAnnouncementCard({
@@ -647,14 +744,19 @@ class FluentAnnouncementCard extends StatelessWidget {
     this.onTap,
     this.selectable = false,
     this.opacity,
+    this.cardType,
+    this.shadow,
+    this.border,
     this.style = const FluentCardStyle(),
   });
 
   FluentCardStyle _getEffectiveStyle() {
-    if (opacity != null) {
-      return style.copyWith(opacity: opacity);
-    }
-    return style;
+    return style.copyWith(
+      opacity: opacity ?? style.opacity,
+      cardType: cardType ?? style.cardType,
+      shadow: shadow ?? style.shadow,
+      border: border ?? style.border,
+    );
   }
 
   @override

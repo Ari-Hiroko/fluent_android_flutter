@@ -74,6 +74,15 @@ class FluentImageCard extends StatelessWidget {
   /// 卡片不透明度 (可选，高频直接参数，范围 0.0 ~ 1.0)
   final double? opacity;
 
+  /// 卡片类型 [FluentCardType] (可选)
+  final FluentCardType? cardType;
+
+  /// 自定义阴影配置 (可选)
+  final List<BoxShadow>? shadow;
+
+  /// 自定义卡片边框 (可选)
+  final BoxBorder? border;
+
   /// 卡片外观、尺寸、图片 fit 与动画配置包 [FluentCardStyle] (可选)
   final FluentCardStyle style;
 
@@ -98,15 +107,20 @@ class FluentImageCard extends StatelessWidget {
     this.onTap,
     this.selectable = false,
     this.opacity,
+    this.cardType,
+    this.shadow,
+    this.border,
     this.style = const FluentCardStyle(),
     this.child,
   });
 
   FluentCardStyle _getEffectiveStyle() {
-    if (opacity != null) {
-      return style.copyWith(opacity: opacity);
-    }
-    return style;
+    return style.copyWith(
+      opacity: opacity ?? style.opacity,
+      cardType: cardType ?? style.cardType,
+      shadow: shadow ?? style.shadow,
+      border: border ?? style.border,
+    );
   }
 
   @override

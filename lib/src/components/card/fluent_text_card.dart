@@ -52,6 +52,15 @@ class FluentTextCard extends StatefulWidget {
   /// 卡片不透明度 (可选，高频直接参数，范围 0.0 ~ 1.0)
   final double? opacity;
 
+  /// 卡片类型 [FluentCardType] (可选)
+  final FluentCardType? cardType;
+
+  /// 自定义阴影配置 (可选)
+  final List<BoxShadow>? shadow;
+
+  /// 自定义卡片边框 (可选)
+  final BoxBorder? border;
+
   /// 是否在内容区域上方显示 1dp 分割线 (默认 false)
   final bool showDivider;
 
@@ -75,6 +84,9 @@ class FluentTextCard extends StatefulWidget {
     this.expandable = true,
     this.selectable = false,
     this.opacity,
+    this.cardType,
+    this.shadow,
+    this.border,
     this.showDivider = false,
     this.style = const FluentCardStyle(),
   });
@@ -108,6 +120,9 @@ class _FluentTextCardState extends State<FluentTextCard>
     return widget.style.copyWith(
       opacity: widget.opacity ?? widget.style.opacity,
       showDivider: widget.showDivider ? true : widget.style.showDivider,
+      cardType: widget.cardType ?? widget.style.cardType,
+      shadow: widget.shadow ?? widget.style.shadow,
+      border: widget.border ?? widget.style.border,
     );
   }
 
@@ -229,6 +244,20 @@ class _FluentTextCardState extends State<FluentTextCard>
 
     if (widget.selectable) {
       cardChild = SelectionArea(child: cardChild);
+    }
+
+    final bool inCardScope = FluentCardScope.of(context) != null;
+    if (inCardScope) {
+      final VoidCallback? tapCallback = widget.onTap ??
+          (widget.expandable || widget.onActionTap != null ? _toggleExpand : null);
+      if (tapCallback != null) {
+        return GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: tapCallback,
+          child: cardChild,
+        );
+      }
+      return cardChild;
     }
 
     return FluentCard(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluent_2_flutter/fluent_2_flutter.dart';
+// import 'package:fluent_2_flutter/show.dart' as show;
 
 void main() {
   runApp(const MainApp());
@@ -113,8 +114,10 @@ class _MainAppState extends State<MainApp> with SingleTickerProviderStateMixin {
             ),
             const SizedBox(height: 10),
             FluentCard.Text(
+              shadow: FluentShadow.shadow4(context),
+              border: Border.all(width: 0.5, color: Colors.black12),
               expandable: false,
-              opacity: 0.8,
+              // opacity: 0.8,
               title: '按钮测试',
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -141,11 +144,12 @@ class _MainAppState extends State<MainApp> with SingleTickerProviderStateMixin {
               ),
             ),
             const SizedBox(height: 10),
-            FluentCard.Text(
-              showDivider: true,
-              opacity: 0.7,
-              expandable: false,
-              title: '大家好啊',
+            AnimatedFluentCard.hover(
+              // style: FluentCardStyle(shadow: FluentShadow.shadow2()),
+              // showDivider: true,
+              // // opacity: 0.7,
+              // expandable: false,
+              // title: '大家好啊',
               child: Column(
                 children: [
                   const FluentTextField(
@@ -160,6 +164,7 @@ class _MainAppState extends State<MainApp> with SingleTickerProviderStateMixin {
                   ),
                   const SizedBox(height: 8),
                   FluentTextField.number(
+                    stepperStyle: FluentNumberStepperStyle.suffixHorizontal,
                     hintText: '数值 (带 +/- 步进)',
                     backgroundColor: Colors.transparent,
                   ),
@@ -308,10 +313,10 @@ class _MainAppState extends State<MainApp> with SingleTickerProviderStateMixin {
               width: double.infinity,
               height: double.infinity,
               decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: Image.asset('assets/sun.jpg').image,
-                  fit: BoxFit.cover,
-                ),
+                // image: DecorationImage(
+                // image: Image.asset('assets/sun.jpg').image,
+                // fit: BoxFit.cover,
+                // ),
               ),
               child: FluentAcrylic(
                 borderRadius: 0,
