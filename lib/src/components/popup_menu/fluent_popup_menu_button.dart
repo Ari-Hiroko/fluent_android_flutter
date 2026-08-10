@@ -28,11 +28,14 @@ class FluentPopupMenuButton<T> extends StatelessWidget {
 
   final bool enableCursor;
 
+  final AnimateDirection animateDirection;
+
   const FluentPopupMenuButton({
     super.key,
     required this.itemBuilder,
     this.onSelected,
     this.checkableBehavior = FluentItemCheckableBehavior.none,
+    this.animateDirection = AnimateDirection.fromTopLeft,
     this.icon,
     this.child,
     this.offset = Offset.zero,
@@ -47,6 +50,7 @@ class FluentPopupMenuButton<T> extends StatelessWidget {
       items: items,
       checkableBehavior: checkableBehavior,
       offset: offset,
+      animateDirection: animateDirection,
     ).then((selected) {
       if (selected != null) {
         onSelected?.call(selected);

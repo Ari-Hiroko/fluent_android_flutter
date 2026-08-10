@@ -3,6 +3,13 @@ import '../../theme/fluent_theme.dart';
 import 'popup_menu_item.dart';
 import 'popup_menu_item_view.dart';
 
+enum AnimateDirection {
+  fromTopLeft,
+  fromTopRight,
+  fromBottomLeft,
+  fromBottomRight,
+}
+
 /// 弹出菜单核心 Widget [FluentPopupMenu<T>]
 class FluentPopupMenu<T> extends StatefulWidget {
   /// 菜单项列表
@@ -23,6 +30,9 @@ class FluentPopupMenu<T> extends StatefulWidget {
   /// 关闭菜单的回调
   final VoidCallback? onDismiss;
 
+  /// 菜单方向
+  final AnimateDirection alignDirection;
+
   const FluentPopupMenu({
     super.key,
     required this.items,
@@ -31,6 +41,7 @@ class FluentPopupMenu<T> extends StatefulWidget {
     this.onItemsChanged,
     this.autoDismiss,
     this.onDismiss,
+    this.alignDirection = AnimateDirection.fromTopLeft,
   });
 
   @override
@@ -115,7 +126,7 @@ class _FluentPopupMenuState<T> extends State<FluentPopupMenu<T>> {
           borderRadius: BorderRadius.circular(theme.cornerRadius),
           child: IntrinsicWidth(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(vertical: 4.0),
+              // padding: const EdgeInsets.symmetric(vertical: 4.0),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -145,6 +156,7 @@ Future<T?> showFluentPopupMenu<T>({
   required List<FluentPopupMenuItem<T>> items,
   FluentItemCheckableBehavior checkableBehavior =
       FluentItemCheckableBehavior.none,
+  AnimateDirection animateDirection = AnimateDirection.fromTopLeft,
 }) async {
   final RenderBox? button = context.findRenderObject() as RenderBox?;
   final OverlayState overlay = Overlay.of(context);
@@ -172,6 +184,7 @@ Future<T?> showFluentPopupMenu<T>({
       anchorRect: rect,
       overlaySize: overlayBox.size,
       themeData: fluentTheme,
+      animateDirection: animateDirection,
       builder: (dismiss) {
         return FluentPopupMenu<T>(
           items: items,
@@ -190,12 +203,14 @@ Future<T?> showFluentPopupMenu<T>({
 
 /// 弹出菜单路由与 CustomSingleChildLayout 定位机制
 class _FluentPopupMenuRoute<R> extends PopupRoute<R> {
+  final AnimateDirection animateDirection;
   final Rect anchorRect;
   final Size overlaySize;
   final FluentThemeData themeData;
   final Widget Function(VoidCallback dismiss) builder;
 
   _FluentPopupMenuRoute({
+    this.animateDirection = AnimateDirection.fromTopLeft,
     required this.anchorRect,
     required this.overlaySize,
     required this.themeData,
@@ -229,7 +244,12 @@ class _FluentPopupMenuRoute<R> extends PopupRoute<R> {
         ),
         child: ScaleTransition(
           scale: CurvedAnimation(parent: animation, curve: Curves.easeOutCubic),
-          alignment: Alignment.topLeft,
+          alignment: switch (animateDirection) {
+            AnimateDirection.fromTopLeft => Alignment.topLeft,
+            AnimateDirection.fromTopRight => Alignment.topRight,
+            AnimateDirection.fromBottomLeft => Alignment.bottomLeft,
+            AnimateDirection.fromBottomRight => Alignment.bottomRight,
+          },
           child: FadeTransition(
             opacity: animation,
             child: builder(() => Navigator.of(context).pop()),

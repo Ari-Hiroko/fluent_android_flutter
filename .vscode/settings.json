@@ -1,3 +1,12 @@
 {
-    "cmake.ignoreCMakeListsMissing": true
+    "cmake.ignoreCMakeListsMissing": true,
+    "dart.previewFlutterUiGuides": false,
+    // "dart.previewFlutterUiGuidesCustomTracking": true,
+    "dart.inlayHints": true,
+    "dart.allowTestsOutsideTestFolder": true,
+    "editor.guides.bracketPairs": "active",
+    "editor.guides.highlightActiveIndentation": true,
+    "terminal.integrated.shellIntegration.showCommandGuide": true,
+    "editor.guides.highlightActiveBracketPair": true,
+    "editor.guides.indentation": true
 }

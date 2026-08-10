@@ -77,7 +77,12 @@ class FluentInkRipple extends InteractiveInkFeature {
        _textDirection = textDirection,
        _targetRadius =
            radius ??
-           _getTargetRadius(referenceBox, position, containedInkWell, rectCallback),
+           _getTargetRadius(
+             referenceBox,
+             position,
+             containedInkWell,
+             rectCallback,
+           ),
        _clipCallback = _getClipCallback(
          referenceBox,
          containedInkWell,
@@ -85,10 +90,7 @@ class FluentInkRipple extends InteractiveInkFeature {
        ),
        super(color: color) {
     _fadeInController =
-        AnimationController(
-            duration: _kFadeInDuration,
-            vsync: controller.vsync,
-          )
+        AnimationController(duration: _kFadeInDuration, vsync: controller.vsync)
           ..addListener(controller.markNeedsPaint)
           ..forward();
     _fadeIn = _fadeInController.drive(
@@ -96,10 +98,7 @@ class FluentInkRipple extends InteractiveInkFeature {
     );
 
     _radiusController =
-        AnimationController(
-            duration: _kRadiusDuration,
-            vsync: controller.vsync,
-          )
+        AnimationController(duration: _kRadiusDuration, vsync: controller.vsync)
           ..addListener(controller.markNeedsPaint)
           ..forward();
     _radius = _radiusController.drive(
@@ -196,8 +195,9 @@ class FluentInkRipple extends InteractiveInkFeature {
 
   @override
   void paintFeature(Canvas canvas, Matrix4 transform) {
-    final int alpha =
-        _fadeInController.isAnimating ? _fadeIn.value : _fadeOut.value;
+    final int alpha = _fadeInController.isAnimating
+        ? _fadeIn.value
+        : _fadeOut.value;
     if (alpha <= 0 || _radius.value <= 0) return;
 
     final Color solidColor = color.withAlpha(alpha);
@@ -648,6 +648,16 @@ class _FluentInkResponseState extends State<_FluentInkResponseStateWidget>
     );
     statesController.removeListener(handleStatesControllerChange);
     internalStatesController?.dispose();
+
+    if (_splashes != null && _splashes!.isNotEmpty) {
+      // 拷贝一份列表进行遍历，防止在 dispose 过程中触发 remove 导致的迭代器冲突
+      final List<InkFeature> splashes = List<InkFeature>.from(_splashes!);
+      for (final InkFeature splash in splashes) {
+        splash.dispose();
+      }
+      _splashes!.clear();
+    }
+
     super.dispose();
   }
 

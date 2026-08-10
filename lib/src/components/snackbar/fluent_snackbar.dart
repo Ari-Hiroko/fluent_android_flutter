@@ -1281,69 +1281,112 @@ class _FluentStackableSnackbarState extends State<FluentStackableSnackbar> {
   Widget build(BuildContext context) {
     if (widget.children.isEmpty) return const SizedBox.shrink();
 
-    // 根据 _expanded 条件单向渲染，避免 AnimatedCrossFade 在后台双重 build 导致 GlobalKey 重复挂载冲突
-    if (_expanded) {
-      // Expanded 模式：纵向展开卡片列表 (对标 Kotlin SnackBarStack Expanded)
-      return GestureDetector(
-        onTap: _toggleExpanded,
+    return TweenAnimationBuilder<double>(
+      tween: Tween<double>(end: _expanded ? 1.0 : 0.0),
+      duration: const Duration(milliseconds: 320),
+      curve: Curves.fastOutSlowIn,
+      builder: (context, progress, child) {
+        // 展开完成模式：使用支持自由纵向拖拽/滚动的 ScrollView
+        if (progress == 1.0) {
+          return _buildExpandedScrollView();
+        }
+        // 折叠态与动画补间过程：使用物理插值 Stack
+        return _buildAnimatedStack(progress);
+      },
+    );
+  }
+
+  /// 展开完成后的纵向拖拽与滚动视图
+  Widget _buildExpandedScrollView() {
+    final List<Widget> items = widget.children;
+    final double maxScrollViewHeight =
+        MediaQuery.of(context).size.height * 0.65;
+
+    return Container(
+      constraints: BoxConstraints(maxHeight: maxScrollViewHeight),
+      child: SingleChildScrollView(
+        physics:
+            const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
         child: Column(
           mainAxisSize: MainAxisSize.min,
-          children: widget.children.map((child) {
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: items.map((cardWidget) {
             return Padding(
               padding: EdgeInsets.only(bottom: widget.spacing),
-              child: child,
+              child: GestureDetector(
+                onTap: _toggleExpanded,
+                behavior: HitTestBehavior.deferToChild,
+                child: cardWidget,
+              ),
             );
           }).toList(),
         ),
-      );
-    } else {
-      // Collapsed 模式：卡片层叠 Peek 呈现 (对标 Kotlin SnackBarStack Collapsed)
-      return GestureDetector(
-        onTap: _toggleExpanded,
-        child: _buildCollapsedStack(),
-      );
-    }
+      ),
+    );
   }
 
-  Widget _buildCollapsedStack() {
-    final int count = widget.children.length.clamp(0, widget.maxCollapsedCount);
-    final List<Widget> visibleChildren = widget.children.take(count).toList();
+  /// 折叠态与动画补间 Stack 容器
+  Widget _buildAnimatedStack(double progress) {
+    final int totalCount = widget.children.length;
+    final List<Widget> items = widget.children;
 
-    return Stack(
-      alignment: Alignment.bottomCenter,
-      children: List.generate(visibleChildren.length, (index) {
-        // 反向层叠，最前端/最新放置在最顶层
-        final int reverseIndex = visibleChildren.length - 1 - index;
-        final double targetScale = (1.0 - (reverseIndex * 0.05)).clamp(
-          0.8,
-          1.0,
-        );
-        final double targetOffsetY = -reverseIndex * 8.0;
-        final Widget childWidget = visibleChildren[index];
+    // 单张卡片在展开模式下的估计步距 (高度 + 间距)
+    const double estimatedCardHeight = 64.0;
+    final double step = estimatedCardHeight + widget.spacing;
 
-        return TweenAnimationBuilder<double>(
-          key: ValueKey('offset_${childWidget.key}'),
-          tween: Tween<double>(end: targetOffsetY),
-          duration: const Duration(milliseconds: 250),
-          curve: Curves.fastOutSlowIn,
-          builder: (context, offsetY, child) {
-            return Transform.translate(
-              offset: Offset(0, offsetY),
-              child: TweenAnimationBuilder<double>(
-                key: ValueKey('scale_${childWidget.key}'),
-                tween: Tween<double>(end: targetScale),
-                duration: const Duration(milliseconds: 250),
-                curve: Curves.fastOutSlowIn,
-                builder: (context, scale, child) {
-                  return Transform.scale(scale: scale, child: child);
-                },
-                child: child,
+    // 展开状态下的最大向上推进距离，用于拓宽 HitTest 手势感应区 Bounds
+    final double maxExpandedDistance =
+        totalCount > 1 ? (totalCount - 1) * step : 0.0;
+    final double topContainerPadding = progress * maxExpandedDistance;
+
+    return Padding(
+      padding: EdgeInsets.only(top: topContainerPadding),
+      child: Stack(
+        alignment: Alignment.bottomCenter,
+        clipBehavior: Clip.none,
+        children: List.generate(items.length, (index) {
+          // 反向 index (0 代表最新最下方一条，1 代表次新一条...)
+          final int reverseIndex = totalCount - 1 - index;
+
+          // 超过折叠最大数量时的渐隐/渐现
+          final bool isExceedCollapsed =
+              !_expanded && reverseIndex >= widget.maxCollapsedCount;
+          final double targetOpacity = isExceedCollapsed ? 0.0 : 1.0;
+          final double opacity =
+              (1.0 - progress) * targetOpacity + progress * 1.0;
+
+          // 折叠态下的 Scale 与 Offset Y
+          final double collapsedScale =
+              (1.0 - (reverseIndex * 0.05)).clamp(0.8, 1.0);
+          final double collapsedOffsetY = -reverseIndex * 8.0;
+
+          // 展开态下的 Offset Y (负向向上依次推开)
+          final double expandedOffsetY = -reverseIndex * step;
+
+          // 动态插值计算当前 Step
+          final double currentScale =
+              collapsedScale + (1.0 - collapsedScale) * progress;
+          final double currentOffsetY =
+              collapsedOffsetY + (expandedOffsetY - collapsedOffsetY) * progress;
+
+          final Widget cardWidget = items[index];
+
+          return Opacity(
+            opacity: opacity.clamp(0.0, 1.0),
+            child: Transform.translate(
+              offset: Offset(0, currentOffsetY),
+              child: Transform.scale(
+                scale: currentScale,
+                child: GestureDetector(
+                  onTap: !_expanded ? _toggleExpanded : null,
+                  behavior: HitTestBehavior.deferToChild,
+                  child: cardWidget,
+                ),
               ),
-            );
-          },
-          child: childWidget,
-        );
-      }),
+            ),
+          );
+        }),
+      ),
     );
   }
 }
@@ -1433,6 +1476,37 @@ class _FluentStackableToastManager {
   final List<_StackableToastItem> _items = [];
   final Map<String, Timer> _timers = {};
   StateSetter? _rebuildOverlay;
+  bool _isExpanded = false;
+
+  void setExpanded(bool expanded) {
+    if (_isExpanded != expanded) {
+      _isExpanded = expanded;
+      if (_isExpanded) {
+        _pauseTimers();
+      } else {
+        _resumeTimers();
+      }
+    }
+  }
+
+  void _pauseTimers() {
+    for (final timer in _timers.values) {
+      timer.cancel();
+    }
+    _timers.clear();
+  }
+
+  void _resumeTimers() {
+    _pauseTimers();
+    for (final item in _items) {
+      if (item.duration != FluentSnackbarDuration.indefinite) {
+        final ms = item.duration == FluentSnackbarDuration.short ? 4000 : 10000;
+        _timers[item.id] = Timer(Duration(milliseconds: ms), () {
+          item.key.currentState?.dismiss(FluentNotificationResult.timeout);
+        });
+      }
+    }
+  }
 
   FluentSnackbarController addToast({
     required BuildContext context,
@@ -1486,8 +1560,8 @@ class _FluentStackableToastManager {
 
     _items.add(item);
 
-    // 维持计时器，到期触发 Slide Out 退场动画
-    if (duration != FluentSnackbarDuration.indefinite) {
+    // 仅在折叠状态下才启动倒计时消除；若当前为展开状态，暂停自动消除
+    if (!_isExpanded && duration != FluentSnackbarDuration.indefinite) {
       final ms = duration == FluentSnackbarDuration.short ? 4000 : 10000;
       _timers[id] = Timer(Duration(milliseconds: ms), () {
         item.key.currentState?.dismiss(FluentNotificationResult.timeout);
@@ -1558,6 +1632,9 @@ class _FluentStackableToastManager {
                       child: FluentTheme(
                         themeData: fluentTheme,
                         child: FluentStackableSnackbar.stackable(
+                          onExpandedChanged: (expanded) {
+                            setExpanded(expanded);
+                          },
                           children: children,
                         ),
                       ),
