@@ -59,7 +59,7 @@ class FluentList extends StatelessWidget {
         processedChildren.add(
           FluentListItem(
             title: child.title,
-            subTitle: child.subTitle,
+            subtitle: child.subtitle,
             tertiaryTitle: child.tertiaryTitle,
             leading: child.leading,
             leadingAccessoryContent: child.leadingAccessoryContent,

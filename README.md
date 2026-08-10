@@ -59,7 +59,7 @@ class MyApp extends StatelessWidget {
             home: Scaffold(
               appBar: const FluentAppBarLayout(
                 title: 'Fluent 2 Mobile',
-                subTitle: 'Component Library',
+                subtitle: 'Component Library',
                 style: FluentStyle.brand,
                 navigationIconType: FluentNavigationIconType.avatar,
                 avatarName: 'User Name',

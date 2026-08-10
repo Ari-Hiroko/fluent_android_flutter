@@ -94,7 +94,7 @@ FluentButton(
 ```dart
 FluentCompoundButton(
   title: '云端同步数据',
-  subTitle: '上一次同步于 10 分钟前',
+  subtitle: '上一次同步于 10 分钟前',
   icon: const Icon(Icons.cloud_upload_outlined),
   onPressed: () => print('Syncing...'),
 )
@@ -259,7 +259,7 @@ showFluentDialog(
 ```dart
 FluentAppBarLayout(
   title: '控制中心',
-  subTitle: '包含 5 个项目',
+  subtitle: '包含 5 个项目',
   style: FluentStyle.brand,
   navigationIconType: FluentNavigationIconType.avatar,
   avatarName: 'Mauricio August',
@@ -274,7 +274,7 @@ FluentAppBarLayout(
 #### 核心属性
 | 参数名 | 类型 | 默认值 | 描述 |
 | :--- | :--- | :--- | :--- |
-| `title` / `subTitle` | `String` | **必填** / `null` | 主标题与副标题 |
+| `title` / `subtitle` | `String` | **必填** / `null` | 主标题与副标题 |
 | `navigationIconType` | `FluentNavigationIconType` | `backIcon` | `none`, `avatar`, `backIcon` 导航图标类型 |
 | `scrollBehavior` | `FluentScrollBehavior` | `collapseToolbar` | `none`, `collapseToolbar`, `pin` 滚动展开隐退行为 |
 | `accessoryView` | `Widget?` | `null` | 底部扩展槽位（如 SearchBar / PillBar） |
@@ -396,7 +396,7 @@ showFluentDrawer(
 ```dart
 FluentListItem(
   title: '双行列表项',
-  subTitle: '包含辅助描述信息',
+  subtitle: '包含辅助描述信息',
   leading: const Icon(Icons.mail_outline),
   trailing: const Icon(Icons.chevron_right),
   onTap: () => print('Tapped'),
@@ -528,7 +528,7 @@ FluentContainer(
 
 FluentFileCard(
   fileName: 'Document.pdf',
-  subTitle: '2.4 MB · PDF',
+  subtitle: '2.4 MB · PDF',
 );
 ```
 

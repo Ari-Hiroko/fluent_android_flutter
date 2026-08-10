@@ -92,7 +92,7 @@ class _ShowcaseHomePageState extends State<ShowcaseHomePage> {
 
       appBar: FluentTopAppBar(
         title: 'Microsoft Fluent UI 2',
-        subTitle: '示例交互式 API 属性表',
+        subtitle: '示例交互式 API 属性表',
         style: FluentStyle.brand,
         leftActions: [
           IconButton(
@@ -328,13 +328,13 @@ class _ShowcaseHomePageState extends State<ShowcaseHomePage> {
           description: '包含大字主标题与小字详细描述的双行卡片式操作按钮。',
           demo: FluentCompoundButton(
             title: '同步配置至云端 OneDrive',
-            subTitle: '包含最新项目配置与样式数据',
+            subtitle: '包含最新项目配置与样式数据',
             icon: const Icon(Icons.cloud_upload_outlined),
             onPressed: () => _log('点击了 CompoundButton'),
           ),
           codeSnippet: '''FluentCompoundButton(
   title: '同步配置至云端 OneDrive',
-  subTitle: '包含最新项目配置与样式数据',
+  subtitle: '包含最新项目配置与样式数据',
   icon: const Icon(Icons.cloud_upload_outlined),
   onPressed: () => print('Syncing'),
 )''',
@@ -346,7 +346,7 @@ class _ShowcaseHomePageState extends State<ShowcaseHomePage> {
               desc: '主标题大字',
             ),
             ApiParam(
-              name: 'subTitle',
+              name: 'subtitle',
               type: 'String',
               defaultVal: '必填',
               desc: '副标题/次要描述小字',
@@ -602,7 +602,7 @@ FluentCitation(
               ),
               FluentListItem(
                 title: '双行列表项',
-                subTitle: '包含次要信息描述的 ListItem 结构',
+                subtitle: '包含次要信息描述的 ListItem 结构',
                 leading: const Icon(Icons.mail_outline),
                 trailing: FluentToggleSwitch(
                   value: _switchValue,
@@ -612,7 +612,7 @@ FluentCitation(
               ),
               FluentListItem(
                 title: '三行列表项',
-                subTitle: '包含完整三层文本结构',
+                subtitle: '包含完整三层文本结构',
                 tertiaryTitle: '同步于 10 分钟前 · 节点机房 Alpha',
                 leading: const Icon(Icons.verified_user_outlined),
                 showDivider: false,
@@ -620,7 +620,7 @@ FluentCitation(
               ),
               const FluentListItem(
                 title: '禁用列表项',
-                subTitle: '无法响应点击手势',
+                subtitle: '无法响应点击手势',
                 enabled: false,
               ),
               FluentListSectionDescription(
@@ -632,7 +632,7 @@ FluentCitation(
           ),
           codeSnippet: '''FluentListItem(
   title: '双行列表项',
-  subTitle: '副标题文本描述',
+  subtitle: '副标题文本描述',
   leading: const Icon(Icons.mail_outline),
   trailing: const Icon(Icons.chevron_right),
   showDivider: true,
@@ -646,7 +646,7 @@ FluentCitation(
               desc: '主标题文本',
             ),
             ApiParam(
-              name: 'subTitle',
+              name: 'subtitle',
               type: 'String?',
               defaultVal: 'null',
               desc: '第二行描述小字',
@@ -749,7 +749,7 @@ FluentCitation(
 
 FluentFileCard(
   fileName: 'Document.pdf',
-  subTitle: '2.4 MB · PDF',
+  subtitle: '2.4 MB · PDF',
   actionOverflowOnClick: () => openMenu(),
 );''',
           params: const [
@@ -790,7 +790,7 @@ FluentFileCard(
             children: [
               FluentAppBarLayout(
                 title: 'AppBarLayout 动态演示',
-                subTitle: '包含 Avatar 导航图标与 Accessory 搜索栏',
+                subtitle: '包含 Avatar 导航图标与 Accessory 搜索栏',
                 navigationIconType: FluentNavigationIconType.avatar,
                 avatarName: 'Mauricio August',
                 style: FluentStyle.brand,
@@ -817,7 +817,7 @@ FluentFileCard(
               const SizedBox(height: 12.0),
               FluentTopAppBar(
                 title: 'Neutral 极简导航栏',
-                subTitle: '包含 5 项控件 · Actions 间距 8.0dp',
+                subtitle: '包含 5 项控件 · Actions 间距 8.0dp',
                 style: FluentStyle.neutral,
                 actionsSpacing: 8.0,
                 leftActions: [const Icon(Icons.arrow_back)],
@@ -835,7 +835,7 @@ FluentFileCard(
               const SizedBox(height: 12.0),
               FluentTopAppBar(
                 title: '自定义颜色 (自适应前景色)',
-                subTitle: '传入 Teal 背景色并自动自适应白色高对比文本',
+                subtitle: '传入 Teal 背景色并自动自适应白色高对比文本',
                 backgroundColor: const Color(0xFF0078D4),
                 actionsSpacing: 12.0,
                 centerTitle: true,
@@ -856,7 +856,7 @@ FluentFileCard(
           codeSnippet: '''// 支持自定义颜色与自动亮度对比度自适应、Actions 间距配置
 FluentTopAppBar(
   title: '自定义导航栏',
-  subTitle: '自动对比度自适应',
+  subtitle: '自动对比度自适应',
   backgroundColor: const Color(0xFF0078D4), // 自定义背景色
   // foregroundColor: Colors.white,         // 可选，未传时按背景亮度自动自适应
   actionsSpacing: 12.0,                     // 右侧/左侧动作按钮间距
@@ -866,7 +866,7 @@ FluentTopAppBar(
 );''',
           params: const [
             ApiParam(
-              name: 'title / subTitle',
+              name: 'title / subtitle',
               type: 'String',
               defaultVal: '必填',
               desc: '主标题与副标题',
@@ -1471,7 +1471,7 @@ showFluentBottomSheet(
                         context: context,
                         title: '发送成功',
                         message: '邮件投递成功',
-                        subTitle: '已包含附件资源文件',
+                        subtitle: '已包含附件资源文件',
                         leadingIcon: const Icon(Icons.email_outlined),
                         actionText: '查看详情',
                         enableDismiss: true,
@@ -1519,7 +1519,7 @@ showFluentSnackbarToast(
   context: context,
   title: '发送成功',
   message: '邮件投递成功',
-  subTitle: '包含附件资源',
+  subtitle: '包含附件资源',
   leadingIcon: const Icon(Icons.email),
   actionText: '查看',
   enableDismiss: true,
@@ -1536,7 +1536,7 @@ showFluentSnackbarToast(
               desc: '主要消息正文',
             ),
             ApiParam(
-              name: 'subTitle',
+              name: 'subtitle',
               type: 'String?',
               defaultVal: 'null',
               desc: '第二行/第三行辅助文本',

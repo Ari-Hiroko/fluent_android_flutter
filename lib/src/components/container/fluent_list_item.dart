@@ -18,8 +18,8 @@ class FluentListItem extends StatefulWidget {
   /// 主标题 (对应 text / title)
   final String title;
 
-  /// 副标题 (第二行文本，对应 subText / subTitle)
-  final String? subTitle;
+  /// 副标题 (第二行文本，对应 subText / subtitle)
+  final String? subtitle;
 
   /// 第三行文本 (页脚描述，对应 secondarySubText / tertiaryTitle)
   final String? tertiaryTitle;
@@ -84,7 +84,7 @@ class FluentListItem extends StatefulWidget {
   const FluentListItem({
     super.key,
     required this.title,
-    this.subTitle,
+    this.subtitle,
     this.tertiaryTitle,
     this.leading,
     this.leadingAccessoryContent,
@@ -125,7 +125,7 @@ class FluentListItem extends StatefulWidget {
     this.borderRadius,
     this.coloredSplash = false,
   }) : title = text,
-       subTitle = subText,
+       subtitle = subText,
        tertiaryTitle = secondarySubText,
        leading = leadingAccessoryContent,
        trailing = trailingAccessoryContent,
@@ -152,7 +152,7 @@ class _FluentListItemState extends State<FluentListItem> {
         widget.transparentBackground ?? (cardScope != null);
 
     final bool hasSubTitle =
-        widget.subTitle != null && widget.subTitle!.isNotEmpty;
+        widget.subtitle != null && widget.subtitle!.isNotEmpty;
     final bool hasTertiary =
         widget.tertiaryTitle != null && widget.tertiaryTitle!.isNotEmpty;
 
@@ -238,7 +238,7 @@ class _FluentListItemState extends State<FluentListItem> {
                 if (hasSubTitle) ...[
                   const SizedBox(height: 2.0),
                   Text(
-                    widget.subTitle!,
+                    widget.subtitle!,
                     style: TextStyle(fontSize: 13.0, color: subtitleColor),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,

@@ -28,7 +28,7 @@ Widget build(BuildContext context) {
 
 ### Buttons & Controls
 - `FluentButton(text: '...', style: FluentButtonStyle.primary, onPressed: ...)`
-- `FluentCompoundButton(title: '...', subTitle: '...', icon: ..., onPressed: ...)`
+- `FluentCompoundButton(title: '...', subtitle: '...', icon: ..., onPressed: ...)`
 - `FluentFloatingActionButton(icon: ..., text: '...', onPressed: ...)`
 - `FluentChip(label: '...', selected: true, onPressed: ...)`
 
@@ -37,7 +37,7 @@ Widget build(BuildContext context) {
 - `FluentTextField(label: '...', hintText: '...', errorText: ..., helperText: ..., onChanged: ...)`
 
 ### Navigation & Bars
-- `FluentTopAppBar(title: '...', subTitle: '...', style: FluentStyle.brand, actions: [...])`
+- `FluentTopAppBar(title: '...', subtitle: '...', style: FluentStyle.brand, actions: [...])`
 - `FluentContextualCommandBar(items: [FluentCommandItem(...)])`
 - `FluentTabBar(selectedIndex: 0, tabs: [FluentTabItem(...)], onTabSelected: ...)`
 - `FluentPillBar(selectedIndex: 0, labels: ['A', 'B'], onSelected: ...)`
@@ -50,14 +50,14 @@ Widget build(BuildContext context) {
 - `showFluentSnackbar(context: context, message: '...', style: FluentSnackbarStyle.brand)`
 
 ### Cards & Lists
-- `FluentListItem(title: '...', subTitle: '...', leading: ..., trailing: ..., onTap: ...)`
+- `FluentListItem(title: '...', subtitle: '...', leading: ..., trailing: ..., onTap: ...)`
 - `FluentListSubHeader(title: '...', actionText: '...', onActionTap: ...)`
 - `FluentDivider(startIndent: 16.0)`
 
 ### Avatars & Personas
 - `FluentAvatar(name: '...', presence: FluentPresence.available, size: FluentAvatarSize.size40)`
 - `FluentAvatarGroup(avatars: [...], maxVisible: 4)`
-- `FluentPersona(name: '...', subTitle: '...', avatar: ...)`
+- `FluentPersona(name: '...', subtitle: '...', avatar: ...)`
 - `FluentPeoplePicker(availablePeople: [...], onChanged: ...)`
 
 ### Transients & Loading

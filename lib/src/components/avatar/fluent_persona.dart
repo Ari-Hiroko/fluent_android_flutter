@@ -13,7 +13,7 @@ class FluentPersona extends StatelessWidget {
   final FluentAvatar? avatar;
 
   /// 职位/副标题 (第二行文本)
-  final String? subTitle;
+  final String? subtitle;
 
   /// 团队/三级描述 (第三行文本)
   final String? tertiaryTitle;
@@ -28,7 +28,7 @@ class FluentPersona extends StatelessWidget {
     super.key,
     required this.name,
     this.avatar,
-    this.subTitle,
+    this.subtitle,
     this.tertiaryTitle,
     this.trailing,
     this.onTap,
@@ -61,10 +61,10 @@ class FluentPersona extends StatelessWidget {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  if (subTitle != null && subTitle!.isNotEmpty) ...[
+                  if (subtitle != null && subtitle!.isNotEmpty) ...[
                     const SizedBox(height: 2.0),
                     Text(
-                      subTitle!,
+                      subtitle!,
                       style: TextStyle(
                         fontSize: 13.0,
                         color: theme.foregroundSecondaryColor,

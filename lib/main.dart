@@ -134,7 +134,7 @@ class _MainAppState extends State<MainApp> with SingleTickerProviderStateMixin {
                         context: context,
                         title: '笑哈哈！',
                         message: '干飞马成功',
-                        subTitle: '飞八分钱干飞马，干得飞马笑哈哈',
+                        subtitle: '飞八分钱干飞马，干得飞马笑哈哈',
                         leadingIcon: const Icon(Icons.face_2),
                         actionText: '把碧玺',
                         enableDismiss: true,
@@ -311,7 +311,7 @@ class _MainAppState extends State<MainApp> with SingleTickerProviderStateMixin {
               elevation: 5,
               style: FluentStyle.brand,
               title: _tabIndex == 0 ? '测试软件' : '软件设置',
-              subTitle: _tabIndex == 0 ? '这是一个副标题' : '这是一个假的设置',
+              subtitle: _tabIndex == 0 ? '这是一个副标题' : '这是一个假的设置',
               titleAlignment: TitleAlignment.left,
             ),
             body: Container(
@@ -447,7 +447,7 @@ class _SettingsViewState extends State<_SettingsView> {
                   children: [
                     FluentListItem(
                       title: '暗黑模式',
-                      subTitle: '开启沉浸深色主题界面',
+                      subtitle: '开启沉浸深色主题界面',
                       leading: const Icon(Icons.dark_mode_outlined),
                       borderRadius: BorderRadius.circular(8.0),
                       onClick: () {
@@ -460,7 +460,7 @@ class _SettingsViewState extends State<_SettingsView> {
                     ),
                     FluentListItem(
                       title: '亚克力磨砂效果',
-                      subTitle: '启用流畅 UI Acrylic 材质背景',
+                      subtitle: '启用流畅 UI Acrylic 材质背景',
                       leading: const Icon(Icons.blur_on),
                       borderRadius: BorderRadius.circular(8.0),
                       trailing: FluentToggleSwitch(
@@ -472,7 +472,7 @@ class _SettingsViewState extends State<_SettingsView> {
                     ),
                     FluentListItem(
                       title: '实时消息通知',
-                      subTitle: '允许后台推送 Toast 消息通知',
+                      subtitle: '允许后台推送 Toast 消息通知',
                       leading: const Icon(Icons.notifications_none),
                       borderRadius: BorderRadius.circular(8.0),
                       trailing: FluentToggleSwitch(
@@ -500,7 +500,7 @@ class _SettingsViewState extends State<_SettingsView> {
                 const SizedBox(height: 8.0),
                 FluentListItem(
                   title: '检查软件更新',
-                  subTitle: '当前版本 v1.1.4-build.514',
+                  subtitle: '当前版本 v1.1.4-build.514',
                   leading: const Icon(Icons.system_update_alt),
                   onTap: () {
                     showFluentSnackbarToast(
@@ -516,7 +516,7 @@ class _SettingsViewState extends State<_SettingsView> {
                 const Divider(height: 1.0),
                 FluentListItem(
                   title: '清除系统缓存',
-                  subTitle: '已占用 51.4 MB 临时资源',
+                  subtitle: '已占用 51.4 MB 临时资源',
                   leading: const Icon(Icons.cleaning_services_outlined),
                   onTap: () {
                     showFluentSnackbarToast(

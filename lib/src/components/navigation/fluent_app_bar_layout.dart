@@ -39,7 +39,7 @@ class FluentAppBarLayout extends StatelessWidget
   final String title;
 
   /// 副标题 (可选)
-  final String? subTitle;
+  final String? subtitle;
 
   /// 导航图标形态 (none, avatar, backIcon)
   final FluentNavigationIconType navigationIconType;
@@ -104,7 +104,7 @@ class FluentAppBarLayout extends StatelessWidget
   const FluentAppBarLayout({
     super.key,
     required this.title,
-    this.subTitle,
+    this.subtitle,
     this.navigationIconType = FluentNavigationIconType.backIcon,
     this.avatarCustomImage,
     this.avatarName = 'Mauricio August',
@@ -129,7 +129,7 @@ class FluentAppBarLayout extends StatelessWidget
 
   @override
   Size get preferredSize {
-    double h = subTitle != null ? 64.0 : 56.0;
+    double h = subtitle != null ? 64.0 : 56.0;
     if (accessoryView != null) h += 56.0;
     return Size.fromHeight(h);
   }
@@ -170,7 +170,7 @@ class FluentAppBarLayout extends StatelessWidget
 
     return FluentTopAppBar(
       title: title,
-      subTitle: subTitle,
+      subtitle: subtitle,
       style: style,
       backgroundColor: backgroundColor,
       foregroundColor: foregroundColor,

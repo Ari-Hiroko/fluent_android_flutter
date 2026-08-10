@@ -116,7 +116,7 @@ class FluentSnackbar extends StatelessWidget {
   final String? title;
 
   /// 副标题 (可选，位于第三行或下方)
-  final String? subTitle;
+  final String? subtitle;
 
   /// 右侧操作按钮文本 (如 "撤销", "重试", "查看")
   final String? actionText;
@@ -146,7 +146,7 @@ class FluentSnackbar extends StatelessWidget {
     super.key,
     required this.message,
     this.title,
-    this.subTitle,
+    this.subtitle,
     this.actionText,
     this.onActionTap,
     this.leadingIcon,
@@ -162,7 +162,7 @@ class FluentSnackbar extends StatelessWidget {
     Key? key,
     required String message,
     String? title,
-    String? subTitle,
+    String? subtitle,
     String? actionText,
     VoidCallback? onActionTap,
     Widget? leadingIcon = const Icon(Icons.check_circle_outline),
@@ -175,7 +175,7 @@ class FluentSnackbar extends StatelessWidget {
       key: key,
       message: message,
       title: title,
-      subTitle: subTitle,
+      subtitle: subtitle,
       actionText: actionText,
       onActionTap: onActionTap,
       leadingIcon: leadingIcon,
@@ -192,7 +192,7 @@ class FluentSnackbar extends StatelessWidget {
     Key? key,
     required String message,
     String? title,
-    String? subTitle,
+    String? subtitle,
     String? actionText,
     VoidCallback? onActionTap,
     Widget? leadingIcon = const Icon(Icons.info_outline),
@@ -205,7 +205,7 @@ class FluentSnackbar extends StatelessWidget {
       key: key,
       message: message,
       title: title,
-      subTitle: subTitle,
+      subtitle: subtitle,
       actionText: actionText,
       onActionTap: onActionTap,
       leadingIcon: leadingIcon,
@@ -222,7 +222,7 @@ class FluentSnackbar extends StatelessWidget {
     Key? key,
     required String message,
     String? title,
-    String? subTitle,
+    String? subtitle,
     String? actionText,
     VoidCallback? onActionTap,
     Widget? leadingIcon = const Icon(Icons.warning_amber_rounded),
@@ -235,7 +235,7 @@ class FluentSnackbar extends StatelessWidget {
       key: key,
       message: message,
       title: title,
-      subTitle: subTitle,
+      subtitle: subtitle,
       actionText: actionText,
       onActionTap: onActionTap,
       leadingIcon: leadingIcon,
@@ -252,7 +252,7 @@ class FluentSnackbar extends StatelessWidget {
     Key? key,
     required String message,
     String? title,
-    String? subTitle,
+    String? subtitle,
     String? actionText,
     VoidCallback? onActionTap,
     Widget? leadingIcon = const Icon(Icons.error_outline),
@@ -265,7 +265,7 @@ class FluentSnackbar extends StatelessWidget {
       key: key,
       message: message,
       title: title,
-      subTitle: subTitle,
+      subtitle: subtitle,
       actionText: actionText,
       onActionTap: onActionTap,
       leadingIcon: leadingIcon,
@@ -282,7 +282,7 @@ class FluentSnackbar extends StatelessWidget {
     Key? key,
     required String message,
     String? title,
-    String? subTitle,
+    String? subtitle,
     String? actionText,
     VoidCallback? onActionTap,
     Widget? leadingIcon,
@@ -295,7 +295,7 @@ class FluentSnackbar extends StatelessWidget {
       key: key,
       message: message,
       title: title,
-      subTitle: subTitle,
+      subtitle: subtitle,
       actionText: actionText,
       onActionTap: onActionTap,
       leadingIcon: leadingIcon,
@@ -312,7 +312,7 @@ class FluentSnackbar extends StatelessWidget {
     Key? key,
     required String message,
     String? title,
-    String? subTitle,
+    String? subtitle,
     String? actionText,
     VoidCallback? onActionTap,
     Widget? leadingIcon,
@@ -325,7 +325,7 @@ class FluentSnackbar extends StatelessWidget {
       key: key,
       message: message,
       title: title,
-      subTitle: subTitle,
+      subtitle: subtitle,
       actionText: actionText,
       onActionTap: onActionTap,
       leadingIcon: leadingIcon,
@@ -342,7 +342,7 @@ class FluentSnackbar extends StatelessWidget {
     Key? key,
     required String message,
     String? title,
-    String? subTitle,
+    String? subtitle,
     String? actionText,
     VoidCallback? onActionTap,
     Widget? leadingIcon,
@@ -355,7 +355,7 @@ class FluentSnackbar extends StatelessWidget {
       key: key,
       message: message,
       title: title,
-      subTitle: subTitle,
+      subtitle: subtitle,
       actionText: actionText,
       onActionTap: onActionTap,
       leadingIcon: leadingIcon,
@@ -378,7 +378,7 @@ class FluentSnackbar extends StatelessWidget {
     final Color actionTextColor = tokens.actionTextColor(style);
 
     final bool hasTitle = title != null && title!.isNotEmpty;
-    final bool hasSubTitle = subTitle != null && subTitle!.isNotEmpty;
+    final bool hasSubTitle = subtitle != null && subtitle!.isNotEmpty;
 
     return FluentMaterial(
       color: backgroundColor,
@@ -432,7 +432,7 @@ class FluentSnackbar extends StatelessWidget {
                   if (hasSubTitle) ...[
                     const SizedBox(height: 2.0),
                     Text(
-                      subTitle!,
+                      subtitle!,
                       style: TextStyle(
                         fontSize: 12.0,
                         color: secondaryTextColor,
@@ -784,7 +784,7 @@ class FluentSnackbarToast {
     required BuildContext context,
     required String message,
     String? title,
-    String? subTitle,
+    String? subtitle,
     String? actionText,
     ValueChanged<FluentNotificationResult>? onResult,
     VoidCallback? onActionTap,
@@ -796,7 +796,7 @@ class FluentSnackbarToast {
       context: context,
       message: message,
       title: title,
-      subTitle: subTitle,
+      subtitle: subtitle,
       actionText: actionText,
       onResult: onResult,
       onActionTap: onActionTap,
@@ -811,7 +811,7 @@ class FluentSnackbarToast {
     required BuildContext context,
     required String message,
     String? title,
-    String? subTitle,
+    String? subtitle,
     String? actionText,
     VoidCallback? onActionTap,
     Widget? leadingIcon = const Icon(Icons.check_circle_outline),
@@ -823,7 +823,7 @@ class FluentSnackbarToast {
       context: context,
       message: message,
       title: title,
-      subTitle: subTitle,
+      subtitle: subtitle,
       actionText: actionText,
       onActionTap: onActionTap,
       leadingIcon: leadingIcon,
@@ -839,7 +839,7 @@ class FluentSnackbarToast {
     required BuildContext context,
     required String message,
     String? title,
-    String? subTitle,
+    String? subtitle,
     String? actionText,
     VoidCallback? onActionTap,
     Widget? leadingIcon = const Icon(Icons.info_outline),
@@ -851,7 +851,7 @@ class FluentSnackbarToast {
       context: context,
       message: message,
       title: title,
-      subTitle: subTitle,
+      subtitle: subtitle,
       actionText: actionText,
       onActionTap: onActionTap,
       leadingIcon: leadingIcon,
@@ -867,7 +867,7 @@ class FluentSnackbarToast {
     required BuildContext context,
     required String message,
     String? title,
-    String? subTitle,
+    String? subtitle,
     String? actionText,
     VoidCallback? onActionTap,
     Widget? leadingIcon = const Icon(Icons.warning_amber_rounded),
@@ -879,7 +879,7 @@ class FluentSnackbarToast {
       context: context,
       message: message,
       title: title,
-      subTitle: subTitle,
+      subtitle: subtitle,
       actionText: actionText,
       onActionTap: onActionTap,
       leadingIcon: leadingIcon,
@@ -895,7 +895,7 @@ class FluentSnackbarToast {
     required BuildContext context,
     required String message,
     String? title,
-    String? subTitle,
+    String? subtitle,
     String? actionText,
     VoidCallback? onActionTap,
     Widget? leadingIcon = const Icon(Icons.error_outline),
@@ -907,7 +907,7 @@ class FluentSnackbarToast {
       context: context,
       message: message,
       title: title,
-      subTitle: subTitle,
+      subtitle: subtitle,
       actionText: actionText,
       onActionTap: onActionTap,
       leadingIcon: leadingIcon,
@@ -923,7 +923,7 @@ class FluentSnackbarToast {
     required BuildContext context,
     required String message,
     String? title,
-    String? subTitle,
+    String? subtitle,
     String? actionText,
     VoidCallback? onActionTap,
     Widget? leadingIcon,
@@ -936,7 +936,7 @@ class FluentSnackbarToast {
       context: context,
       message: message,
       title: title,
-      subTitle: subTitle,
+      subtitle: subtitle,
       actionText: actionText,
       onActionTap: onActionTap,
       leadingIcon: leadingIcon,
@@ -956,7 +956,7 @@ FluentSnackbarController showFluentSnackbarToast({
   required BuildContext context,
   required String message,
   String? title,
-  String? subTitle,
+  String? subtitle,
   String? actionText,
   ValueChanged<FluentNotificationResult>? onResult,
   VoidCallback? onActionTap,
@@ -984,7 +984,7 @@ FluentSnackbarController showFluentSnackbarToast({
       context: context,
       message: message,
       title: title,
-      subTitle: subTitle,
+      subtitle: subtitle,
       actionText: actionText,
       onResult: onResult,
       onActionTap: onActionTap,
@@ -1067,7 +1067,7 @@ FluentSnackbarController showFluentSnackbarToast({
         child: FluentSnackbar(
           message: message,
           title: title,
-          subTitle: subTitle,
+          subtitle: subtitle,
           actionText: actionText,
           onActionTap: () {
             onActionTap?.call();
@@ -1150,7 +1150,7 @@ ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showFluentSnackbar({
   required BuildContext context,
   required String message,
   String? title,
-  String? subTitle,
+  String? subtitle,
   String? actionText,
   VoidCallback? onActionTap,
   Widget? leadingIcon,
@@ -1167,7 +1167,7 @@ ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showFluentSnackbar({
       child: FluentSnackbar(
         message: message,
         title: title,
-        subTitle: subTitle,
+        subtitle: subtitle,
         actionText: actionText,
         onActionTap: onActionTap != null
             ? () {
@@ -1398,7 +1398,7 @@ FluentSnackbarController showFluentStackableSnackbarToast({
   required BuildContext context,
   required String message,
   String? title,
-  String? subTitle,
+  String? subtitle,
   String? actionText,
   ValueChanged<FluentNotificationResult>? onResult,
   VoidCallback? onActionTap,
@@ -1418,7 +1418,7 @@ FluentSnackbarController showFluentStackableSnackbarToast({
     context: context,
     message: message,
     title: title,
-    subTitle: subTitle,
+    subtitle: subtitle,
     actionText: actionText,
     onResult: onResult,
     onActionTap: onActionTap,
@@ -1440,7 +1440,7 @@ class _StackableToastItem {
   final GlobalKey<AnimatedFluentSnackbarState> key;
   final String message;
   final String? title;
-  final String? subTitle;
+  final String? subtitle;
   final String? actionText;
   final VoidCallback? onActionTap;
   final Widget? leadingIcon;
@@ -1455,7 +1455,7 @@ class _StackableToastItem {
     required this.key,
     required this.message,
     this.title,
-    this.subTitle,
+    this.subtitle,
     this.actionText,
     this.onActionTap,
     this.leadingIcon,
@@ -1512,7 +1512,7 @@ class _FluentStackableToastManager {
     required BuildContext context,
     required String message,
     String? title,
-    String? subTitle,
+    String? subtitle,
     String? actionText,
     ValueChanged<FluentNotificationResult>? onResult,
     VoidCallback? onActionTap,
@@ -1547,7 +1547,7 @@ class _FluentStackableToastManager {
       key: itemKey,
       message: message,
       title: title,
-      subTitle: subTitle,
+      subtitle: subtitle,
       actionText: actionText,
       onActionTap: onActionTap,
       leadingIcon: leadingIcon,
@@ -1599,7 +1599,7 @@ class _FluentStackableToastManager {
                     child: FluentSnackbar(
                       message: it.message,
                       title: it.title,
-                      subTitle: it.subTitle,
+                      subtitle: it.subtitle,
                       actionText: it.actionText,
                       onActionTap: () {
                         it.onActionTap?.call();

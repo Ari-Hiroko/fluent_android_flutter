@@ -50,7 +50,7 @@ class FluentTopAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
 
   /// 副标题 (可选)
-  final String? subTitle;
+  final String? subtitle;
 
   /// 尺寸形态 (small, medium, large)
   final FluentAppBarSize appBarSize;
@@ -127,7 +127,7 @@ class FluentTopAppBar extends StatelessWidget implements PreferredSizeWidget {
   const FluentTopAppBar({
     super.key,
     required this.title,
-    this.subTitle,
+    this.subtitle,
     this.appBarSize = FluentAppBarSize.small,
     this.style = FluentStyle.neutral,
     this.backgroundColor,
@@ -154,7 +154,7 @@ class FluentTopAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.enableCursor = true,
   });
 
-  bool get _hasSubTitle => subTitle != null && subTitle!.isNotEmpty;
+  bool get _hassubtitle => subtitle != null && subtitle!.isNotEmpty;
 
   FluentTitleAlignment get _effectiveTitleAlignment {
     if (centerTitle) return FluentTitleAlignment.center;
@@ -166,10 +166,10 @@ class FluentTopAppBar extends StatelessWidget implements PreferredSizeWidget {
     double baseHeight;
     switch (appBarSize) {
       case FluentAppBarSize.small:
-        baseHeight = _hasSubTitle ? 64.0 : 56.0;
+        baseHeight = _hassubtitle ? 64.0 : 56.0;
         break;
       case FluentAppBarSize.medium:
-        baseHeight = _hasSubTitle ? 72.0 : 64.0;
+        baseHeight = _hassubtitle ? 72.0 : 64.0;
         break;
       case FluentAppBarSize.large:
         baseHeight = 96.0;
@@ -271,10 +271,10 @@ class FluentTopAppBar extends StatelessWidget implements PreferredSizeWidget {
     double mainRowHeight;
     switch (appBarSize) {
       case FluentAppBarSize.small:
-        mainRowHeight = _hasSubTitle ? 64.0 : 56.0;
+        mainRowHeight = _hassubtitle ? 64.0 : 56.0;
         break;
       case FluentAppBarSize.medium:
-        mainRowHeight = _hasSubTitle ? 72.0 : 64.0;
+        mainRowHeight = _hassubtitle ? 72.0 : 64.0;
         break;
       case FluentAppBarSize.large:
         mainRowHeight = 96.0;
@@ -318,10 +318,10 @@ class FluentTopAppBar extends StatelessWidget implements PreferredSizeWidget {
           overflow: TextOverflow.ellipsis,
           textAlign: titleTextAlign,
         ),
-        if (_hasSubTitle) ...[
+        if (_hassubtitle) ...[
           const SizedBox(height: 2.0),
           Text(
-            subTitle!,
+            subtitle!,
             style: TextStyle(
               fontSize: 12.0,
               color: effectiveSecondaryFg,

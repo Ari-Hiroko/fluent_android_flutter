@@ -9,7 +9,7 @@ class FluentCompoundButton extends StatelessWidget {
   final String title;
 
   /// 副标题/描述文本
-  final String subTitle;
+  final String subtitle;
 
   /// 前置 Icon (可选)
   final Widget? icon;
@@ -26,7 +26,7 @@ class FluentCompoundButton extends StatelessWidget {
   const FluentCompoundButton({
     super.key,
     required this.title,
-    required this.subTitle,
+    required this.subtitle,
     this.icon,
     this.onPressed,
     this.style = FluentButtonStyle.secondary,
@@ -49,7 +49,7 @@ class FluentCompoundButton extends StatelessWidget {
         ? (isEnabled ? Colors.white : theme.foregroundSecondaryColor)
         : (isEnabled ? theme.foregroundColor : theme.foregroundSecondaryColor);
 
-    final Color subTitleColor = isPrimary
+    final Color subtitleColor = isPrimary
         ? (isEnabled
               ? Colors.white.withAlpha(200)
               : theme.foregroundSecondaryColor)
@@ -99,8 +99,8 @@ class FluentCompoundButton extends StatelessWidget {
                     ),
                     const SizedBox(height: 2.0),
                     Text(
-                      subTitle,
-                      style: TextStyle(fontSize: 12.0, color: subTitleColor),
+                      subtitle,
+                      style: TextStyle(fontSize: 12.0, color: subtitleColor),
                     ),
                   ],
                 ),
